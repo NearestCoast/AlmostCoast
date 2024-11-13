@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Renge_PPB_URP_Custom
+  m_Shader: {fileID: 4800000, guid: b67f3d4983b028e4db225d79cd1dd9ac, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BackgroundGradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BackgroundTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BorderTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _InnerGradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _InnerTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OverlayTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VariableWidthCurve:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AdjustBorderRadiusToWidthCurve: 0
+    - _AlphaCutoff: 0.5
+    - _AntiAlias: 1
+    - _Arc: 0
+    - _BackgroundGradientEnabled: 0
+    - _BackgroundGradientRotation: 0
+    - _BackgroundTextureOpacity: 0
+    - _BackgroundTextureRotation: 0
+    - _BackgroundTextureScaleWithSegments: 0
+    - _BorderInsetShadowFalloff: 0.99
+    - _BorderInsetShadowSize: 0.04
+    - _BorderRadius: 0.3
+    - _BorderShadowFalloff: 0.99
+    - _BorderShadowSize: 0.05
+    - _BorderTextureOpacity: 1
+    - _BorderTextureRotation: 0
+    - _BorderTextureScaleWithSegments: 0
+    - _BorderWidth: 0.06
+    - _CenterFill: 0
+    - _CircleLength: 0.2
+    - _FlipbookFPS: 24
+    - _InnerBorderWidth: 0.02
+    - _InnerGradientEnabled: 0
+    - _InnerGradientRotation: 0
+    - _InnerRoundingPercent: 0
+    - _InnerTextureOpacity: 0
+    - _InnerTextureRotation: 0
+    - _InnerTextureScaleWithSegments: 1
+    - _OffsetTextureWithValue: 1
+    - _OverlayTextureOpacity: 1
+    - _PixelCount: 0
+    - _Pixelate: 0
+    - _PulsateWhenLow: 1
+    - _PulseActivationThreshold: 0.5
+    - _PulseRamp: 0.1
+    - _PulseSpeed: 10
+    - _QueueControl: -1
+    - _QueueOffset: 0
+    - _Radius: 0.3
+    - _RatioScaling: 1
+    - _ReceiveShadows: 1
+    - _SegmentCount: 1
+    - _SegmentSpacing: 0
+    - _Slant: 0
+    - _UIScaling: 0
+    - _Value: 0.64
+    - _ValueAsGradientTimeBackground: 0
+    - _ValueAsGradientTimeInner: 0
+    - _ValueInsetShadowFalloff: 0.99
+    - _ValueInsetShadowSize: 0.1
+    - _ValueShadowFalloff: 0.99
+    - _ValueShadowSize: 0.1
+    - _Width: 0.2
+    m_Colors:
+    - _BackgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BackgroundFlipbookDim: {r: 1, g: 1, b: 0, a: 0}
+    - _BackgroundTextureOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _BackgroundTextureTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BorderFlipbookDim: {r: 1, g: 1, b: 0, a: 0}
+    - _BorderInsetShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BorderRadiusOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _BorderShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BorderTextureOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _BorderTextureTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _CustomScale: {r: 1, g: 1, b: 0, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _InnerBorderColor: {r: 0.745283, g: 0, b: 0, a: 1}
+    - _InnerColor: {r: 1, g: 1, b: 1, a: 1}
+    - _InnerFlipbookDim: {r: 1, g: 1, b: 0, a: 0}
+    - _InnerTextureOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _InnerTextureTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _OverlayColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OverlayFlipbookDim: {r: 1, g: 1, b: 0, a: 0}
+    - _OverlayTextureOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayTextureTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _PulseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ValueInsetShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ValueMaskOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _ValueShadowColor: {r: 0, g: 0, b: 0, a: 1}
+  m_BuildTextureStacks: []

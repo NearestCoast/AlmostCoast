@@ -1,0 +1,395 @@
+Each FBX contains several Anims. 
+
+-------------------  01_Idle  --------------------------------------
+20-100    		Frank_Platformer@Idle_01
+170-270		Frank_Platformer@Idle_02
+320-400		Frank_Platformer@Idle_03
+
+
+
+		
+-------------------  02_Moving_In-Place  ---------
+80-120    		Frank_Platformer@Run01_InPlace
+160-200		Frank_Platformer@Run02_InPlace
+240-280		Frank_Platformer@Run03_InPlace
+320-360		Frank_Platformer@Run04_InPlace
+400-440		Frank_Platformer@Run05_InPlace
+		
+500-554		Frank_Platformer@Walk01_InPlace
+600-654		Frank_Platformer@Walk02_InPlace
+700-760		Frank_Platformer@Walk03_InPlace
+800-860		Frank_Platformer@Walk04_InPlace
+		
+		
+920-948		Frank_Platformer@Sprint01_InPlace
+1000-1024            	Frank_Platformer@Sprint02_InPlace
+1080-1104	Frank_Platformer@Sprint03_InPlace
+1160-1184	Frank_Platformer@Sprint04_InPlace
+		
+		
+		
+		
+		
+-------------------  03_Lean Moving  --------------------------------
+100-154		Frank_Platformer@Walk01_Lean_L_InPlace
+180-234		Frank_Platformer@Walk01_Lean_R_InPlace
+		
+300-354		Frank_Platformer@Walk02_Lean_L_InPlace
+380-434		Frank_Platformer@Walk02_Lean_R_InPlace
+		
+500-560		Frank_Platformer@Walk03_Lean_L_InPlace
+600-660		Frank_Platformer@Walk03_Lean_R_InPlace
+		
+730-790		Frank_Platformer@Walk04_Lean_L_InPlace
+830-890		Frank_Platformer@Walk04_Lean_R_InPlace
+		
+		
+		
+1000-1040	Frank_Platformer@Run01_Lean_L_InPlace
+1080-1120	Frank_Platformer@Run01_Lean_R_InPlace
+		
+1180-1220	Frank_Platformer@Run02_Lean_L_InPlace
+1260-1300	Frank_Platformer@Run02_Lean_R_InPlace
+		
+1380-1420	Frank_Platformer@Run03_Lean_L_InPlace
+1460-1500	Frank_Platformer@Run03_Lean_R_InPlace
+		
+1560-1600	Frank_Platformer@Run04_Lean_L_InPlace
+1640-1680	Frank_Platformer@Run04_Lean_R_InPlace
+		
+1740-1780	Frank_Platformer@Run05_Lean_L_InPlace
+1800-1840	Frank_Platformer@Run05_Lean_R_InPlace
+		
+		
+		
+1960-1988	Frank_Platformer@Sprint01_Lean_L_InPlace
+2000-2028	Frank_Platformer@Sprint01_Lean_R_InPlace
+		
+2080-2104	Frank_Platformer@Sprint02_Lean_L_InPlace
+2120-2144	Frank_Platformer@Sprint02_Lean_R_InPlace
+		
+2200-2224	Frank_Platformer@Sprint03_Lean_L_InPlace
+2240-2264	Frank_Platformer@Sprint03_Lean_R_InPlace
+		
+2330-2354	Frank_Platformer@Sprint04_Lean_L_InPlace
+2370-2394	Frank_Platformer@Sprint04_Lean_R_InPlace
+
+
+
+
+		
+-------------------  04_Sliding  ----------------------------------------
+0-30		Frank_Platformer@Sliding01
+60-100		Frank_Platformer@Sliding02
+220-270		Frank_Platformer@Sliding03
+320-360		Frank_Platformer@Sliding04
+420-460		Frank_Platformer@Sliding05
+510-555		Frank_Platformer@Sliding06
+		
+
+		
+		
+-------------------  05_Knock Down  -------------------------------
+100-135		Frank_Platformer@KnockDown_F_01
+160-210		Frank_Platformer@KnockDown_F_02
+250-295		Frank_Platformer@KnockDown_F_03
+330-380		Frank_Platformer@KnockDown_B_01
+420-465		Frank_Platformer@KnockDown_B_02
+500-550		Frank_Platformer@KnockDown_B_03
+
+
+
+		
+-------------------  06_Stumble  -----------------------------------
+100-135		Frank_Platformer@Stumble01
+160-206		Frank_Platformer@Stumble02
+230-275		Frank_Platformer@Stumble03
+300-345		Frank_Platformer@Stumble04
+370-415		Frank_Platformer@Stumble05
+460-505		Frank_Platformer@Stumble06
+540-595		Frank_Platformer@Stumble07
+		
+
+
+
+		
+-------------------  07_Jumping  ----------------------------------
+20-93		Frank_Platformer@Jump01_All
+20-32		Frank_Platformer@Jump01_Start
+33-76		Frank_Platformer@Jump01_Air
+77-93		Frank_Platformer@Jump01_End
+		
+120-193		Frank_Platformer@Jump02_All
+120-133		Frank_Platformer@Jump02_Start
+134-176		Frank_Platformer@Jump02_Air
+177-193		Frank_Platformer@Jump02_End
+		
+220-293		Frank_Platformer@Jump03_All
+220-233		Frank_Platformer@Jump03_Start
+234-276		Frank_Platformer@Jump03_Air
+277-293		Frank_Platformer@Jump03_End
+		
+320-393		Frank_Platformer@Jump04_All
+320-333		Frank_Platformer@Jump04_Start
+334-376		Frank_Platformer@Jump04_Air
+377-393		Frank_Platformer@Jump04_End
+		
+420-493		Frank_Platformer@Jump05_All
+420-433		Frank_Platformer@Jump05_Start
+434-476		Frank_Platformer@Jump05_Air
+477-493		Frank_Platformer@Jump05_End
+		
+
+
+
+		
+-------------------  08_Double Jumping  ------------------------
+20-90		Frank_Platformer@Double_Jump01
+130-200		Frank_Platformer@Double_Jump02
+240-310		Frank_Platformer@Double_Jump03
+		
+
+
+		
+-------------------  09_Air_Loop  ---------------------------------
+20-56		Frank_Platformer@Air_Loop01
+80-92		Frank_Platformer@Air_Loop02
+120-220		Frank_Platformer@Air_Loop03
+260-310		Frank_Platformer@Air_Loop04
+		
+
+		
+		
+		
+-------------------  10_Getup  -----------------------------------
+20-60		Frank_Platformer@Getup01
+90-130		Frank_Platformer@Getup02
+180-220		Frank_Platformer@Getup03
+		
+
+
+		
+		
+-------------------  11_Landing  ---------------------------------
+20-50		Frank_Platformer@Landing01
+80-110		Frank_Platformer@Landing02
+160-190		Frank_Platformer@Landing03
+		
+	
+
+
+	
+-------------------  12_Turn 45 90 180  -------------------------
+40-60		Frank_Platformer@Turn_L_45
+80-100		Frank_Platformer@Turn_R_45
+120-140		Frank_Platformer@Turn_L_45_Crouch
+160-180		Frank_Platformer@Turn_R_45_Crouch
+		
+230-250		Frank_Platformer@Turn_L_90
+270-290		Frank_Platformer@Turn_R_90
+310-330		Frank_Platformer@Turn_L_90_Crouch
+350-370		Frank_Platformer@Turn_R_90_Crouch
+		
+420-450		Frank_Platformer@Turn_L_180
+480-510		Frank_Platformer@Turn_R_180
+540-570		Frank_Platformer@Turn_L_180_Crouch
+600-630		Frank_Platformer@Turn_R_180_Crouch
+		
+
+
+		
+		
+-------------------  13_Attack  -----------------------------------
+80-115		Frank_Platformer@Attack01
+140-185		Frank_Platformer@Attack02
+220-265		Frank_Platformer@Attack03
+300-345		Frank_Platformer@Attack04
+390-470		Frank_Platformer@Attack05
+500-555		Frank_Platformer@Attack06
+590-635		Frank_Platformer@Attack07
+670-725		Frank_Platformer@Attack08
+760-844		Frank_Platformer@Attack09
+
+
+
+
+		
+-------------------  14_Weapon_Atk  ---------------------------
+100-155		Frank_Platformer@ATK_Sword01
+190-240		Frank_Platformer@ATK_Sword02
+280-355		Frank_Platformer@ATK_GreatSword01
+400-480		Frank_Platformer@ATK_GreatSword02
+540-635		Frank_Platformer@ATK_Hammer01
+700-810		Frank_Platformer@ATK_Hammer02
+860-946		Frank_Platformer@ATK_Rock
+		
+	
+
+	
+		
+-------------------  15_Damaged  -------------------------------
+100-130		Frank_Platformer@Damaged01
+160-200		Frank_Platformer@Damaged02
+230-270		Frank_Platformer@Damaged03
+300-335		Frank_Platformer@Damaged04
+360-415		Frank_Platformer@Damaged05
+	
+
+
+	
+		
+		
+-------------------  16_Climb  ------------------------------------
+50-80		Frank_Platformer@Climb_Start
+120-200		Frank_Platformer@Climb_Idle
+240-300		Frank_Platformer@Climb_Up_InPlace
+350-410		Frank_Platformer@Climb_Down_InPlace
+460-500		Frank_Platformer@Climb_Right_InPlace
+550-590		Frank_Platformer@Climb_Left_InPlace
+640-700		Frank_Platformer@Climb_Upper_Left_InPlace
+750-810		Frank_Platformer@Climb_Upper_Right_InPlace
+860-920		Frank_Platformer@Climb_Lower_Right_InPlace
+960-1020		Frank_Platformer@Climb_Lower_Left_InPlace
+1120-1170	Frank_Platformer@Climb_End
+1200-1270	Frank_Platformer@Climb_Jump
+1300-1355	Frank_Platformer@Climb_Dash
+1390-1420	Frank_Platformer@Climb_Falling_Loop
+1460-1500	Frank_Platformer@Climb_Grab
+1540-1630	Frank_Platformer@Climb_StandUp
+
+
+
+
+		
+-------------------  17_Climb_RM  ----------------------------------------------------------------------------
+60-120		Frank_Platformer@Climb_Up_RM
+170-230		Frank_Platformer@Climb_Down_RM
+280-320		Frank_Platformer@Climb_Right_RM
+370-410		Frank_Platformer@Climb_Left_RM
+460-520		Frank_Platformer@Climb_Upper_Left_RM
+570-630		Frank_Platformer@Climb_Upper_Right_RM
+680-740		Frank_Platformer@Climb_Lower_Right_RM
+780-840		Frank_Platformer@Climb_Lower_Left_RM
+900-955		Frank_Platformer@Climb_Dash_RM
+		
+	
+	
+		
+		
+-------------------  18_Ledge  -------------------------------------
+70-130		Frank_Platformer@Ledge_Start
+160-220		Frank_Platformer@Ledge_Idle
+250-310		Frank_Platformer@Ledge_Left_RM
+340-400		Frank_Platformer@Ledge_Right_RM
+430-475		Frank_Platformer@Ledge_Left_Step_RM
+500-545		Frank_Platformer@Ledge_Right_Step_RM
+580-662		Frank_Platformer@Ledge_Climb
+690-730		Frank_Platformer@Ledge_Fall
+760-840		Frank_Platformer@Ledge_Jump
+		
+900-960		Frank_Platformer@Ledge_Left_InPlace
+990-1050		Frank_Platformer@Ledge_Right_InPlace
+1080-1125	Frank_Platformer@Ledge_Left_Step_InPlace
+1150-1195	Frank_Platformer@Ledge_Right_Step_InPlace
+		
+
+
+
+		
+-------------------  19_Pipe  ---------------------------------------
+40-80		Frank_Platformer@Pipe_Start
+110-170		Frank_Platformer@Pipe_Idle
+200-240		Frank_Platformer@Pipe_Up_InPlace
+270-310		Frank_Platformer@Pipe_Down_InPlace
+350-380		Frank_Platformer@Pipe_Left
+400-430		Frank_Platformer@Pipe_Right
+470-505		Frank_Platformer@Pipe_End
+530-580		Frank_Platformer@Pipe_Jump
+		
+640-680		Frank_Platformer@Pipe_Up
+710-750		Frank_Platformer@Pipe_Down
+		
+		
+	
+	
+		
+-------------------  20_Dodge  ---------------------------------
+60-100		Frank_Platformer@Tumble_F
+130-170		Frank_Platformer@Tumble_B
+200-240		Frank_Platformer@Tumble_L
+270-310		Frank_Platformer@Tumble_R
+340-380		Frank_Platformer@Roll_F
+410-450		Frank_Platformer@Roll_B
+480-520		Frank_Platformer@Roll_L
+550-590		Frank_Platformer@Roll_R
+
+
+
+		
+		
+-------------------  21_Action  ---------------------------------
+20-104		Frank_Platformer@Action_ChestOpen
+140-195		Frank_Platformer@Action_ChestKick
+230-280		Frank_Platformer@Action_Item
+310-370		Frank_Platformer@Action_Cheer
+400-640		Frank_Platformer@Action_Dance
+		
+
+
+
+		
+-------------------  22_Crouch  ----------------------------------
+100-130		Frank_Platformer@Crouch_Start
+150-200		Frank_Platformer@Crouch_Idle
+230-260		Frank_Platformer@Crouch_End
+		
+
+
+
+
+-------------------  23_Idle_Action  ----------------------------
+80-250		Frank_Platformer@Idle_01_Action01
+290-360		Frank_Platformer@Idle_01_Action02
+400-570		Frank_Platformer@Idle_01_Action03
+		
+		
+		
+		
+		
+-------------------  24_Moving(RM)  ------------------------
+100-140		Frank_Platformer@Run01_RM
+180-220		Frank_Platformer@Run02_RM
+260-300		Frank_Platformer@Run03_RM
+340-380		Frank_Platformer@Run04_RM
+420-460		Frank_Platformer@Run05_RM
+		
+520-574		Frank_Platformer@Walk01_RM
+620-674		Frank_Platformer@Walk02_RM
+720-780		Frank_Platformer@Walk03_RM
+820-880		Frank_Platformer@Walk04_RM
+		
+		
+940-968		Frank_Platformer@Sprint01_RM
+1020-1044	Frank_Platformer@Sprint02_RM
+1100-1124	Frank_Platformer@Sprint03_RM
+1180-1204	Frank_Platformer@Sprint04_RM
+
+
+
+		
+		
+-------------------  25_Jumping(0Height)  -----------------------
+100-142		Frank_Platformer@Jump01_Air_0Height
+170-212		Frank_Platformer@Jump02_Air_0Height
+240-282		Frank_Platformer@Jump03_Air_0Height
+320-362		Frank_Platformer@Jump04_Air_0Height
+390-432		Frank_Platformer@Jump05_Air_0Height
+		
+
+
+
+		
+-------------------  26_Double Jumping(0Height)  ---------------------
+100-147		Frank_Platformer@Double_Jump01_Air_0Height
+180-227		Frank_Platformer@Double_Jump02_Air_0Height
+260-313		Frank_Platformer@Double_Jump03_Air_0Height
