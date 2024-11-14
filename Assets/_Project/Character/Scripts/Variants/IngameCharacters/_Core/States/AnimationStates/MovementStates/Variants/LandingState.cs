@@ -53,8 +53,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.ResetSkillJumpCount();
         }
 
-        // private bool IsLandingEnded => true;
-        private bool IsLandingEnded => transform.position.y - GroundParams.GroundPoint.y <= characterControllerEnveloper.SkinWidth + 0.0001f;
+        private bool IsLandingEnded => true;
+        // private bool IsLandingEnded => transform.position.y - GroundParams.GroundPoint.y <= characterControllerEnveloper.SkinWidth + 0.0001f;
 
         protected override Vector3 GetVelocity()
         {

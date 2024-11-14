@@ -125,7 +125,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
             else
             {
-                var dir = Vector3.ProjectOnPlane(HorizontalDirection3, GroundParams.GroundNormal);
+                var dir = Vector3.ProjectOnPlane(HorizontalDirection3, GroundParams.GroundNormal).normalized;
                 moveValue = dir * (inputMagnitudeAmplified * maxLength / maxTime);
             }
             
@@ -141,8 +141,9 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 anims.State.Parameter = 1;
             }
             
-            var ray = new Ray(characterControllerEnveloper.transform.position, moveValue);
+            var ray = new Ray(transform.position + Vector3.up * 1.5f, moveValue);
             IsBlocked = Physics.Raycast(ray,  out var hitInfo, camTargetMoveAmount,  surfaceLayers);
+            // if (IsBlocked) Debug.Log(IsBlocked);
 
             // if (anims.State is not null) anims.State.Parameter = (!GroundParams.IsGrounded && VerticalParams.IsWalled) ? 1 : 0;
             
@@ -165,7 +166,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         
             var inputDirSpeed = InputDirection.magnitude > 0.75f ? 1 : 0;
             var inputSpeed = InputDirection == Vector2.zero ? camTargetGoBackRate : InputDirection.magnitude;
-
+        
             if (InitialPosition.y > transform.position.y + 1.5f)
             {
                 var dir = transform.position - moveCameraTarget.transform.position + Vector3.up * 1.5f;
