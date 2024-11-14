@@ -8,20 +8,17 @@ namespace _Project.Character.IngameCharacters.Enemies
 {
     public class PlayerEnteringChecker : MonoBehaviour
     {
-        private Enemy master;
-        private SphereCollider trigger;
-        
-        private void Awake()
+        [SerializeField] private Enemy master;
+        [SerializeField] private SphereCollider trigger;
+        public float TriggerRadius => trigger.radius;
+
+#if UNITY_EDITOR
+        private void OnValidate()
         {
             master = GetComponentInParent<Enemy>();
+            trigger = GetComponent<SphereCollider>(); 
         }
-
-        private void Start()
-        {
-            // trigger = GetComponent<SphereCollider>();
-            // trigger.enabled = true;
-            // trigger.radius /= master.CharacterControllerEnveloper.CurrentScale;
-        }
+#endif
 
         private void OnTriggerEnter(Collider other)
         {

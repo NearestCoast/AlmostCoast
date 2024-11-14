@@ -28,7 +28,7 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
         {
             try
             {
-                var waitingTime = master.Stat.MaxWaitingTime;
+                var waitingTime = master.MaxWaitingTime;
                 await UniTask.Delay(TimeSpan.FromSeconds(waitingTime), cancellationToken: cancellationTokenSource.Token);
                 master.ReturnToStartPosition();
             }

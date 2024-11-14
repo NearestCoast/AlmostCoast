@@ -48,26 +48,6 @@ namespace _Project.Characters._Core
                 onDie?.Invoke();
             }
         }
-
-        [SerializeField, TitleGroup("BehaviourParams")] private float awareAreaRadius = 60;
-        
-        [SerializeField, TitleGroup("BehaviourParams")] private float sightAngle = 120;
-        [SerializeField, TitleGroup("BehaviourParams")] private float viewDistance = 60;
-        [SerializeField, TitleGroup("BehaviourParams")] private float soundDistance = 10;
-        
-        [SerializeField, TitleGroup("BehaviourParams")] private float isInFightDistance = 8;
-        
-        [SerializeField, TitleGroup("BehaviourParams")] private float maxWaitingTime = 60;
-
-        public float AwareAreaRadius => awareAreaRadius;
-        
-        public float SightAngle => sightAngle;
-        public float ViewDistance => viewDistance;
-        public float SoundDistance => soundDistance;
-        
-        public float IsInFightDistance => isInFightDistance;
-        
-        public float MaxWaitingTime => maxWaitingTime;
     }
     
     public class Character : MonoBehaviour, IDamageReceiver

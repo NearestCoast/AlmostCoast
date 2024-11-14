@@ -12,10 +12,32 @@ using Renge.PPB;
 
 namespace _Project.Character.IngameCharacters.Enemies
 {
-    public class Enemy : IngameCharacter
+    public partial class Enemy : IngameCharacter
+    {
+        [SerializeField, TitleGroup("BehaviourParams")] private float sightAngle = 120;
+        [SerializeField, TitleGroup("BehaviourParams")] private float viewDistance = 60;
+        [SerializeField, TitleGroup("BehaviourParams")] private float soundDistance = 10;
+        
+        [SerializeField, TitleGroup("BehaviourParams")] private float isInFightDistance = 8;
+        
+        [SerializeField, TitleGroup("BehaviourParams")] private float maxWaitingTime = 60;
+
+        public float ActiveAreaRadius => playerEnteringChecker.TriggerRadius * characterControllerEnveloper.CurrentScale;
+         
+        public float SightAngle => sightAngle;
+        public float ViewDistance => viewDistance;
+        public float SoundDistance => soundDistance;
+        
+        public float IsInFightDistance => isInFightDistance;
+        
+        public float MaxWaitingTime => maxWaitingTime;
+    }
+
+    public partial class Enemy : IngameCharacter
     {
         private Behavior behavior;
-        
+
+        [SerializeField] private PlayerEnteringChecker playerEnteringChecker;
         private WorldHealthBar worldHealthBar;
         private ProceduralProgressBar progressBar;
         
@@ -46,6 +68,13 @@ namespace _Project.Character.IngameCharacters.Enemies
                 return velocity;
             }
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            playerEnteringChecker = GetComponentInChildren<PlayerEnteringChecker>();
+        }
+#endif
 
         protected override void Awake()
         {

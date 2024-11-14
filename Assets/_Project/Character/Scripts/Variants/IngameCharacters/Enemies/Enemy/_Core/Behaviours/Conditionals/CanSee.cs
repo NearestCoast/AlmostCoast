@@ -16,9 +16,9 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Conditionals
         public override void OnAwake()
         {
             base.OnAwake();
-            fieldOfViewAngle = master.Stat.SightAngle;
-            viewDistance = master.Stat.ViewDistance;
-            soundDistance = master.Stat.SoundDistance;
+            fieldOfViewAngle = master.SightAngle;
+            viewDistance = master.ViewDistance;
+            soundDistance = master.SoundDistance;
             targetCharacter = pathfinder.TargetCharacter;
             
             // Debug.Log("FOV: " + fieldOfViewAngle + ", ViewDistance: " + viewDistance);
