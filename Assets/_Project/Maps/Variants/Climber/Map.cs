@@ -125,9 +125,17 @@ namespace _Project.Maps.Climber
 
                 foreach (var exist in collectionT.GetComponents<Level>()) DestroyImmediate(exist);
 
+                var split = collectionT.name.Split(".");
                 var level = collectionT.gameObject.AddComponent<Level>();
                 level.LevelType = levelType;
-                level.ID = collectionT.name.Split(".")[1];
+                if (split.Length > 1)
+                {
+                    level.ID = collectionT.name.Split(".")[1];
+                }
+                else
+                {
+                    level.ID = "000";
+                }
                 levels.Add(level);
 
                 TraverseCollectionLevel(collectionT, level, out var dingdongDict, out ringdongDict);
@@ -679,7 +687,7 @@ namespace _Project.Maps.Climber
                     else if (split[1].Contains("Ground"))
                     {
                         child.layer = LayerMask.NameToLayer("Ground");
-                        child.AddComponent<BoxCollider>();
+                        child.AddComponent<MeshCollider>();
                         // var rb = child.AddComponent<Rigidbody>();
                         // rb.isKinematic = true;
                         // child.AddComponent<MeshCollider>();
