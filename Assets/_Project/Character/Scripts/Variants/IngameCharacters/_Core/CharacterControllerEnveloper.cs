@@ -56,7 +56,7 @@ namespace _Project.Characters.IngameCharacters.Core
 
         public void Move(Vector3 motion)
         {
-            characterController.Move(motion);
+            if (characterController.enabled) characterController.Move(motion);
         }
         
         private float OriginalHeight { get; set; }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b9e5414b4ef2f4972ae0d4af635a3712
+guid: 0d86a38be75f04e41b4b549261e1890c
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -95,3 +95,11 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Buildings_T/Parts_T/Building
+    Floors_T/floor-tiles-3x3m.fbx
+  uploadId: 679271

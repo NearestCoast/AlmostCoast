@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 #if UNITY_2022_3_OR_NEWER
@@ -89,22 +88,22 @@ public class FlatKitOutline : ScriptableRendererFeature {
         if (_effectMaterial == null) return;
 
         const string depthKeyword = "OUTLINE_USE_DEPTH";
-        SetKeyword(_effectMaterial, depthKeyword, settings.useDepth);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, depthKeyword, settings.useDepth);
 
         const string normalsKeyword = "OUTLINE_USE_NORMALS";
-        SetKeyword(_effectMaterial, normalsKeyword, settings.useNormals);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, normalsKeyword, settings.useNormals);
 
         const string colorKeyword = "OUTLINE_USE_COLOR";
-        SetKeyword(_effectMaterial, colorKeyword, settings.useColor);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, colorKeyword, settings.useColor);
 
         const string outlineOnlyKeyword = "OUTLINE_ONLY";
-        SetKeyword(_effectMaterial, outlineOnlyKeyword, settings.outlineOnly);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, outlineOnlyKeyword, settings.outlineOnly);
 
         const string resolutionInvariantKeyword = "RESOLUTION_INVARIANT_THICKNESS";
-        SetKeyword(_effectMaterial, resolutionInvariantKeyword, settings.resolutionInvariant);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, resolutionInvariantKeyword, settings.resolutionInvariant);
 
         const string fadeWithDistanceKeyword = "OUTLINE_FADE_OUT";
-        SetKeyword(_effectMaterial, fadeWithDistanceKeyword, settings.fadeWithDistance);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, fadeWithDistanceKeyword, settings.fadeWithDistance);
 
         _effectMaterial.SetColor(edgeColor, settings.edgeColor);
         _effectMaterial.SetFloat(thickness, settings.thickness);
@@ -120,18 +119,6 @@ public class FlatKitOutline : ScriptableRendererFeature {
 
         _effectMaterial.SetFloat(fadeRangeStart, settings.fadeRangeStart);
         _effectMaterial.SetFloat(fadeRangeEnd, settings.fadeRangeEnd);
-    }
-
-    private static void SetKeyword(Material material, string keyword, bool enabled) {
-        if (material.shader != null) {
-            material.SetKeyword(new LocalKeyword(material.shader, keyword), enabled);
-        } else {
-            if (enabled) {
-                material.EnableKeyword(keyword);
-            } else {
-                material.DisableKeyword(keyword);
-            }
-        }
     }
 }
 }

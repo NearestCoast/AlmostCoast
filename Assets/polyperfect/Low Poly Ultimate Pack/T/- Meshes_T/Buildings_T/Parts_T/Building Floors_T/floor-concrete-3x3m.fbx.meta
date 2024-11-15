@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 39ad529204b09446fbef0a6eaae8c442
+guid: 0cea09183fb5345988a66019b066d4ca
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -95,3 +95,11 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Buildings_T/Parts_T/Building
+    Floors_T/floor-concrete-3x3m.fbx
+  uploadId: 679271

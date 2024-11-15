@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 14bb975693c5b4275b8494b82840a7ba
+guid: 3c3760f08f2914a789b1dbabec288c61
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -122,3 +122,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/M/- Meshes_M/Medieval_M/tower-castle-round.fbx
+  uploadId: 679271

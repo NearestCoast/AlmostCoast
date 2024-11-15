@@ -99,7 +99,7 @@ public class FlatKitFog : ScriptableRendererFeature {
     private void SetMaterialProperties() {
         if (_effectMaterial == null) return;
 
-        SetKeyword(_effectMaterial, UseDistanceFog, settings.useDistance);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, UseDistanceFog, settings.useDistance);
         if (settings.useDistance) {
             UpdateDistanceLut();
             _effectMaterial.SetFloat(near, settings.near);
@@ -107,7 +107,7 @@ public class FlatKitFog : ScriptableRendererFeature {
             _effectMaterial.SetFloat(distanceFogIntensity, settings.distanceFogIntensity);
         }
 
-        SetKeyword(_effectMaterial, UseHeightFog, settings.useHeight);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, UseHeightFog, settings.useHeight);
         if (settings.useHeight) {
             UpdateHeightLut();
             _effectMaterial.SetFloat(lowWorldY, settings.low);
@@ -116,7 +116,7 @@ public class FlatKitFog : ScriptableRendererFeature {
             _effectMaterial.SetFloat(distanceHeightBlend, settings.distanceHeightBlend);
         }
 
-        SetKeyword(_effectMaterial, CameraRelativePosition, settings.cameraRelativePosition);
+        RendererFeatureUtils.SetKeyword(_effectMaterial, CameraRelativePosition, settings.cameraRelativePosition);
     }
 
     private void UpdateDistanceLut() {
@@ -165,14 +165,6 @@ public class FlatKitFog : ScriptableRendererFeature {
 
         _lutHeight.Apply();
         _effectMaterial.SetTexture(heightLut, _lutHeight);
-    }
-
-    private static void SetKeyword(Material material, string keyword, bool enabled) {
-        if (enabled) {
-            material.EnableKeyword(keyword);
-        } else {
-            material.DisableKeyword(keyword);
-        }
     }
 }
 }

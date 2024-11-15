@@ -59,7 +59,7 @@ namespace _Project.Utils
             // UV 배열 초기화
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
-            Vector2[] uvs = new Vector2[vertices.Length];
+            Vector2[] uvs = new Vector2[vertices.Length]; 
 
             bool hasChanges = false;
 

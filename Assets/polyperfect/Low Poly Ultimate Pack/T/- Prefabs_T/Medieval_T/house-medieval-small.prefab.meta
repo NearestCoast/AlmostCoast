@@ -1,8 +1,15 @@
 fileFormatVersion: 2
-guid: 8d6e6f2a805904fadbf391b8f13eadfe
+guid: fd4ae7da9b37049c4bc2007d8de9efcf
 timeCreated: 1513630587
 licenseType: Store
 NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Prefabs_T/Medieval_T/house-medieval-small.prefab
+  uploadId: 679271

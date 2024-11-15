@@ -8,17 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.PlaneDark
-    second: {fileID: 2100000, guid: 4646a80cdf5564309a1cd5c68b696136, type: 2}
+    second: {fileID: 2100000, guid: 895ba7ae53cef4b7cb4c3f28d99adaed, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.PlaneLight
-    second: {fileID: 2100000, guid: 55643a1d55e68448fbf7bd4f94ebf346, type: 2}
+    second: {fileID: 2100000, guid: bf46bd77128fd48f9931f1a2c9f25e3c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.Wall
-    second: {fileID: 2100000, guid: 8b455f385a319422ab06f9d2c4ef28c7, type: 2}
+    second: {fileID: 2100000, guid: 6eaa94660316643c3b2f7d9885548116, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -31,8 +31,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 

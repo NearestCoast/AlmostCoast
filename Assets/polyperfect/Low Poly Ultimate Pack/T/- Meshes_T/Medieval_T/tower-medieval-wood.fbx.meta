@@ -11,7 +11,7 @@ ModelImporter:
     3300000: //RootNode
     4300000: castle-wood_tower
     4300002: tower-medieval_wood
-    4300004: "\xDF"
+    4300004: "\0\0"
   materials:
     importMaterials: 0
     materialName: 0
@@ -87,3 +87,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Medieval_T/tower-medieval-wood.fbx
+  uploadId: 679271

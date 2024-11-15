@@ -123,7 +123,11 @@ void InitializeInputData_DR(Varyings input, half3 normalTS, out InputData inputD
         GetAbsolutePositionWS(inputData.positionWS),
         inputData.normalWS,
         inputData.viewDirectionWS,
-        input.positionCS.xy);
+        input.positionCS.xy
+#if UNITY_VERSION >= 60000012
+        , 0, 0  // vertexProbeOcclusion, probeOcclusion
+#endif
+        );
 #else
     inputData.bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, inputData.normalWS);
 #endif
@@ -188,7 +192,10 @@ Varyings StylizedPassVertex(Attributes input)
     output.dynamicLightmapUV = input.dynamicLightmapUV.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
 #endif
 
-#if UNITY_VERSION >= 202317
+#if UNITY_VERSION >= 60000010
+    float4 probeOcclusion;
+    OUTPUT_SH4(vertexInput.positionWS, output.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), output.vertexSH, probeOcclusion);
+#elif UNITY_VERSION >= 202317
     OUTPUT_SH4(vertexInput.positionWS, output.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), output.vertexSH);
 #elif UNITY_VERSION >= 202310
     OUTPUT_SH(vertexInput.positionWS, output.normalWS.xyz, GetWorldSpaceNormalizeViewDir(vertexInput.positionWS), output.vertexSH);

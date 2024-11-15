@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Cinemachine;
+
+using Unity.Cinemachine;
 using UnityEngine.EventSystems;
 
 namespace _Project.UI.OptionMenu
@@ -15,10 +16,11 @@ namespace _Project.UI.OptionMenu
         }
 
         [SerializeField] private Axis axis;
-        [SerializeField] private CinemachineFreeLook freeLookCamera;
         [SerializeField] private Slider sensitivitySlider;
         [SerializeField] private float minSpeed = 10;
         [SerializeField] private float maxSpeed = 150;
+
+        [SerializeField] private CinemachineInputAxisController ceCinemachineOrbitalFollow;
         
         private float defaultHorizontalSpeed;
         private float CurrentHorizontalSpeed
@@ -40,17 +42,17 @@ namespace _Project.UI.OptionMenu
             {
                 case Axis.XAxis:
                 {
-                    defaultHorizontalSpeed = freeLookCamera.m_XAxis.m_MaxSpeed;
-
-                    sensitivitySlider.value = freeLookCamera.m_XAxis.m_MaxSpeed / maxSpeed;
+                    // defaultHorizontalSpeed = freeLookCamera.m_XAxis.m_MaxSpeed;
+                    //
+                    // sensitivitySlider.value = freeLookCamera.m_XAxis.m_MaxSpeed / maxSpeed;
                     break;
                 }
                 
                 case Axis.YAxis:
                 {
-                    defaultHorizontalSpeed = freeLookCamera.m_YAxis.m_MaxSpeed;
-
-                    sensitivitySlider.value = freeLookCamera.m_YAxis.m_MaxSpeed / maxSpeed;
+                    // defaultHorizontalSpeed = freeLookCamera.m_YAxis.m_MaxSpeed;
+                    //
+                    // sensitivitySlider.value = freeLookCamera.m_YAxis.m_MaxSpeed / maxSpeed;
                     break;
                 }
             }
@@ -69,13 +71,13 @@ namespace _Project.UI.OptionMenu
             {
                 case Axis.XAxis:
                 {
-                    freeLookCamera.m_XAxis.m_MaxSpeed = CurrentHorizontalSpeed;
+                    // freeLookCamera.m_XAxis.m_MaxSpeed = CurrentHorizontalSpeed;
                     break;
                 }
                 
                 case Axis.YAxis:
                 {
-                    freeLookCamera.m_YAxis.m_MaxSpeed = CurrentHorizontalSpeed;
+                    // freeLookCamera.m_YAxis.m_MaxSpeed = CurrentHorizontalSpeed;
                     break;
                 }
             }

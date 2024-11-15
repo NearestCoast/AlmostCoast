@@ -1,7 +1,14 @@
 fileFormatVersion: 2
-guid: 4fdfa93bcb7dd428ea8ab3ef6ad1fdb8
+guid: ee98fbb23d732194fbf7ea7263be153b
 DefaultImporter:
   externalObjects: {}
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 292803
+  packageName: Low Poly Animated Fantasy Creatures
+  packageVersion: 1.1.5
+  assetPath: Assets/polyperfect/Low Poly Animated Fantasy Creatures/01 DEMO Scene.unity
+  uploadId: 708051

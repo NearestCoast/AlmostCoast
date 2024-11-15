@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f07a4dde5ec224bee83ce74eacf64c30
+guid: 188cc8d90bf554de094e5ab4b8976857
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -96,3 +96,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/M/- Meshes_M/Racing_M/plastic-barriers.fbx
+  uploadId: 679271

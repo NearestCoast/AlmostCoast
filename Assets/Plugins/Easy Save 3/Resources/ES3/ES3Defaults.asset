@@ -30,12 +30,12 @@ MonoBehaviour:
     referenceMode: 2
     serializationDepthLimit: 64
     assemblyNames:
+    - andywiecko.BurstTriangulator
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - AstarPathfindingProject
     - CFXRDemo
     - CFXRRuntime
-    - Cinemachine
     - Drawing
     - KinoBloom.Runtime
     - Kybernetik.Animancer

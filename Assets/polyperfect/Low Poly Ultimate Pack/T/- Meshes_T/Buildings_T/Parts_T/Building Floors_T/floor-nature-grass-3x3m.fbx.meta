@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b33a83153b1704293908409df6ae6448
+guid: 94ea8bf27b0b24bbfb902494bdf55db5
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -95,3 +95,11 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Buildings_T/Parts_T/Building
+    Floors_T/floor-nature-grass-3x3m.fbx
+  uploadId: 679271

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7fdc1ee01b8cd4b7ab79da3d65d67299
+guid: af1bebdaf3e2d4154974b6a71d3ae485
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -104,3 +104,11 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Buildings_T/Parts_T/Building
+    Floors_T/floor-plain-3x3m.fbx
+  uploadId: 679271

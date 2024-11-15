@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f7afa9fe3655c4d8089edbfb68f656c6
+guid: bbfe619082c7343c99ffe5159f345eee
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
@@ -95,3 +95,11 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/T/- Meshes_T/Buildings_T/Parts_T/Building
+    Floors_T/floor-parquet-a-3x3m.fbx
+  uploadId: 679271

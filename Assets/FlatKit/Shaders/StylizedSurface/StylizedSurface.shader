@@ -170,9 +170,15 @@
             #pragma multi_compile_fragment _ _LIGHT_COOKIES
             #pragma multi_compile _ _CLUSTERED_RENDERING
             #endif
-            #if UNITY_VERSION >= 202220
+            #if UNITY_VERSION >= 202220 && UNITY_VERSION < 600000
             #pragma multi_compile _ _FORWARD_PLUS
             #pragma multi_compile_fragment _ _WRITE_RENDERING_LAYERS
+            #endif
+            #if UNITY_VERSION >= 600000
+            #pragma multi_compile _ _FORWARD_PLUS
+            #include_with_pragmas "Packages/com.unity.render-pipelines.core/ShaderLibrary/FoveatedRenderingKeywords.hlsl"
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ProbeVolumeVariants.hlsl"
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
             #endif
 
             // -------------------------------------
@@ -228,7 +234,119 @@
 
         Pass
         {
+        	// Renderer Feature outline pass.
             Name "Outline"
+            Tags{"LightMode" = "Outline"}
+
+            Cull Front
+
+            HLSLPROGRAM
+            #include "LibraryUrp/StylizedInput.hlsl"
+
+            #pragma vertex VertexProgram
+            #pragma fragment FragmentProgram
+
+            #pragma multi_compile _ DR_OUTLINE_ON
+            #pragma multi_compile _ DR_OUTLINE_SMOOTH_NORMALS
+            #pragma multi_compile __ _OUTLINESPACE_SCREEN _OUTLINESPACE_OBJECT
+            #pragma multi_compile_fog
+
+			/* start CurvedWorld */
+			//#define CURVEDWORLD_BEND_TYPE_CLASSICRUNNER_X_POSITIVE
+			//#define CURVEDWORLD_BEND_ID_1
+			//#pragma shader_feature_local CURVEDWORLD_DISABLED_ON
+			//#pragma shader_feature_local CURVEDWORLD_NORMAL_TRANSFORMATION_ON
+			//#include "Assets/Amazing Assets/Curved World/Shaders/Core/CurvedWorldTransform.cginc"
+			/* end CurvedWorld */
+
+            struct VertexInput
+            {
+                float4 position : POSITION;
+                float3 normal : NORMAL;
+            	#if defined(DR_OUTLINE_SMOOTH_NORMALS)
+                float4 uv2 : TEXCOORD2;
+                #endif
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct VertexOutput
+            {
+                float4 position : SV_POSITION;
+                float fogCoord : TEXCOORD1;
+
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+                UNITY_VERTEX_OUTPUT_STEREO
+            };
+
+            float4 ObjectToClipPos(float4 pos)
+            {
+                return mul(UNITY_MATRIX_VP, mul(UNITY_MATRIX_M, float4(pos.xyz, 1)));
+            }
+
+            float4 ObjectToClipDir(float3 dir)
+            {
+                return mul(UNITY_MATRIX_VP, mul(UNITY_MATRIX_M, float4(dir.xyz, 0)));
+            }
+
+            VertexOutput VertexProgram(VertexInput v)
+            {
+                #if defined(CURVEDWORLD_IS_INSTALLED) && !defined(CURVEDWORLD_DISABLED_ON)
+                    CURVEDWORLD_TRANSFORM_VERTEX(v.position)
+                #endif
+
+                UNITY_SETUP_INSTANCE_ID(v);
+
+                VertexOutput o = (VertexOutput)0;
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+
+	            #if defined(DR_OUTLINE_ON)
+            		#if defined(DR_OUTLINE_SMOOTH_NORMALS)
+            			float3 objectScale = abs(UNITY_MATRIX_M[0].xyz) + abs(UNITY_MATRIX_M[1].xyz) + abs(UNITY_MATRIX_M[2].xyz);
+            			v.normal = v.uv2.xyz / objectScale;
+            		#endif
+            	
+            		#if defined(_OUTLINESPACE_OBJECT)
+            			float3 offset = v.normal * _OutlineWidth * 0.01;
+		                float4 clipPosition = ObjectToClipPos(v.position * _OutlineScale + float4(offset, 0)); 
+					#else
+		                float4 clipPosition = ObjectToClipPos(v.position * _OutlineScale);
+		                const float3 clipNormal = ObjectToClipDir(v.normal).xyz;
+						const float2 aspectRatio = float2(_ScreenParams.x / _ScreenParams.y, 1);
+		                const half cameraDistanceImpact = lerp(clipPosition.w, 4.0, _CameraDistanceImpact);
+		                const float2 offset = normalize(clipNormal.xy) / aspectRatio * _OutlineWidth * cameraDistanceImpact * 0.005;
+		                clipPosition.xy += offset;
+            		#endif
+
+            		// Depth offset
+		            {
+			            const half outlineDepthOffset = _OutlineDepthOffset * .1;
+                    	#if UNITY_REVERSED_Z
+                    	clipPosition.z -= outlineDepthOffset;
+                    	#else
+                    	clipPosition.z += outlineDepthOffset * (1.0 - UNITY_NEAR_CLIP_VALUE);
+                    	#endif
+		            }
+
+	                o.position = clipPosition;
+	                o.fogCoord = ComputeFogFactor(o.position.z);
+                #endif
+            	
+                return o;
+            }
+
+            half4 FragmentProgram(VertexOutput i) : SV_TARGET
+            {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+                half4 color = _OutlineColor;
+                color.rgb = MixFog(color.rgb, i.fogCoord);
+                return color;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Outline (Legacy)"
             Tags{"LightMode" = "SRPDefaultUnlit"}
 
             Cull Front

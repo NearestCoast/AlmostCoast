@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3197ccdcc379d49ae9ddd420182c3551
+guid: 39ed58536bef8448da198606a9270b04
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -119,3 +119,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 54733
+  packageName: Low Poly Ultimate Pack
+  packageVersion: 8.5.5
+  assetPath: Assets/polyperfect/Low Poly Ultimate Pack/M/- Meshes_M/Medieval_M/marketplace-stand-simple.fbx
+  uploadId: 679271
