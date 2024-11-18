@@ -181,8 +181,6 @@ namespace _Project.Maps.Climber
                 }
             }
 
-
-
             // Find RollingCube's Level And Push To It
             foreach (var rollingCube in rollingCubeDict.Values)
             {
@@ -204,8 +202,14 @@ namespace _Project.Maps.Climber
                     dingdongDoor.Ringdongs = value;
                 }
             }
+            
+            foreach (var level in levels)
+            {
+                var uvScaler = level.gameObject.AddComponent<UVScaler>();
+                uvScaler.ScaleUVsToTexelDensity();
+            }
 
-
+            return;
             void TraverseCollectionLevel(Transform T, Level level, out Dictionary<string, List<Dingdong>> dingdongDict, out Dictionary<string, List<Dingdong>> ringdongDict)
             {
                 dingdongDict = new Dictionary<string, List<Dingdong>>();
@@ -467,7 +471,7 @@ namespace _Project.Maps.Climber
                     else if (split[1].Contains("Wall"))
                     {
                         child.layer = LayerMask.NameToLayer("Wall");
-                        var boxCollider = child.AddComponent<BoxCollider>();
+                        var meshCollider = child.AddComponent<MeshCollider>();
                         var rb = child.AddComponent<Rigidbody>();
                         rb.isKinematic = true;
                         // child.gameObject.SetActive(false);
@@ -523,6 +527,10 @@ namespace _Project.Maps.Climber
                         if (abilityName.Contains("Attack"))
                         {
                             ability.TargetState = GameObject.FindObjectOfType<Attack_01>(true);
+                        }
+                        else if (abilityName.Contains("Jump"))
+                        {
+                            ability.TargetState = GameObject.FindObjectOfType<JumpState>(true);
                         }
                         else if (abilityName.Contains("SlideDash"))
                         {
@@ -717,8 +725,6 @@ namespace _Project.Maps.Climber
                     spotLight.ContainerSwitch = spotLightSwitch;
                 }
             }
-
-
         }
 
         [Button]

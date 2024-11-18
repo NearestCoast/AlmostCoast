@@ -31,11 +31,12 @@ namespace _Project.Utils
 
                     Mesh mesh = meshFilter.sharedMesh;
 
-                    if (ProcessMeshUVs(mesh))
-                    {
-                        SaveMeshAsAsset(mesh, meshFilter.name, meshFilter);
-                        processedCount++;
-                    }
+                    // UV 스케일링이 필요 없는 경우 건너뜀
+                    if (!ProcessMeshUVs(mesh))
+                        continue;
+
+                    SaveMeshAsAsset(mesh, meshFilter.name, meshFilter);
+                    processedCount++;
 
                     // 주기적으로 작업을 나누어 에디터의 응답성을 유지
                     if (i % 10 == 0)
@@ -56,7 +57,6 @@ namespace _Project.Utils
 
         private bool ProcessMeshUVs(Mesh mesh)
         {
-            // UV 배열 초기화
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
             Vector2[] uvs = new Vector2[vertices.Length]; 
@@ -70,7 +70,7 @@ namespace _Project.Utils
                 Vector3 normal = normals[i];
                 Vector2 newUV = CalculateUV(localPos, normal);
 
-                // 기존 UV와 비교하여 변경이 있는 경우
+                // 기존 UV와 비교하여 변경 여부 확인
                 if (mesh.uv.Length > i && mesh.uv[i] != newUV)
                 {
                     hasChanges = true;
@@ -81,7 +81,7 @@ namespace _Project.Utils
 
             if (!hasChanges)
             {
-                // 변경 사항이 없으면 처리하지 않음
+                // UV에 변경 사항이 없으면 스킵
                 return false;
             }
 

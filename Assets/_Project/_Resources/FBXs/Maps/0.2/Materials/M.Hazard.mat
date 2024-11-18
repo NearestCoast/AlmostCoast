@@ -226,11 +226,11 @@ Material:
     - Vector2_2818E70A: {r: 0.5, g: 0.5, b: 0, a: 0}
     - Vector2_EF5B598A: {r: 1, g: 1, b: 0, a: 0}
     - Vector2_e73567ad58ea471b959103dee10b2647: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _BaseColor: {r: 0.7830189, g: 0.35826808, b: 0.5364852, a: 1}
+    - _BaseColor: {r: 0.35686272, g: 0.78431374, b: 0.38152307, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorDim: {r: 0.49056602, g: 0.20594516, b: 0.36011487, a: 1}
+    - _ColorDim: {r: 0.20518869, g: 0.5, b: 0.22412153, a: 1}
     - _ColorDimCurve: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
-    - _ColorDimExtra: {r: 0.33962262, g: 0.15218937, b: 0.2311086, a: 1}
+    - _ColorDimExtra: {r: 0.13243146, g: 0.3018868, b: 0.14331391, a: 1}
     - _ColorDimSteps: {r: 0.53987205, g: 0.48206657, b: 0.6509434, a: 1}
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
     - _DetailMapColor: {r: 1, g: 1, b: 1, a: 1}
@@ -242,3 +242,4 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _UnityShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

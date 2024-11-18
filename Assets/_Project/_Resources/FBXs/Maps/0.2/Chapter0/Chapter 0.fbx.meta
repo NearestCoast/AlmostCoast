@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M.Hazard
+    second: {fileID: 2100000, guid: d9d8a045347364ec485c14bcac86f387, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M.PlaneDark
     second: {fileID: 2100000, guid: 895ba7ae53cef4b7cb4c3f28d99adaed, type: 2}
   - first:
@@ -19,6 +24,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M.Wall
     second: {fileID: 2100000, guid: 6eaa94660316643c3b2f7d9885548116, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M.Wall2
+    second: {fileID: 2100000, guid: d9d45a0a52ca64948b998861d14c09db, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +55,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1

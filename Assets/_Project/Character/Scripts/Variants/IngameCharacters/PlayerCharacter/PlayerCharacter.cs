@@ -170,7 +170,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         }
 
         private void OnGUI()
-        {
+        {return;
             var i = 0;
             guiStyle.fontSize = (int)(Screen.height * 0.02f);
             guiStyle.normal.textColor = Color.gray;
