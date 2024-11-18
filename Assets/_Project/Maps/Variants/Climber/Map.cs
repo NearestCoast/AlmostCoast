@@ -532,10 +532,17 @@ namespace _Project.Maps.Climber
                         var abilityName = split[1].Split(".")[1];
                         var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
                         
-                        if (abilityName.Contains("Attack"))
+                        if (abilityName.Contains("Attack_01"))
                         {
-                            
                             ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_01>(true);
+                        }
+                        else if (abilityName.Contains("Attack_02"))
+                        {
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_02>(true);
+                        }
+                        else if (abilityName.Contains("Attack_03"))
+                        {
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_03>(true);
                         }
                         else if (abilityName.Contains("Jump"))
                         {
