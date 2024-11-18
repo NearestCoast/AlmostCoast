@@ -1,12 +1,11 @@
 using System.Collections.Generic;
+using System.Linq; // 활성화 필터링을 위해 필요
 using _Project.Characters._Core.States.AnimationStates;
-using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 namespace _Project.InputSystem
 {
@@ -82,6 +81,12 @@ namespace _Project.InputSystem
 
         [SerializeField] private float demandedDuration = 0;
 
+        // 활성화된 AttackState만 반환하는 메서드
+        private List<AttackState> GetActiveAttackStates()
+        {
+            return attackStates.Where(state => state.gameObject.activeInHierarchy).ToList();
+        }
+
         // 공격 입력이 시작될 때 호출되는 함수
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
@@ -123,15 +128,17 @@ namespace _Project.InputSystem
         private void ExecuteAttack()
         {
             if (attackTermTime < attackTerm) return;
-            if (attackStates.Count == 0) return;
 
-            var attackState = attackStates[currentAttackIndex % attackStates.Count];
+            var activeAttackStates = GetActiveAttackStates(); // 활성화된 공격 상태 필터링
+            if (activeAttackStates.Count == 0) return;
+
+            var attackState = activeAttackStates[currentAttackIndex % activeAttackStates.Count];
             AnimationStateConductor.TrySetActionState(attackState);
 
             var currentAttackState = AnimationStateConductor.CurrentActionState as AttackState;
             if (currentAttackState == attackState)
             {
-                if (currentAttackIndex % attackStates.Count == attackStates.Count - 1)
+                if (currentAttackIndex % activeAttackStates.Count == activeAttackStates.Count - 1)
                 {
                     attackTermTime = 0;
                 }

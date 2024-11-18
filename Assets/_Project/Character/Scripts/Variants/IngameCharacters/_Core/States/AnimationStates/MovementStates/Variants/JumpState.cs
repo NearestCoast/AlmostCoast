@@ -245,7 +245,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         public void ResetJumpButton()
         {
-            MoveParams.IsJumpButtonPerforming = false; 
+            if (gameObject.activeSelf) MoveParams.IsJumpButtonPerforming = false; 
         }
     }
 

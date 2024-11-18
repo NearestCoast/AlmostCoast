@@ -22,8 +22,8 @@ namespace _Project.Maps.Climber.Objects.Collectables
             base.Work();
             Debug.Log("Player Collected " + TargetState.name);
             TargetState.gameObject.SetActive(true);
-            FindObjectOfType<AudioManager>().SetClip(audioSource.clip);
-            FindObjectOfType<AudioManager>().Play();
+            FindAnyObjectByType<AudioManager>().SetClip(audioSource.clip);
+            FindAnyObjectByType<AudioManager>().Play();
             Time.timeScale = 0;
             
             DestroyAfterDelay().Forget();

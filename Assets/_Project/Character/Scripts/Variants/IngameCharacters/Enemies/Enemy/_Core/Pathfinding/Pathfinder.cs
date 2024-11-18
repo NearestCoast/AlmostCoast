@@ -16,7 +16,17 @@ public class Pathfinder : MonoBehaviour
     private PlayerCharacter targetCharacter;
     public PlayerCharacter TargetCharacter => targetCharacter;
 
-    public Vector3 NextNodePoint { get; set; }
+    private Vector3 nextNodePoint;
+
+    public Vector3 NextNodePoint
+    {
+        get => nextNodePoint;
+        set
+        {
+            nextNodePoint = value;
+            // Debug.Log("Come");
+        }
+    }
     public float DistanceToTargetCharacter => Vector3.Distance(transform.position, TargetCharacter.transform.position);
     public float DistanceToTarget => Vector3.Distance(transform.position, Target.position);
     public float FlattenedDistanceToTarget => Vector3.Distance(transform.position.XYZ3toX0Z3(), Target.position.XYZ3toX0Z3());

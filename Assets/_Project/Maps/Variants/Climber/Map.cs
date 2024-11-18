@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates.MeleeAttacks;
@@ -275,7 +276,13 @@ namespace _Project.Maps.Climber
                     if (split[1].Contains("Bound"))
                     {
                         child.layer = LayerMask.NameToLayer("Bound");
-                        child.gameObject.SetActive(false);
+                        var boxCollider = child.AddComponent<BoxCollider>();
+                        boxCollider.isTrigger = true;
+                        var bound = child.AddComponent<Bound>();
+                        bound.Level = level;
+                        child.GetComponent<MeshRenderer>().enabled = false;
+                        
+                        // child.gameObject.SetActive(false);
                     }
 
                     if (split[1].Contains("Ceiling"))
@@ -523,22 +530,28 @@ namespace _Project.Maps.Climber
                         // var sphereCollider = ability.gameObject.AddComponent<SphereCollider>();
                         
                         var abilityName = split[1].Split(".")[1];
+                        var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
                         
                         if (abilityName.Contains("Attack"))
                         {
-                            ability.TargetState = GameObject.FindObjectOfType<Attack_01>(true);
+                            
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_01>(true);
                         }
                         else if (abilityName.Contains("Jump"))
                         {
-                            ability.TargetState = GameObject.FindObjectOfType<JumpState>(true);
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<JumpState>(true);
                         }
                         else if (abilityName.Contains("SlideDash"))
                         {
-                            ability.TargetState = GameObject.FindObjectOfType<SlideDashState>(true);
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<SlideDashState>(true);
                         }
                         else if (abilityName.Contains("GroundPounding"))
                         {
-                            ability.TargetState = GameObject.FindObjectOfType<GroundPoundingState>(true);
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<GroundPoundingState>(true);
+                        }
+                        else if (abilityName.Contains("Climb"))
+                        {
+                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<ClimbState>(true);
                         }
                     }
                     else if (split[1].Contains("SpotLight"))

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Project.Utils
@@ -199,6 +200,65 @@ namespace _Project.Utils
             }
 
             return null;
+        }
+        
+        public static T GetComponentInChildrenOfType<T>(this Transform parent, bool includeInactive = false) where T : Component
+        {
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(parent);
+
+            while (queue.Count > 0)
+            {
+                Transform current = queue.Dequeue();
+
+                // 비활성화된 오브젝트를 포함하지 않으려면 건너뜀
+                if (!includeInactive && !current.gameObject.activeSelf)
+                {
+                    continue;
+                }
+
+                // 현재 Transform에서 T 컴포넌트 검색
+                T component = current.GetComponent<T>();
+                if (component != null)
+                {
+                    return component; // 조건에 맞는 첫 번째 오브젝트 반환
+                }
+
+                // 자식 Transform들을 큐에 추가
+                foreach (Transform child in current)
+                {
+                    queue.Enqueue(child);
+                }
+            }
+
+            return null; // 조건에 맞는 오브젝트가 없을 경우 null 반환
+        }
+        
+        public static List<T> GetComponentsInChildrenOfType<T>(this Transform parent) where T : Component
+        {
+            List<T> results = new List<T>();
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(parent);
+
+            while (queue.Count > 0)
+            {
+                Transform current = queue.Dequeue();
+
+                // 현재 Transform에서 T 컴포넌트 검색
+                T component = current.GetComponent<T>();
+                if (component != null)
+                {
+                    results.Add(component);
+                }
+
+                // 자식 Transform들을 큐에 추가
+                foreach (Transform child in current)
+                {
+                    queue.Enqueue(child);
+                }
+            }
+
+            return results;
         }
         
         public static T GetComponentInDirectChildren<T>(this GameObject parent) where T : Component

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Project.Character.IngameCharacters.Enemies;
 using _Project.Maps.Climber.Objects;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace _Project.Maps.Climber
         [SerializeField] private List<MovingPlatform> movingPlatforms = new List<MovingPlatform>();
         [SerializeField] private List<DingdongDoor> dingdongDoors = new List<DingdongDoor>();
         [SerializeField] private List<RollingCube> rollingCubes = new List<RollingCube>();
+        [SerializeField] private List<Enemy> enemies = new List<Enemy>();
         [SerializeField] private SavePoint savePoint;
 
         public Type LevelType
@@ -46,6 +48,7 @@ namespace _Project.Maps.Climber
         public List<MovingPlatform> MovingPlatforms => movingPlatforms;
         public List<DingdongDoor> DingdongDoors => dingdongDoors;
         public List<RollingCube> RollingCubes => rollingCubes;
+        public List<Enemy> Enemies => enemies;
 
         public void StartLevel()
         {
@@ -65,6 +68,11 @@ namespace _Project.Maps.Climber
             foreach (var rollingCube in rollingCubes)
             {
                 rollingCube.StartWorking();
+            }
+            
+            foreach (var enemy in enemies)
+            {
+                enemy.StartBehaviour();
             }
         }
         
