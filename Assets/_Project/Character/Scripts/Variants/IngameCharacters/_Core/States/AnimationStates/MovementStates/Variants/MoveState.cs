@@ -49,6 +49,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     StateType.AirDash => true,
                     StateType.SkillJumpUp => true,
                     StateType.GroundPounding => true,
+                    StateType.Hang => true,
                     StateType.Climb => true,
                     StateType.SlideDash => true,
                     

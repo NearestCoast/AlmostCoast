@@ -105,9 +105,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             get
             {
                 if (MoveParams.IsUnderCrowdControl) return true;
-                var nextStateType = NextState.Type;
 
-                switch (nextStateType)
+                switch (NextState.Type)
                 {
                     case StateType.Jump:
                     {
@@ -134,13 +133,18 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                         return StateTime > 0.2f;
                     }
                     
+                    case StateType.Hang:
+                    {
+                        return IsLeapEnd;
+                    }
+                    
                     case StateType.Climb:
                     {
                         return StateTime > 0.2f;
                     }
                 }
                 
-                var value = nextStateType switch
+                var value = NextState.Type switch
                 {
                     StateType.SkillJumpUp => true,
                     StateType.AirDash => true,

@@ -62,6 +62,7 @@ namespace _Project.Characters.IngameCharacters.Core
             // else VerticalParams.IsLeftLedgeMovable = false; 
             
             VerticalParams.IsHeadOpen = GetIsHeadOpen();
+            VerticalParams.IsEdgeOfPlatform = GetIsEdgeOfPlatform();
         }
 
         private bool GetIsHeadOpen()
@@ -160,6 +161,38 @@ namespace _Project.Characters.IngameCharacters.Core
             // HitDetectLeftMovable = Physics.BoxCast(BoxCastRayLeftMovable.origin, HalfExtents , BoxCastRayLeftMovable.direction, transform.rotation, characterController.skinWidth);
             // return HitDetectLeftMovable;
         }
+
+        [SerializeField] private float edgeCheckOffset = 0.25f;
+        public bool GetIsEdgeOfPlatform()
+        {
+            if (!VerticalParams.IsWalled || !VerticalParams.IsHeadOpen) return false;
+
+            // 캐릭터 최상단에서 Ray를 쏠 시작 위치
+            Vector3 topOrigin = transform.position + Vector3.up * (characterControllerEnveloper.Height);
+
+            // 최상단에서 Ray를 쏠 오프셋 위치
+            Vector3 offsetOrigin = topOrigin + Vector3.up * edgeCheckOffset;
+
+            // Ray 방향
+            Vector3 rayDirection = transform.forward;
+
+            // Ray 길이
+            float rayLength = characterControllerEnveloper.Radius * 2;
+
+            // Debug용 Ray 시각화
+            Debug.DrawRay(topOrigin, rayDirection * rayLength, Color.red);
+            Debug.DrawRay(offsetOrigin, rayDirection * rayLength, Color.blue);
+
+            // 캐릭터 최상단에서 forward 방향 Ray
+            bool isTopHit = Physics.Raycast(topOrigin, rayDirection, rayLength, surfaceLayers);
+
+            // 캐릭터 최상단 + offset 위치에서 forward 방향 Ray
+            bool isOffsetHit = Physics.Raycast(offsetOrigin, rayDirection, rayLength, surfaceLayers);
+
+            // 조건을 만족할 때 true 반환
+            return isTopHit && !isOffsetHit;
+        }
+
         
         private void OnDrawGizmos()
         {

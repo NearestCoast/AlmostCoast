@@ -180,7 +180,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel(CurrentSpotLight?.ToString());
             // DrawLabel(CurrentBrightnessState.Type + " " + (int)CurrentBrightnessState.StateTime);
             // DrawLabel(CurrentLockState.Type + " " + (int)CurrentLockState.StateTime);
-            // DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
+            DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
+            // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
             // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
             // DrawLabel("GroundParams.IsGroundedOnCharacter : " + GroundParams.IsGroundedOnCharacter);
             // DrawLabel("MoveParams.HasMovingPlatform : " + MoveParams.HasMovingPlatform);

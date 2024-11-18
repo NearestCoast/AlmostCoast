@@ -29,6 +29,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             CrouchEnd,
             Roll,
             
+            Hang,
+            HangJump,
             Climb,
             ClimbJump,
             Jump,

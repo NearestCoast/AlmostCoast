@@ -37,6 +37,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public  bool IsSkillJumpUpInterruptible { get; set; }
         public  float SkillJumpUpHeight { get; set; }
         
+        public  bool IsClimbButtonPressed { get; set; }
         public  bool IsClimbing { get; private set; }
         public  bool IsClimbable => ClimbStaminaTime > 0;
         public  float ClimbStaminaTime { get; private set; }
@@ -98,7 +99,14 @@ namespace _Project.Characters.IngameCharacters.Core
         public void ResetJumpCount() => JumpCount = 1;
         public void DecreaseJumpCount() => JumpCount -= 1;
 
-        public  void ResetWallJumpCount() => WallJumpCount = 3;
+        [SerializeField] private int maxWallJumpCount = 1;
+        public int MaxWallJumpCount
+        {
+            get => maxWallJumpCount;
+            set => maxWallJumpCount = value;
+        }
+        
+        public  void ResetWallJumpCount() => WallJumpCount = maxWallJumpCount;
         public  void DecreaseWallJumpCount() => WallJumpCount -= 1;
 
         public  void ResetKickCount() => KickCount = 1;
