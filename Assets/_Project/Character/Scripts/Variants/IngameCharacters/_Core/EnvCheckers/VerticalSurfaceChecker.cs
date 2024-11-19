@@ -162,13 +162,19 @@ namespace _Project.Characters.IngameCharacters.Core
             // return HitDetectLeftMovable;
         }
 
+        [SerializeField] private float topOriginOffset = 1;
         [SerializeField] private float edgeCheckOffset = 0.25f;
+        
         public bool GetIsEdgeOfPlatform()
         {
-            if (!VerticalParams.IsWalled || !VerticalParams.IsHeadOpen) return false;
+            // Edge까지의 거리를 초기화 (-1은 충돌이 없음을 나타냄)
+            var edgeDistance = -1f;
+
+            if (!VerticalParams.IsWalled || !VerticalParams.IsHeadOpen)
+                return false;
 
             // 캐릭터 최상단에서 Ray를 쏠 시작 위치
-            Vector3 topOrigin = transform.position + Vector3.up * (characterControllerEnveloper.Height);
+            Vector3 topOrigin = transform.position + Vector3.up * (characterControllerEnveloper.Height - topOriginOffset);
 
             // 최상단에서 Ray를 쏠 오프셋 위치
             Vector3 offsetOrigin = topOrigin + Vector3.up * edgeCheckOffset;
@@ -183,15 +189,28 @@ namespace _Project.Characters.IngameCharacters.Core
             Debug.DrawRay(topOrigin, rayDirection * rayLength, Color.red);
             Debug.DrawRay(offsetOrigin, rayDirection * rayLength, Color.blue);
 
+            // Raycast hit 정보를 저장할 변수
+            RaycastHit topHitInfo;
+            RaycastHit offsetHitInfo;
+
             // 캐릭터 최상단에서 forward 방향 Ray
-            bool isTopHit = Physics.Raycast(topOrigin, rayDirection, rayLength, surfaceLayers);
+            bool isTopHit = Physics.Raycast(topOrigin, rayDirection, out topHitInfo, rayLength, surfaceLayers);
 
             // 캐릭터 최상단 + offset 위치에서 forward 방향 Ray
-            bool isOffsetHit = Physics.Raycast(offsetOrigin, rayDirection, rayLength, surfaceLayers);
+            bool isOffsetHit = Physics.Raycast(offsetOrigin, rayDirection, out offsetHitInfo, rayLength, surfaceLayers);
 
-            // 조건을 만족할 때 true 반환
+            // Edge 판정 조건을 만족하는 경우
+            if (isTopHit && !isOffsetHit)
+            {
+                // 충돌한 경우 거리를 저장
+                edgeDistance = topHitInfo.distance;
+                VerticalParams.DistanceToTopEdge = edgeDistance;
+            }
+
+            // 기존 조건 반환
             return isTopHit && !isOffsetHit;
         }
+
 
         
         private void OnDrawGizmos()

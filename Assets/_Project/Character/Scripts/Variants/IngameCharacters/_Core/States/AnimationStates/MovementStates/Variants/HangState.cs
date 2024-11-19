@@ -33,6 +33,19 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
         }
 
+        [SerializeField] private float maxTime = 0.1f;
+        [SerializeField] private float distanceOffset = 0.2f;
+        protected override Vector3 GetVelocity()
+        {
+            if (StateTime < maxTime)
+            {
+                var value = Vector3.up * (VerticalParams.DistanceToTopEdge + distanceOffset) / maxTime;
+                return value * Time.deltaTime;
+            }
+            
+            return Vector3.zero;
+        }
+
         protected override Quaternion GetRotation()
         {
             // WallNormal이 유효하지 않을 경우 현재 회전 유지

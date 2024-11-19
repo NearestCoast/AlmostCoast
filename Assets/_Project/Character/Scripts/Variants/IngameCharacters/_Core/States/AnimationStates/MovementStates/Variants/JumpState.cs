@@ -162,6 +162,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         public override void OnEnterState()
         {
             base.OnEnterState();
+            
             if (MoveParams.IsWallJumpable) MoveParams.SetIsWallJumping();
             
             WallNormalSnap = (MoveParams.IsWallJumpable) ? VerticalParams.WallNormal.Value : Vector3.zero;
@@ -283,7 +284,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             set
             {
                 isLeapEnd = value;
-                if (isLeapEnd) MoveParams.EndLeaping();
+                
+                if (isLeapEnd)
+                {
+                    MoveParams.EndLeaping();
+                    GroundParams.IsGrounded = false;
+                }
             }
         }
 

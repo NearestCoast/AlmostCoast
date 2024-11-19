@@ -7,6 +7,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public bool IsWalled {get;set;}
         public bool PrevIsWalled {get;set;}
         public bool IsEdgeOfPlatform { get; set; }
+        public float DistanceToTopEdge { get; set; }
         public bool IsSightOpened {get;set;}
         public bool IsRightSightOpened {get;set;}
         public bool IsLeftSightOpened {get;set;}
