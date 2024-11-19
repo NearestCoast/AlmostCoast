@@ -19,7 +19,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public  Vector3 Gravity { get; set; }
         public  float GravityTime { get; set; }
 
-        public  bool IsJumpButtonPerforming { get; set; }
+        public  bool IsJumpButtonPerforming { get; private set; }
         public  int JumpCount { get; private set; }
         public  int WallJumpCount { get; private set; }
         public  int KickCount { get; private set; }
@@ -37,7 +37,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public  bool IsSkillJumpUpInterruptible { get; set; }
         public  float SkillJumpUpHeight { get; set; }
         
-        public  bool IsClimbButtonPressed { get; set; }
+        public  bool IsClimbButtonPressed { get; private set; }
         public  bool IsClimbing { get; private set; }
         public  bool IsClimbable => ClimbStaminaTime > 0;
         public  float ClimbStaminaTime { get; private set; }
@@ -117,6 +117,10 @@ namespace _Project.Characters.IngameCharacters.Core
 
         public  void StartClimbing() => IsClimbing = true;
         public  void EndClimbing() => IsClimbing = false;
+        public void SetClimbingButtonPressed() => IsClimbButtonPressed = true;
+        public void ResetClimbingButtonPressed() => IsClimbButtonPressed = false;
+        public void SetIsJumpButtonPerforming() => IsJumpButtonPerforming = true;
+        public void ResetIsJumpButtonPerforming() => IsJumpButtonPerforming = false;
 
         public  void ResetClimbStamina() => ClimbStaminaTime = 4;
         public  void DecreaseClimbStaminaPerFrame() => ClimbStaminaTime -= Time.deltaTime;

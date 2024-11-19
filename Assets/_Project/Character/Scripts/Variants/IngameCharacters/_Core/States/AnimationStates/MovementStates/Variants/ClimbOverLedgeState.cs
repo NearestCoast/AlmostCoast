@@ -56,6 +56,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.ResetClimbStamina();
             MoveParams.ResetKickCount();
             MoveParams.ResetWallJumpCount();
+            
+            MoveParams.ResetClimbingButtonPressed();
         }
 
         public override void OnExitState()

@@ -83,7 +83,6 @@ namespace _Project.Character.Scripts.Enemies.PlatformingEnemies.AttackStates
             
             MoveParams.StartJumping();
             MoveParams.EndClimbing();
-            MoveParams.IsJumpButtonPerforming = true;   
         }
 
         public override void OnExitState()
@@ -91,11 +90,6 @@ namespace _Project.Character.Scripts.Enemies.PlatformingEnemies.AttackStates
             base.OnExitState();
             MoveParams.EndJumping();
             MoveParams.Gravity = Vector3.zero;
-        }
-
-        public void ResetJumpButton()
-        {
-            MoveParams.IsJumpButtonPerforming = false;
         }
         
         [SerializeField, TitleGroup("Velocity")]

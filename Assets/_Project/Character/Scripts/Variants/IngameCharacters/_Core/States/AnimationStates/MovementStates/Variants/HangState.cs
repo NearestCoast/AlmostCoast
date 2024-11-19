@@ -5,12 +5,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
     public class HangState : BaseLayerClipMovementState
     {
         public override StateType Type => StateType.Hang;
+        [SerializeField] private VerticalSurfaceChecker checker;
 
         public override bool CanEnterState
         {
             get
             {
-                return !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform;
+                VerticalParams.IsEdgeOfPlatform = checker.GetIsEdgeOfPlatform();
+                return MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform;
             }
         }
 
@@ -18,10 +20,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             get
             {
-                if (NextState.Type == StateType.HangJump)
+                if (!MoveParams.IsClimbable) return true;
+
+                switch (NextState.Type)
                 {
-                    return StateTime > 0.2f;
+                    case StateType.HangJump : return StateTime > 0.2f;
+                    case StateType.ClimbOverLedge : return StateTime > 0.2f;
                 }
+                
                 var value = NextState.Type switch
                 {
                     StateType.Climb => true,
@@ -36,7 +42,19 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         public override void OnEnterState()
         {
             base.OnEnterState();
+            MoveParams.StartClimbing();
+            
+            MoveParams.ResetWallJumping();
+            MoveParams.ResetHeadJumping();
+            MoveParams.ResetAcceleration();
+            
             IsJustEntered = true;
+        }
+
+        public override void OnExitState()
+        {
+            base.OnExitState();
+            MoveParams.EndClimbing();
         }
 
         // [SerializeField] private float maxTime = 0.1f;
@@ -44,6 +62,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         private bool IsJustEntered { get; set; }
         protected override Vector3 GetVelocity()
         {
+            MoveParams.DecreaseClimbStaminaPerFrame();
+            
             if (IsJustEntered)
             {
                 IsJustEntered = false;

@@ -140,7 +140,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
                     case StateType.Hang:
                     {
-                        return IsLeapEnd;
+                        return StateTime > 0.2f;
                     }
 
                     case StateType.Climb:
@@ -238,7 +238,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
             MoveParams.StartJumping();
             MoveParams.EndClimbing();
-            MoveParams.IsJumpButtonPerforming = true;
 
             if (MoveParams.IsHeadJumping)
             {
@@ -256,11 +255,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.ResetWallJumping();
             MoveParams.ResetHeadJumping();
             MoveParams.Gravity = Vector3.zero;
-        }
-
-        public void ResetJumpButton()
-        {
-            if (gameObject.activeSelf) MoveParams.IsJumpButtonPerforming = false;
         }
     }
 

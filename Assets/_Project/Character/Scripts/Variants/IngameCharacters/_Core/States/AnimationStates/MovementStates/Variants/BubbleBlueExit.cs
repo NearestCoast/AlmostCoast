@@ -47,8 +47,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             IsLeapEnd = false;
             IsJumpEnd = false;
             movementStateValues.CurrentHeight = maxJumpHeight;
-            
-            MoveParams.IsJumpButtonPerforming = true;   
         }
 
         public override void OnExitState()

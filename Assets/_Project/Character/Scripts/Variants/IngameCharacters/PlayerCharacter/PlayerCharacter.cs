@@ -87,6 +87,11 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 }
             }
             
+            if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform)
+            {
+                animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Hang]);
+            }
+            
             base.Update();
             
             CurrentLockState.UpdateLockOnMarker();

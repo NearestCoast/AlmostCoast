@@ -46,9 +46,11 @@ namespace _Project.Characters.IngameCharacters.Core
             (Vector3.back + Vector3.left).normalized // 뒤왼쪽 대각선
         };
 
+        [SerializeField] private float headOffset = -0.25f;
         private Vector3 HeadOrigin => transform.position + characterControllerEnveloper.Center +
-                                      Vector3.up * (characterControllerEnveloper.Height / 2 -
-                                                    characterControllerEnveloper.Radius);
+                                      Vector3.up * (characterControllerEnveloper.Height / 2
+                                                    - characterControllerEnveloper.Radius
+                                                    + headOffset);
 
         private Vector3 BodyOrigin => transform.position + characterControllerEnveloper.Center;
 
@@ -203,8 +205,8 @@ namespace _Project.Characters.IngameCharacters.Core
             float rayLength = characterControllerEnveloper.Radius * 2;
 
             // Debug용 Ray 시각화
-            Debug.DrawRay(topOrigin, rayDirection * rayLength, Color.red);
-            Debug.DrawRay(offsetOrigin, rayDirection * rayLength, Color.blue);
+            // Debug.DrawRay(topOrigin, rayDirection * rayLength, Color.red);
+            // Debug.DrawRay(offsetOrigin, rayDirection * rayLength, Color.blue);
 
             // Raycast hit 정보를 저장할 변수
             RaycastHit topHitInfo;
@@ -225,7 +227,7 @@ namespace _Project.Characters.IngameCharacters.Core
                 float downRayLength = 2; // 충분한 길이를 설정
                 RaycastHit downHitInfo;
 
-                Debug.DrawRay(downRayOrigin, downRayDirection * downRayLength, Color.green);
+                // Debug.DrawRay(downRayOrigin, downRayDirection * downRayLength, Color.green);
 
                 if (Physics.Raycast(downRayOrigin, downRayDirection, out downHitInfo, downRayLength, surfaceLayers))
                 {

@@ -57,9 +57,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 if (!VerticalParams.IsWallPerpendicularToGround) return true;
                 if (!connectedInput.IsPressing) return true;
                 
-                var nextStateType = NextState.Type;
-                
-                var value = nextStateType switch
+                var value = NextState.Type switch
                 {
                     StateType.Jump => true,
                     StateType.ClimbOverLedge => true,

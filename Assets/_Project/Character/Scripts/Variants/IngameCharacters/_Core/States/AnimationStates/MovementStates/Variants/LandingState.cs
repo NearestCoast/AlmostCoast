@@ -41,11 +41,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             base.OnEnterState();
 
             prevState = PrevState;
-            MoveParams.ResetAcceleration();
             MoveParams.ResetClimbStamina();
             MoveParams.EndClimbing();
             MoveParams.ResetWallJumping();
             MoveParams.ResetHeadJumping();
+            
+            MoveParams.ResetAcceleration();
 
             MoveParams.ResetJumpCount();
             MoveParams.ResetWallJumpCount();
