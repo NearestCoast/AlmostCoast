@@ -12,7 +12,9 @@ namespace _Project.Characters.IngameCharacters.Core
     public class VerticalSurfaceChecker : MonoBehaviour, IEnvironmentChecker
     {
         private VerticalParams VerticalParams;
+
         [ShowInInspector] private CharacterControllerEnveloper characterControllerEnveloper;
+
         // private BoxCollider boxCollider;
         private LayerMask surfaceLayers;
 
@@ -20,12 +22,13 @@ namespace _Project.Characters.IngameCharacters.Core
         {
             characterControllerEnveloper = GetComponentInParent<CharacterControllerEnveloper>();
             VerticalParams = GetComponentInParent<VerticalParams>();
-            
+
             // boxCollider = GetComponent<BoxCollider>();
             // boxCollider.size = new Vector3((1 + characterController.skinWidth * 2), boxCollider.size.y, (1 + characterController.skinWidth * 2)); 
-            
-            surfaceLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") | 1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling");
-            
+
+            surfaceLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") |
+                            1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling");
+
             VerticalParams.IsWalled = false;
         }
 
@@ -42,15 +45,18 @@ namespace _Project.Characters.IngameCharacters.Core
             (Vector3.back + Vector3.right).normalized, // 뒤오른쪽 대각선
             (Vector3.back + Vector3.left).normalized // 뒤왼쪽 대각선
         };
-        
-        private Vector3 HeadOrigin => transform.position + characterControllerEnveloper.Center + Vector3.up * (characterControllerEnveloper.Height / 2 - characterControllerEnveloper.Radius);
+
+        private Vector3 HeadOrigin => transform.position + characterControllerEnveloper.Center +
+                                      Vector3.up * (characterControllerEnveloper.Height / 2 -
+                                                    characterControllerEnveloper.Radius);
+
         private Vector3 BodyOrigin => transform.position + characterControllerEnveloper.Center;
-        
-        
+
+
         public void Check(MovementState currentState)
         {
             VerticalParams.PrevIsWalled = VerticalParams.IsWalled;
-            
+
             VerticalParams.IsWalled = GetIsWalled();
             VerticalParams.IsSightOpened = GetIsSightOpened();
             VerticalParams.IsRightSightOpened = GetIsRightSightOpened();
@@ -60,7 +66,7 @@ namespace _Project.Characters.IngameCharacters.Core
             // else VerticalParams.IsRightLedgeMovable = false;
             // if (VerticalParams.IsLeftSightOpened) VerticalParams.IsLeftLedgeMovable = GetIsLeftLedgeMovable();
             // else VerticalParams.IsLeftLedgeMovable = false; 
-            
+
             VerticalParams.IsHeadOpen = GetIsHeadOpen();
             VerticalParams.IsEdgeOfPlatform = GetIsEdgeOfPlatform();
         }
@@ -68,10 +74,12 @@ namespace _Project.Characters.IngameCharacters.Core
         private bool GetIsHeadOpen()
         {
             var rayCenter = new Ray(HeadOrigin, Vector3.up);
-            var rayLength = characterControllerEnveloper.Height + characterControllerEnveloper.Radius + characterControllerEnveloper.SkinWidth;
+            var rayLength = characterControllerEnveloper.Height + characterControllerEnveloper.Radius +
+                            characterControllerEnveloper.SkinWidth;
             Debug.DrawRay(rayCenter.origin, rayCenter.direction * rayLength, Color.cyan);
             return VerticalParams.IsHeadOpen = !Physics.Raycast(rayCenter, rayLength, surfaceLayers);
         }
+
         public bool GetIsWalled()
         {
             foreach (var direction in directions)
@@ -80,7 +88,7 @@ namespace _Project.Characters.IngameCharacters.Core
                 var rayLength = characterControllerEnveloper.Radius * 3f;
                 var hit = Physics.Raycast(ray, out var hitInfo, rayLength, surfaceLayers);
                 // Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.blue);
-            
+
                 if (!hit) continue;
                 // Debug.Log(Vector3.Dot(hitInfo.normal, Vector3.up));
                 // Debug.Log(Vector3.Angle(hitInfo.normal, Vector3.up));
@@ -91,13 +99,13 @@ namespace _Project.Characters.IngameCharacters.Core
                     VerticalParams.WallPoint = null;
                     continue;
                 }
-                
+
                 VerticalParams.WallNormal = hitInfo.normal;
                 VerticalParams.WallPoint = hitInfo.point;
-                
+
                 return true;
             }
-            
+
             VerticalParams.WallNormal = null;
             VerticalParams.WallPoint = null;
             return false;
@@ -108,23 +116,29 @@ namespace _Project.Characters.IngameCharacters.Core
         private bool HitDetectRightSight { get; set; }
         private bool HitDetectLeftMovable { get; set; }
         private bool HitDetectClimbRightLedge { get; set; }
-        
-        private Vector3 HeadAboveSightOrigin => HeadOrigin + Vector3.up * (characterControllerEnveloper.Height / 2 + characterControllerEnveloper.Radius);
+
+        private Vector3 HeadAboveSightOrigin => HeadOrigin +
+                                                Vector3.up * (characterControllerEnveloper.Height / 2 +
+                                                              characterControllerEnveloper.Radius);
+
         private Vector3 LeftSightOrigin => BodyOrigin + (-transform.right) * (characterControllerEnveloper.Radius * 2);
         private Vector3 RightSightOrigin => BodyOrigin + (transform.right) * (characterControllerEnveloper.Radius * 2);
         private Vector3 LeftMovableOrigin => BodyOrigin;
-        
+
         private Ray BoxCastRayClimbOverLedge => new Ray(HeadAboveSightOrigin, transform.forward);
         private Ray BoxCastRayLeftSight => new Ray(LeftSightOrigin, transform.forward);
         private Ray BoxCastRayRightSight => new Ray(RightSightOrigin, transform.forward);
         private Ray BoxCastRayLeftMovable => new Ray(LeftMovableOrigin, transform.right);
-        
-        private Vector3 HalfExtents => new Vector3(characterControllerEnveloper.Radius, characterControllerEnveloper.Height / 2, characterControllerEnveloper.Radius);
+
+        private Vector3 HalfExtents => new Vector3(characterControllerEnveloper.Radius,
+            characterControllerEnveloper.Height / 2, characterControllerEnveloper.Radius);
+
         private float BoxCastRayLength => characterControllerEnveloper.Radius * 2;
-        
-        
+
+
 
         [SerializeField] private TriggerManager upSightTrigger;
+
         public bool GetIsSightOpened()
         {
             HitDetectClimbOverLedge = upSightTrigger.IsHit;
@@ -132,6 +146,7 @@ namespace _Project.Characters.IngameCharacters.Core
         }
 
         [SerializeField] private TriggerManager rightSightTrigger;
+
         public bool GetIsRightSightOpened()
         {
             HitDetectRightSight = rightSightTrigger.IsHit;
@@ -139,6 +154,7 @@ namespace _Project.Characters.IngameCharacters.Core
         }
 
         [SerializeField] private TriggerManager leftSightTrigger;
+
         public bool GetIsLeftSightOpened()
         {
             HitDetectLeftSight = leftSightTrigger.IsHit;
@@ -164,7 +180,7 @@ namespace _Project.Characters.IngameCharacters.Core
 
         [SerializeField] private float topOriginOffset = 1;
         [SerializeField] private float edgeCheckOffset = 0.25f;
-        
+
         public bool GetIsEdgeOfPlatform()
         {
             // Edge까지의 거리를 초기화 (-1은 충돌이 없음을 나타냄)
@@ -174,7 +190,8 @@ namespace _Project.Characters.IngameCharacters.Core
                 return false;
 
             // 캐릭터 최상단에서 Ray를 쏠 시작 위치
-            Vector3 topOrigin = transform.position + Vector3.up * (characterControllerEnveloper.Height - topOriginOffset);
+            Vector3 topOrigin =
+                transform.position + Vector3.up * (characterControllerEnveloper.Height - topOriginOffset);
 
             // 최상단에서 Ray를 쏠 오프셋 위치
             Vector3 offsetOrigin = topOrigin + Vector3.up * edgeCheckOffset;
@@ -202,22 +219,42 @@ namespace _Project.Characters.IngameCharacters.Core
             // Edge 판정 조건을 만족하는 경우
             if (isTopHit && !isOffsetHit)
             {
-                // 충돌한 경우 거리를 저장
-                edgeDistance = topHitInfo.distance;
-                VerticalParams.DistanceToTopEdge = edgeDistance;
+                // 위에서 아래로 다시 Ray를 쏘아 정확한 Edge point를 구함
+                Vector3 downRayOrigin = topHitInfo.point + Vector3.up; // Ray 시작 위치를 충돌 지점 위로 약간 올림
+                Vector3 downRayDirection = Vector3.down;
+                float downRayLength = 2; // 충분한 길이를 설정
+                RaycastHit downHitInfo;
+
+                Debug.DrawRay(downRayOrigin, downRayDirection * downRayLength, Color.green);
+
+                if (Physics.Raycast(downRayOrigin, downRayDirection, out downHitInfo, downRayLength, surfaceLayers))
+                {
+                    // 정확한 Edge point를 구한 경우
+                    VerticalParams.EdgeHeight = downHitInfo.point.y; // 아래 Ray의 충돌 지점 y 값을 저장
+                    VerticalParams.DistanceToTopEdge = downHitInfo.point.y - transform.position.y;
+                }
+                else
+                {
+                    // 아래로 Ray를 쏘아도 충돌이 없으면 EdgeHeight를 초기화
+                    VerticalParams.EdgeHeight = float.NaN;
+                }
+            }
+            else
+            {
+                // Edge를 찾지 못한 경우 값 초기화
+                VerticalParams.DistanceToTopEdge = -1f;
+                VerticalParams.EdgeHeight = float.NaN; // Edge가 없음을 나타냄
             }
 
             // 기존 조건 반환
             return isTopHit && !isOffsetHit;
         }
-
-
         
         private void OnDrawGizmos()
         {
             return;
             if (!Application.isPlaying) return;
-            
+
             DrawBoxCast(BoxCastRayClimbOverLedge, transform.rotation, BoxCastRayLength, HitDetectClimbOverLedge);
             DrawBoxCast(BoxCastRayLeftSight, transform.rotation, BoxCastRayLength, HitDetectLeftSight);
             DrawBoxCast(BoxCastRayRightSight, transform.rotation, BoxCastRayLength, HitDetectRightSight);
@@ -233,7 +270,7 @@ namespace _Project.Characters.IngameCharacters.Core
                 Vector3 endPoint = origin + direction.normalized * rayLength;
 
                 // Gizmo 색상 설정
-                Gizmos.color = isHit ? Color.red: Color.green;
+                Gizmos.color = isHit ? Color.red : Color.green;
 
                 // BoxCast의 시작점 그리기 (회전 반영)
                 Gizmos.matrix = Matrix4x4.TRS(origin, orientation, Vector3.one);

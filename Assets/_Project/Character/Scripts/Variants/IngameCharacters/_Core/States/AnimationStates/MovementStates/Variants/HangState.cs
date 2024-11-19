@@ -33,15 +33,31 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
         }
 
-        [SerializeField] private float maxTime = 0.1f;
+        public override void OnEnterState()
+        {
+            base.OnEnterState();
+            IsJustEntered = true;
+        }
+
+        // [SerializeField] private float maxTime = 0.1f;
         [SerializeField] private float distanceOffset = 0.2f;
+        private bool IsJustEntered { get; set; }
         protected override Vector3 GetVelocity()
         {
-            if (StateTime < maxTime)
+            if (IsJustEntered)
             {
-                var value = Vector3.up * (VerticalParams.DistanceToTopEdge + distanceOffset) / maxTime;
-                return value * Time.deltaTime;
+                IsJustEntered = false;
+                return Vector3.up * (VerticalParams.DistanceToTopEdge - characterControllerEnveloper.Height + distanceOffset);
             }
+            // if (StateTime < maxTime)
+            // {
+            //     var value = Vector3.up * (VerticalParams.DistanceToTopEdge + distanceOffset) / maxTime;
+            //     return value * Time.deltaTime;
+            // }
+            // else
+            // {
+            //     
+            // }
             
             return Vector3.zero;
         }
