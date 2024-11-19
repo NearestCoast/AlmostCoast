@@ -105,8 +105,8 @@ public class OutlineSettings : ScriptableObject {
     [HideInInspector]
     public Material effectMaterial;
 
-    internal Action onSettingsChanged;
-    internal Action onReset;
+    public Action onSettingsChanged;
+    public Action onReset;
 
     private void OnValidate() {
         if (minDepthThreshold > maxDepthThreshold + float.Epsilon) {

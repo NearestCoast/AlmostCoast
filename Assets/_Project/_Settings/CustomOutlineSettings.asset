@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59ac356bb0c448ada6ac4892ce40dcd5, type: 3}
+  m_Name: CustomOutlineSettings
+  m_EditorClassIdentifier: 
+  edgeColor: {r: 0.38471088, g: 0.32053223, b: 0.46226418, a: 1}
+  thickness: 1
+  resolutionInvariant: 0
+  fadeWithDistance: 1
+  fadeRangeStart: 1
+  fadeRangeEnd: 100
+  useDepth: 1
+  minDepthThreshold: 1
+  maxDepthThreshold: 100
+  useNormals: 1
+  minNormalsThreshold: 0
+  maxNormalsThreshold: 2
+  useColor: 0
+  minColorThreshold: 20.83
+  maxColorThreshold: 52.97
+  renderEvent: 550
+  outlineOnly: 0
+  applyInSceneView: 0
+  effectMaterial: {fileID: 8955279083979957487}
+  outlineLayers:
+    serializedVersion: 2
+    m_Bits: 1206912759
+--- !u!21 &8955279083979957487
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Effect Material
+  m_Shader: {fileID: -6465566751694194690, guid: f968e7540d632cc40b5ca8b340a3e718,
+    type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - OUTLINE_FADE_OUT
+  - OUTLINE_USE_DEPTH
+  - OUTLINE_USE_NORMALS
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ColorThresholdMax: 5.39
+    - _ColorThresholdMin: 2.5
+    - _DepthThresholdMax: 10
+    - _DepthThresholdMin: 1
+    - _FadeRangeEnd: 200
+    - _FadeRangeStart: 1
+    - _NormalThresholdMax: 2.26
+    - _NormalThresholdMin: 1.79
+    - _Thickness: 1
+    m_Colors:
+    - _EdgeColor: {r: 0.41854084, g: 0.29556784, b: 0.509434, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

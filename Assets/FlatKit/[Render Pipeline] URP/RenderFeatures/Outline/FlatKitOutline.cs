@@ -10,10 +10,10 @@ public class FlatKitOutline : ScriptableRendererFeature {
     [Expandable]
     public OutlineSettings settings;
 
-    private Material _effectMaterial;
-    private DustyroomRenderPass _fullScreenPass;
-    private bool _requiresColor;
-    private bool _injectedBeforeTransparents;
+    protected Material _effectMaterial;
+    protected DustyroomRenderPass _fullScreenPass;
+    protected bool _requiresColor;
+    protected bool _injectedBeforeTransparents;
     private ScriptableRenderPassInput _requirements = ScriptableRenderPassInput.Color;
 
     private const string ShaderName = "Hidden/FlatKit/OutlineWrap";
@@ -84,7 +84,7 @@ public class FlatKitOutline : ScriptableRendererFeature {
         _fullScreenPass?.Dispose();
     }
 
-    private void SetMaterialProperties() {
+    protected void SetMaterialProperties() {
         if (_effectMaterial == null) return;
 
         const string depthKeyword = "OUTLINE_USE_DEPTH";

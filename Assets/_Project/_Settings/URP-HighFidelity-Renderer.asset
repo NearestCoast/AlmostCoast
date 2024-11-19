@@ -14,6 +14,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   settings: {fileID: 11400000, guid: a7c91003576e047c19362bcda8364170, type: 2}
+--- !u!114 &-6759592604168192598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cca7768aaaea4b0081f14e7f9d4b5ad, type: 3}
+  m_Name: FlatKitOutline
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {fileID: 11400000, guid: a44e48e97cc5e40cd88d72b4bc373987, type: 2}
+--- !u!114 &-4647362097864895885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb32058629b4ce3b1fdb03d0b65af85, type: 3}
+  m_Name: CustomOutlineRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 500
+    outlineSettings: {fileID: 0}
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,7 +111,8 @@ MonoBehaviour:
   - {fileID: 6896903080030348622}
   - {fileID: -7194367166153733796}
   - {fileID: 2969440747371732316}
-  m_RendererFeatureMap: adc0de57c6d2eee5051e9ef43ec11e584ea58157cfb8b65f5c49ac052e79289c5c9da980a0923529
+  - {fileID: -6759592604168192598}
+  m_RendererFeatureMap: adc0de57c6d2eee5051e9ef43ec11e584ea58157cfb8b65f5c49ac052e79289c5c9da980a0923529aa7d3222571a31a2
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

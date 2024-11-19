@@ -176,7 +176,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             if (!IsBlocked)
             {
-                var dotMag = Mathf.Abs(Vector3.Dot(moveDirection, Vector3.right));
+                var camToPlayer = (transform.position - Camera.main.transform.position).XYZ3toX0Z3();
+                var rightOfCamToPlayer = Vector3.Cross(Vector3.up, camToPlayer).normalized;
+                
+                var dotMag = Mathf.Abs(Vector3.Dot(moveDirection, rightOfCamToPlayer));
                 var dir = (transform.position + Vector3.up * 1.5f + moveDirection * (camTargetMoveAmount * inputDirSpeed * dotMag) - moveCameraTarget.transform.position);
                 
                 var value = dir * (camTargetMoveSpeed * inputSpeed);

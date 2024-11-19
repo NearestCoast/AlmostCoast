@@ -109,11 +109,10 @@ namespace _Project.Characters.IngameCharacters.Core
                 animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Landing]);
             }
 
-            if (GroundParams.IsGroundedOnCharacter)
+            if (GroundParams.IsGroundedOnCharacter && !IsDying && !IsDead)
             {
                 MoveParams.SetIsHeadJumping();
                 animationStateConductor.ForceSetMovementState(movementStateContainer[MovementState.StateType.Jump]);
-                
             }
 
             if (!VerticalParams.PrevIsWalled && VerticalParams.IsWalled && !GroundParams.IsGrounded)
@@ -259,6 +258,7 @@ namespace _Project.Characters.IngameCharacters.Core
         
         public override void TakeDamage(HittingInfo hittingInfo, int damage, SideEffect sideEffect = SideEffect.None)
         {
+            if (IsDying || IsDead) return;
             base.TakeDamage(hittingInfo, damage);
             
             HittingInfo = hittingInfo;
