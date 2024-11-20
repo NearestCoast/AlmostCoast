@@ -212,7 +212,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("VerticalParams.IsLeftLedgeMovable : " + VerticalParams.IsLeftLedgeMovable);
             // DrawLabel("");
             DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
-            // DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
+            DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
             // DrawLabel("MoveParams.IsClimbing : " + MoveParams.IsClimbing);
             // DrawLabel("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
             // DrawLabel("MoveParams.ClimbStamina : " + MoveParams.ClimbStaminaTime);

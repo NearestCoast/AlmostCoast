@@ -82,6 +82,11 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     _ => false,
                 };
                 
+                if (Time.time - DebugEndTime < 0.05f)
+                {
+                    Debug.Log(value);
+                }
+                
                 return value;
             }
         }

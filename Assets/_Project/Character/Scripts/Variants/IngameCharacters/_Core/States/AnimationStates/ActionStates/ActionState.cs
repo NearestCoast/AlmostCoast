@@ -81,11 +81,10 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
             if (masterCharacter is PlayerCharacter) return Vector3.zero;
             if (GroundParams.IsGrounded)
             {
-                MoveParams.GravityTime = 0f;
-                
                 if (GroundParams.GroundNormal == Vector3.up)
                 // if (GroundParams.GroundNormalDotWithGroundPlane > 0.98f)
                 {
+                    MoveParams.GravityTime = 0f;
                     if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
                     {
                         MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);
@@ -102,18 +101,22 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
                 else
                 {
                     var normalGravity = movementStateValues.GetGravity();
+                    MoveParams.GravityTime += Time.deltaTime;
                     var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
                     var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
                     if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
                     {
-                        MoveParams.Gravity = gravityDir * normalGravity.magnitude *  slopeDownSpeed;
+                        
+                        MoveParams.Gravity = gravityDir * normalGravity.magnitude * slopeDownSpeed;
+                        // MoveParams.Gravity = gravityDir * normalGravity.magnitude;
                     }
                     else
                     {
+                        MoveParams.GravityTime = 0f;
                         MoveParams.Gravity = Vector3.zero;
                     }
-
-                    Debug.DrawRay(transform.position, gravityDir, Color.green);
+                    
+                    Debug.DrawRay(transform.position, MoveParams.Gravity * 10, Color.green);
                     
                     if (!characterControllerEnveloper.IsGrounded)
                     {

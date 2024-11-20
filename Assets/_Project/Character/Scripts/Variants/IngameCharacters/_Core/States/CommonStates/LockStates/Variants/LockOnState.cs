@@ -38,7 +38,7 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
             enemyLayer = 1 << LayerMask.NameToLayer("Character");
         }
 
-        private Collider[] targetColliders;
+        private Collider[] targetColliders = new Collider[50];
         public override void OnEnterState()
         {
             // Debug.Log("Success Lock On");
@@ -68,6 +68,7 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
 
                 foreach (var col in targetColliders)
                 {
+                    if (!col) continue;
                     Transform enemy = col.transform;
 
                     Vector3 screenPoint = MainCamera.WorldToScreenPoint(enemy.position);

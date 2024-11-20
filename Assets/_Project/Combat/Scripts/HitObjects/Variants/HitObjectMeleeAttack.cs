@@ -76,7 +76,7 @@ namespace _Project.Combat.HitObjects
 
         private readonly HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // 히트된 대상을 저장할 집합
 
-        private Collider[] hitColliders;
+        private Collider[] hitColliders = new Collider[50];
         private void PerformMeleeAttack(Vector3 attackOrigin)
         {
             Vector3 baseDirection = transform.forward;
@@ -98,9 +98,9 @@ namespace _Project.Combat.HitObjects
                 {
                     var dirLength = AttackRange - j * SphereRadius;
                     Physics.OverlapSphereNonAlloc(originWithCenterHeight + attackDirectionVector * dirLength, SphereRadius, hitColliders, targetLayer);
-
                     foreach (var hitCollider in hitColliders)
                     {
+                        if (!hitCollider) continue;
                         GameObject hitObject = hitCollider.gameObject;
 
                         // 동일한 대상에 한 번만 히트 적용

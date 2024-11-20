@@ -20,8 +20,10 @@ namespace _Project.Characters.IngameCharacters.Core
                     if (!specificTrigger.IsHit) continue;
                     
                     result = true;
+                    break;
                 }
 
+                Debug.Log(result);
                 return result;
             }
         }

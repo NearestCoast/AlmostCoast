@@ -22,6 +22,13 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     var isDirectionCorrect = inputChecker.Direction2.y > 0;
                     var dot = Vector3.Dot(-VerticalParams.WallNormal.Value, transform.forward);
                     var isLookingAtWall = 1 - dot < 0.05f;
+                    
+                    Debug.Log("#### ClimbOverLedge ####");
+                    Debug.Log("isDirectionCorrect : " + isDirectionCorrect);
+                    Debug.Log("isLookingAtWall: " + isLookingAtWall);
+                    Debug.Log("checker.GetIsSightOpened(): " + checker.GetIsSightOpened());
+                    Debug.Log("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
+                    
                     return isDirectionCorrect &&
                            isLookingAtWall &&
                            checker.GetIsSightOpened() &&
@@ -30,6 +37,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 else return false;
             }
         }
+        
+        private float DebugEndTime { get; set; }
 
         public override bool CanExitState
         {
@@ -64,6 +73,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.ResetWallJumpCount();
             
             MoveParams.ResetClimbingButtonPressed();
+            DebugEndTime = Time.time;
         }
 
         public override void OnExitState()

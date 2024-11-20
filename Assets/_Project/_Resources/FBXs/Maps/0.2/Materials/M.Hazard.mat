@@ -85,6 +85,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ColorGradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -110,6 +114,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -156,6 +164,9 @@ Material:
     - _CelPrimaryMode: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _ColorMode: 0
+    - _CrestSharpness: 0.1
+    - _CrestSize: 0.1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -165,6 +176,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _FadeDistance: 0.5
     - _FlatRimEdgeSmoothness: 0.5
     - _FlatRimLightAlign: 1
     - _FlatRimSize: 0.059
@@ -172,6 +184,16 @@ Material:
     - _FlatSpecularSize: 0.1
     - _Flatness: 1
     - _FlatnessExtra: 1
+    - _FoamAmount: 0.25
+    - _FoamDepth: 0.5
+    - _FoamDirection: 0
+    - _FoamMode: 1
+    - _FoamNoiseAmount: 1
+    - _FoamScale: 1
+    - _FoamSharpness: 0.5
+    - _FoamSpeed: 0.1
+    - _FoamStretchX: 1
+    - _FoamStretchY: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -187,6 +209,7 @@ Material:
     - _LightmapDirectionYaw: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Opaque: 0
     - _OutlineDepthOffset: 0
     - _OutlineEnabled: 0
     - _OutlineScale: 1
@@ -197,11 +220,16 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RefractionAmplitude: 0.01
+    - _RefractionFrequency: 35
+    - _RefractionScale: 1
+    - _RefractionSpeed: 0.1
     - _RimEnabled: 0
     - _SelfShadingSize: 0.9
     - _SelfShadingSizeExtra: 0.6
     - _ShadowEdgeSize: 0.05
     - _ShadowEdgeSizeExtra: 0.05
+    - _ShadowStrength: 0.35
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularEnabled: 0
@@ -217,8 +245,16 @@ Material:
     - _UnityShadowSharpness: 1
     - _VertexColorsEnabled: 0
     - _VertexExtrusionSmoothNormals: 0
+    - _WaterClearness: 0.3
+    - _WaterDepth: 5
+    - _WaveAmplitude: 0.25
+    - _WaveDirection: 0
+    - _WaveFrequency: 1
+    - _WaveMode: 1
+    - _WaveNoise: 0.25
+    - _WaveSpeed: 0.5
     - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - Color_1313CB5F: {r: 0, g: 0, b: 0, a: 1}
     - Color_1dfb0a33e5314a98a054db225a533281: {r: 0, g: 0, b: 0, a: 0.2509804}
@@ -233,15 +269,19 @@ Material:
     - Vector2_e73567ad58ea471b959103dee10b2647: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BaseColor: {r: 0.35686272, g: 0.78431374, b: 0.38152307, a: 1}
     - _Color: {r: 0.3568627, g: 0.78431374, b: 0.38152304, a: 1}
+    - _ColorDeep: {r: 0.65, g: 0.9, b: 1, a: 1}
     - _ColorDim: {r: 0.20518869, g: 0.5, b: 0.22412153, a: 1}
     - _ColorDimCurve: {r: 0.85023, g: 0.85034, b: 0.8504499, a: 0.85056}
     - _ColorDimExtra: {r: 0.13243146, g: 0.3018868, b: 0.14331391, a: 1}
     - _ColorDimSteps: {r: 0.53987205, g: 0.48206657, b: 0.6509434, a: 1}
     - _ColorGradient: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
+    - _ColorShallow: {r: 0.34999996, g: 0.6, b: 0.75, a: 0.8}
+    - _CrestColor: {r: 1, g: 1, b: 1, a: 0.9}
     - _DetailMapColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FlatRimColor: {r: 0.5647059, g: 0.2745098, b: 0.44294193, a: 1}
     - _FlatSpecularColor: {r: 0.85023, g: 0.85034, b: 0.85045, a: 0.85056}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _LightmapDirection: {r: 0, g: 1, b: 0, a: 0}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
