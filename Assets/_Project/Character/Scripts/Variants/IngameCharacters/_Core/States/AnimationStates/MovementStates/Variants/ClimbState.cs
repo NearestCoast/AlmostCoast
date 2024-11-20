@@ -51,6 +51,17 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             get
             {
+                if (Time.time - DebugEndTime < 0.05f)
+                {
+                    Debug.Log("#### 기다리고 기다리던 버그 등장 ####");
+                    Debug.Log("기대한 행동 : Climb -> ClimbOverLedge");
+                    Debug.Log("NextState.Type : " + NextState.Type);
+                    Debug.Log("MoveParams.IsUnderCrowdControl : " + MoveParams.IsUnderCrowdControl);
+                    Debug.Log("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
+                    Debug.Log("VerticalParams.IsWalled : " + VerticalParams.IsWalled);
+                    Debug.Log("VerticalParams.IsWallPerpendicularToGround : " + VerticalParams.IsWallPerpendicularToGround);
+                    Debug.Log("connectedInput.IsPressing : " + connectedInput.IsPressing);
+                }
                 if (MoveParams.IsUnderCrowdControl) return true;
                 if (!MoveParams.IsClimbable) return true;
                 if (!VerticalParams.IsWalled) return true;
@@ -90,7 +101,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.OnExitState();
             MoveParams.EndClimbing();
+            DebugEndTime = Time.time;
         }
+        
+        private float DebugEndTime { get; set; }
     }
     public partial class ClimbState : MovementState
     {

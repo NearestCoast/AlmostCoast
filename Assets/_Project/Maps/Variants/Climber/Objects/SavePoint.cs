@@ -25,10 +25,9 @@ namespace _Project.Maps.Climber.Objects
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.attachedRigidbody) return;
-            if (other.attachedRigidbody.gameObject.layer.IsInLayerMask(targetLayers))
+            if (other.gameObject.layer.IsInLayerMask(targetLayers))
             {
-                var character = other.attachedRigidbody.GetComponent<IngameCharacter>();
+                var character = other.gameObject.GetComponent<IngameCharacter>();
                 
                 if (character.gameObject.layer == LayerMask.NameToLayer("Player"))
                 {

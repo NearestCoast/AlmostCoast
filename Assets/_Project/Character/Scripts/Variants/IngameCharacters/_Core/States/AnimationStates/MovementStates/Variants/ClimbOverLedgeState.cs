@@ -13,6 +13,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             get
             {
                 if (MoveParams.IsUnderCrowdControl) return false;
+                if (VerticalParams.WallNormal is null)
+                {
+                    if (PrevState.Type == StateType.Climb) Debug.Log("WallNormal Is Null.");
+                }
                 if (VerticalParams.WallNormal is not null)
                 {
                     var isDirectionCorrect = inputChecker.Direction2.y > 0;
@@ -39,12 +43,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     StateType.Die => true,
                     _ => false,
                 };
+                
                 return IsEnd || value;
             }
         }
 
         public override void OnEnterState()
         {
+            Debug.Log("Enter ClimbOverLedge");
             base.OnEnterState();
             ForwardDirection = (transform.forward) * (characterControllerEnveloper.Radius * 3);
             
@@ -62,6 +68,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         public override void OnExitState()
         {
+            Debug.Log("Exit ClimbOverLedge");
             base.OnExitState();
             MoveParams.SetLedgeMove();
             MoveParams.DecreaseClimbStaminaAmount(readyTime + forwardTime);
