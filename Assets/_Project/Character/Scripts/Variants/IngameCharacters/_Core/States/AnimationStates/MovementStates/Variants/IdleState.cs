@@ -17,6 +17,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.PlayAnimation();
             AnimancerState = AnimationStateConductor.BaseLayer.Play(anims[0]);
+            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
         }
 
         public override bool CanEnterState
@@ -70,7 +71,20 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 }
                 else
                 {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate;
+                    var normalGravity = movementStateValues.GetGravity();
+                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
+                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
+                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
+                    {
+                        MoveParams.Gravity = gravityDir * normalGravity.magnitude *  slopeDownSpeed;
+                    }
+                    else
+                    {
+                        MoveParams.Gravity = Vector3.zero;
+                    }
+
+                    Debug.DrawRay(transform.position, gravityDir, Color.green);
+                    
                     if (!characterControllerEnveloper.IsGrounded)
                     {
                         var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
@@ -84,17 +98,9 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
             else
             {
-                if (GroundParams.GroundNormalDotWithGroundPlane > 0.99f)
-                {
-                    MoveParams.Gravity = movementStateValues.GetGravity();
-                    MoveParams.GravityTime += Time.deltaTime;
-                }
-                else
-                {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate + movementStateValues.GetGravity();
-                }
+                MoveParams.Gravity = movementStateValues.GetGravity();
+                MoveParams.GravityTime += Time.deltaTime;
             }
-
             var exceptionalMoveValue = Vector3.zero;
             
             // var rayOrigin = transform.position + Vector3.up * characterControllerEnveloper.Height / 2;

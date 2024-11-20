@@ -15,6 +15,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.PlayAnimation();
             AnimancerState = AnimationStateConductor.Animancer.Play(anims);
+            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
             OriginalAnimSpeed = AnimancerState.Speed;
         }
 
@@ -80,39 +81,47 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
                     {
                         MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);
-                        if (MoveParams.HasMovingPlatform) MoveParams.Gravity = Vector3.zero;
+                        if (MoveParams.HasMovingPlatform)
+                        {
+                            MoveParams.Gravity = Vector3.zero;
+                        }
                     }
                     else
                     {
                         MoveParams.Gravity = Vector3.zero;
                     }
-                    
                 }
                 else
                 {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate;
+                    var normalGravity = movementStateValues.GetGravity();
+                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
+                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
+                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
+                    {
+                        MoveParams.Gravity = gravityDir * normalGravity.magnitude *  slopeDownSpeed;
+                    }
+                    else
+                    {
+                        MoveParams.Gravity = Vector3.zero;
+                    }
+
+                    Debug.DrawRay(transform.position, gravityDir, Color.green);
+                    
                     if (!characterControllerEnveloper.IsGrounded)
                     {
                         var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
                         if (sphereCastHit)
                         {
                             MoveParams.Gravity += Vector3.down * sphereCastHitInfo.distance * 0.1f;
-                            // Debug.Log(sphereCastHitInfo.distance);
+                            // Debug.Log(hitInfo.distance);
                         }
                     }
                 }
             }
             else
             {
-                if (GroundParams.GroundNormalDotWithGroundPlane > 0.99f)
-                {
-                    MoveParams.Gravity = movementStateValues.GetGravity();
-                    MoveParams.GravityTime += Time.deltaTime;
-                }
-                else
-                {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate + movementStateValues.GetGravity();
-                }
+                MoveParams.Gravity = movementStateValues.GetGravity();
+                MoveParams.GravityTime += Time.deltaTime;
             }
 
             

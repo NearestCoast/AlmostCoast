@@ -23,7 +23,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.PlayAnimation();
             AnimancerState = AnimationStateConductor.Animancer.Play(anims);
-            AnimancerState.NormalizedTime = 0f;
+            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
         }
 
         public override bool CanEnterState

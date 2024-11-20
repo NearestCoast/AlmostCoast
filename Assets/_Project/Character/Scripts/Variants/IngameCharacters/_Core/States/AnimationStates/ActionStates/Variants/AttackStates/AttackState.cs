@@ -6,10 +6,8 @@ using UnityEngine;
 
 namespace _Project.Characters.IngameCharacters.Core.ActionStates
 {
-    public class AttackState : ActionState
+    public class AttackState : ActionLayerClipActionState
     {
-        [SerializeField, TitleGroup("Animation")] private ClipTransition anim;
-
         protected override void Awake()
         {
             base.Awake();
@@ -18,16 +16,9 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
             PlayerCharacterT = FindObjectOfType<PlayerCharacter>().transform;
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            AnimancerState = AnimationStateConductor.AttackLayer.Play(anim);
-            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
-        }
-
         public override bool CanEnterState
         {
-            get
+            get 
             {
                 var value = AnimationStateConductor.CurrentMovementState switch
                 {
@@ -53,7 +44,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
                 if (NextState.Type == StateType.KnockBacked) return true;
                 
                 return base.CanExitState;
-            }
+            }   
         }
 
         [SerializeField, TitleGroup("SearchEnemy")] private float searchAngle = 45f; // 탐색 각도

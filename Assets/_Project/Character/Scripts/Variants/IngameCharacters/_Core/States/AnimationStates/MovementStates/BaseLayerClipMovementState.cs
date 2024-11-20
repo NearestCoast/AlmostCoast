@@ -11,7 +11,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.PlayAnimation();
             AnimancerState = AnimationStateConductor.BaseLayer.Play(anim);
-            AnimancerState.NormalizedTime = 0f;
+            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace _Project.Characters._Core.States.AnimationStates
         protected AnimationState NextAnimationState => AnimationStateConductor.MovementStateMachine.NextState;
         protected AnimationState PrevAnimationState => AnimationStateConductor.MovementStateMachine.PreviousState;
 
-        protected virtual bool IsAnimEnded => (AnimancerState.NormalizedTime >= 1);
+        protected virtual bool IsAnimEnded => (AnimancerState.NormalizedTime >= animCutEndNormalizedTime);
 
         protected MoveParams MoveParams;
         protected VerticalParams VerticalParams;
@@ -45,6 +45,9 @@ namespace _Project.Characters._Core.States.AnimationStates
         protected Vector3 HorizontalDirection3VerticalNegative => inputChecker.HorizontalDirection3VerticalNegative;
         protected Vector3 VerticalDirection3 => inputChecker.VerticalDirection3;
         protected Vector3 CamToCharacter3 => inputChecker.CamToCharacter3;
+        
+        [SerializeField, TitleGroup("Animation")] protected float animCutStartNormalizedTime = 0;
+        [SerializeField, TitleGroup("Animation")] protected float animCutEndNormalizedTime = 1;
 
         protected override void Awake()
         {

@@ -76,7 +76,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             base.PlayAnimation();
             AnimancerState = AnimationStateConductor.BaseLayer.Play(anims);
-            AnimancerState.NormalizedTime = 0f;
+            AnimancerState.NormalizedTime = animCutStartNormalizedTime;
         }
 
         private bool IsJumpPossible

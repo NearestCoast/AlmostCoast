@@ -30,10 +30,6 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
         protected ActionState NextState => AnimationStateConductor.ActionStateMachine.NextState as ActionState;
         protected ActionState PrevState => AnimationStateConductor.ActionStateMachine.PreviousState as ActionState;
         
-        [SerializeField, TitleGroup("Animation")] protected float animCutStartNormalizedTime = 0;
-        [SerializeField, TitleGroup("Animation")] protected float animCutEndNormalizedTime = 1;
-
-        protected override bool IsAnimEnded => AnimancerState.NormalizedTime >= animCutEndNormalizedTime;
         public override bool CanExitState => IsAnimEnded;
     }
 
@@ -88,7 +84,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
                 MoveParams.GravityTime = 0f;
                 
                 if (GroundParams.GroundNormal == Vector3.up)
-                // if (GroundParams.GroundNormalDotWithGroundPlane > 0.98f) 
+                // if (GroundParams.GroundNormalDotWithGroundPlane > 0.98f)
                 {
                     if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
                     {
@@ -105,7 +101,20 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
                 }
                 else
                 {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate;
+                    var normalGravity = movementStateValues.GetGravity();
+                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
+                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
+                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
+                    {
+                        MoveParams.Gravity = gravityDir * normalGravity.magnitude *  slopeDownSpeed;
+                    }
+                    else
+                    {
+                        MoveParams.Gravity = Vector3.zero;
+                    }
+
+                    Debug.DrawRay(transform.position, gravityDir, Color.green);
+                    
                     if (!characterControllerEnveloper.IsGrounded)
                     {
                         var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
@@ -119,15 +128,8 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
             }
             else
             {
-                if (GroundParams.GroundNormalDotWithGroundPlane > 0.99f)
-                {
-                    MoveParams.Gravity = movementStateValues.GetGravity();
-                    MoveParams.GravityTime += Time.deltaTime;
-                }
-                else
-                {
-                    MoveParams.Gravity = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized * GroundParams.SlopeAngleRad * angleGravityRate + movementStateValues.GetGravity();
-                }
+                MoveParams.Gravity = movementStateValues.GetGravity();
+                MoveParams.GravityTime += Time.deltaTime;
             }
 
             return MoveParams.Gravity;
