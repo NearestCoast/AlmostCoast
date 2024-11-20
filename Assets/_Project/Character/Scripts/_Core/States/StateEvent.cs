@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using _Project.Combat.HitObjects;
 using _Project.Effect;
 using _Project.Utils;
 using Animancer;
-using Animancer.FSM;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -73,36 +71,36 @@ namespace _Project.Characters._Core.States
         [BoxGroup("Normalized Timings/VerticalLayout/VFX Settings")]
         [HorizontalGroup("Normalized Timings/VerticalLayout/VFX Settings/InnerHorizontal")]
         [LabelText("Normalized Times to VFX")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private float[] normalizedTimesToPlayVFX = new[] { 0f };
 
         [HorizontalGroup("Normalized Timings/VerticalLayout/VFX Settings/InnerHorizontal")]
         [LabelText("VFXs")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private VisualEffect[] VFXs = new VisualEffect[0];
 
         // SFX 박스
         [BoxGroup("Normalized Timings/VerticalLayout/SFX Settings")]
         [HorizontalGroup("Normalized Timings/VerticalLayout/SFX Settings/InnerHorizontal")]
         [LabelText("Normalized Times to SFX")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private float[] normalizedTimesToPlaySFX = new[] { 0f };
 
         [HorizontalGroup("Normalized Timings/VerticalLayout/SFX Settings/InnerHorizontal")]
         [LabelText("SFXs")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private AudioSource[] SFXs = new AudioSource[0];
 
         // Hit 박스
         [BoxGroup("Normalized Timings/VerticalLayout/Hit Settings")]
         [HorizontalGroup("Normalized Timings/VerticalLayout/Hit Settings/InnerHorizontal")]
         [LabelText("Normalized Times to Hit")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private float[] normalizedTimesToPlayHit = new[] { 0f };
 
         [HorizontalGroup("Normalized Timings/VerticalLayout/Hit Settings/InnerHorizontal")]
         [LabelText("Hit Objects")]
-        [SerializeField, ListDrawerSettings(Expanded = true)]
+        [SerializeField, ListDrawerSettings(ShowFoldout = true)]
         private HitObject[] hitObjects = new HitObject[0];
 
         [PropertySpace(SpaceBefore = 10)]

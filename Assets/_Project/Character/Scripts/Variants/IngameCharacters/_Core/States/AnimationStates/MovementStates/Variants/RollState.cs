@@ -174,13 +174,13 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             
         
-            Vector3 CalculateMoveDirectionVerticalNegative(Vector3 forward, Vector2 inputDirection)
-            {
-                var right = Quaternion.Euler(0, -90, 0) * forward;
-                forward.y = 0;  
-                right.y = 0;
-                return (forward * inputDirection.y + right * inputDirection.x).normalized;
-            }
+            // Vector3 CalculateMoveDirectionVerticalNegative(Vector3 forward, Vector2 inputDirection)
+            // {
+            //     var right = Quaternion.Euler(0, -90, 0) * forward;
+            //     forward.y = 0;  
+            //     right.y = 0;
+            //     return (forward * inputDirection.y + right * inputDirection.x).normalized;
+            // }
         }
     }
 }

@@ -28,7 +28,7 @@ namespace _Project.UI.OptionMenu
         {
             base.Apply();
             setResolution();
-            FindObjectOfType<GameManager>().DelayedOnApply().Forget();;
+            FindAnyObjectByType<GameManager>().DelayedOnApply().Forget();;
             
 
             void setResolution()

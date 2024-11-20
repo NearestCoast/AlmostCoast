@@ -17,8 +17,8 @@ namespace _Project
 
         private void Awake()
         {
-            playerInputController = FindObjectOfType<PlayerInputController>();
-            mainMenuCanvas = FindObjectOfType<MainMenuCanvas>();
+            playerInputController = FindAnyObjectByType<PlayerInputController>();
+            mainMenuCanvas = FindAnyObjectByType<MainMenuCanvas>();
         }
 
         private void Start()

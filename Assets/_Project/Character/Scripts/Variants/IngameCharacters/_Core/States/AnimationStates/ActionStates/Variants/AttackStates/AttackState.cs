@@ -13,7 +13,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
             base.Awake();
             if (masterCharacter is PlayerCharacter) enemyLayer = 1 << LayerMask.NameToLayer("Character");
             else enemyLayer = 1 << LayerMask.NameToLayer("Player");
-            PlayerCharacterT = FindObjectOfType<PlayerCharacter>().transform;
+            PlayerCharacterT = FindAnyObjectByType<PlayerCharacter>().transform;
         }
 
         public override bool CanEnterState

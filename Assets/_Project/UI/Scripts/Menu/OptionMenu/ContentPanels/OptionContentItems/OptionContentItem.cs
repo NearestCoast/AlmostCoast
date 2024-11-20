@@ -28,7 +28,7 @@ namespace _Project.UI.OptionMenu
             title = transform.Find("Panel - Title/Text (Legacy) - Title").GetComponent<Text>();
             description = transform.Find("Panel - Selection/Panel/Text (Legacy) - Description").GetComponent<Text>();
             optionCanvas = GetComponentInParent<OptionCanvas>();
-            applyButton = FindObjectOfType<ApplyButton>();
+            applyButton = FindAnyObjectByType<ApplyButton>();
             // arrowLeft = transform.Find("Panel - Selection/Panel/ArrowLeft").GetComponent<OptionContentItemArrow>();
             // arrowRight = transform.Find("Panel - Selection/Panel/ArrowRight").GetComponent<OptionContentItemArrow>();
         }

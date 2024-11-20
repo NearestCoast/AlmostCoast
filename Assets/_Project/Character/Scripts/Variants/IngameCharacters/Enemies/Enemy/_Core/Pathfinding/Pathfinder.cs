@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Character.IngameCharacters.Enemies;
@@ -37,7 +36,7 @@ public class Pathfinder : MonoBehaviour
     private void Awake()
     {
         masterEnemy = GetComponentInParent<Enemy>();
-        targetCharacter = FindObjectOfType<PlayerCharacter>();
+        targetCharacter = FindAnyObjectByType<PlayerCharacter>();
         wanderingWayPoints = new List<Transform>();
         var enemySpot = transform.GetComponentInParent<Character>().transform.parent;
         foreach (var componentsInChild in enemySpot.GetComponentsInChildren<WanderingPointMasterNode>())
@@ -120,11 +119,6 @@ public class Pathfinder : MonoBehaviour
                     ? Target.position 
                     : Nodes[NextNodeIndex];
         }
-    }
-
-    private Vector3 FlattenPosition(Vector3 position)
-    {
-        return new Vector3(position.x, 0f, position.z);
     }
 
     public bool IsWandering { get; set; }

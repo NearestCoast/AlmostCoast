@@ -4,7 +4,6 @@ using _Project._Core;
 using _Project.Character.IngameCharacters.Enemies;
 using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
-using _Project.Utils;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -41,9 +40,10 @@ namespace _Project.Combat.HitObjects
             {
                 float offset = heightOrigin switch
                 {
-                    HeightOrigin.Bottom => 0f,
+                    HeightOrigin.Bottom => 0,
                     HeightOrigin.Center => characterControllerEnveloper.Height / 2,
                     HeightOrigin.Top => characterControllerEnveloper.Height,
+                    _=> 0,
                 };
 
                 return offset + heightRevision;
@@ -59,16 +59,16 @@ namespace _Project.Combat.HitObjects
         [SerializeField] private float attackRange = 2.0f; // 공격 범위
         [SerializeField] private float sphereRadius = 0.5f;
         [SerializeField] private float horizontalAngle = 90f; // 수평 각도
-        [SerializeField] private float verticalAngle = 0f; // 수직 각도
+        [SerializeField] private float verticalAngle; // 수직 각도
         [SerializeField] private int angleSteps = 10; // 체크할 각도 스텝
         [SerializeField] private HeightOrigin heightOrigin = HeightOrigin.Center; // 높이 기준, 기본은 Center
-        [SerializeField] private float heightRevision = 0;
+        [SerializeField] private float heightRevision;
 
         [PropertySpace(10)]
         [SerializeField] private LayerMask targetLayer; // 타겟이 속한 레이어
         [SerializeField] private GameObject hitEffectPrefab; // 검이 부딪힐 때 나올 이펙트 프리팹
         private AudioSource hitSoundEffect;
-        [SerializeField] private bool allowMultiHit = false; // 멀티 히트 허용 여부
+        [SerializeField] private bool allowMultiHit; // 멀티 히트 허용 여부
 
         private float AttackRange => attackRange * characterControllerEnveloper.CurrentScale;
         private float SphereRadius => sphereRadius * characterControllerEnveloper.CurrentScale;
@@ -76,6 +76,7 @@ namespace _Project.Combat.HitObjects
 
         private readonly HashSet<GameObject> hitTargets = new HashSet<GameObject>(); // 히트된 대상을 저장할 집합
 
+        private Collider[] hitColliders;
         private void PerformMeleeAttack(Vector3 attackOrigin)
         {
             Vector3 baseDirection = transform.forward;
@@ -96,7 +97,7 @@ namespace _Project.Combat.HitObjects
                 for (var j = jLength; j > 0; j--)
                 {
                     var dirLength = AttackRange - j * SphereRadius;
-                    Collider[] hitColliders = Physics.OverlapSphere(originWithCenterHeight + attackDirectionVector * dirLength, SphereRadius, targetLayer);
+                    Physics.OverlapSphereNonAlloc(originWithCenterHeight + attackDirectionVector * dirLength, SphereRadius, hitColliders, targetLayer);
 
                     foreach (var hitCollider in hitColliders)
                     {
@@ -108,7 +109,7 @@ namespace _Project.Combat.HitObjects
                         Vector3 hitPoint = hitCollider.ClosestPoint(originWithCenterHeight + attackDirectionVector * dirLength);
                         var fx = Instantiate(hitEffectPrefab, hitPoint, transform.rotation);
                         fx.gameObject.SetActive(true);
-                        PlaySound(hitCollider);
+                        PlaySound(hitCollider).Forget();
 
                         var damageReceiver = hitCollider.GetComponent<IDamageReceiver>();
                         if (damageReceiver != null)

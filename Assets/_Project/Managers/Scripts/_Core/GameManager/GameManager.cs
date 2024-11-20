@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using _Project.Data;
 using _Project.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 namespace _Project
 {
@@ -38,7 +35,7 @@ namespace _Project
         public async UniTaskVoid DelayedOnApply()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(0.5));
-            var aspectRatios = FindObjectsOfType<UIElementAspectRatio>();
+            var aspectRatios = FindObjectsByType<UIElementAspectRatio>(FindObjectsSortMode.None);
             foreach (var uiElementAspectRatio in aspectRatios)
             {
                 uiElementAspectRatio.SetAspect();

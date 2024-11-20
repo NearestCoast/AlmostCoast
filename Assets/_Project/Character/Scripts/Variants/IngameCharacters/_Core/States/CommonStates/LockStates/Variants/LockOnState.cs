@@ -1,16 +1,13 @@
-using System;
 using System.Collections.Generic;
 using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates.Variants
 {
-    public partial class LockOnState : LockState
+    public class LockOnState : LockState
     {
         public override StateType Type => StateType.LockOn;
         public override bool CanEnterState
@@ -37,10 +34,11 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
         {
             base.Awake();
 
-            PlayerCharacterT = FindObjectOfType<PlayerCharacter>().transform;
+            PlayerCharacterT = FindAnyObjectByType<PlayerCharacter>().transform;
             enemyLayer = 1 << LayerMask.NameToLayer("Character");
         }
 
+        private Collider[] targetColliders;
         public override void OnEnterState()
         {
             // Debug.Log("Success Lock On");
@@ -60,17 +58,17 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
                 
                 
             }
-            
             Transform FindBestTarget()
             {
                 if (masterCharacter is not PlayerCharacter) return PlayerCharacterT;
-                Collider[] colliders = Physics.OverlapSphere(transform.position, lockOnRadius, enemyLayer);
+                
+                Physics.OverlapSphereNonAlloc(transform.position, lockOnRadius, targetColliders, enemyLayer);
                 Transform bestTarget = null;
                 float bestScore = Mathf.Infinity;
 
-                foreach (Collider collider in colliders)
+                foreach (var col in targetColliders)
                 {
-                    Transform enemy = collider.transform;
+                    Transform enemy = col.transform;
 
                     Vector3 screenPoint = MainCamera.WorldToScreenPoint(enemy.position);
                     Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -122,10 +120,10 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
             {
                 Transform closestScreenTarget = null;
                 float bestScreenDistance = Mathf.Infinity;
-                Collider[] colliders = Physics.OverlapSphere(transform.position, lockOnRadius, enemyLayer);
-                foreach (Collider collider in colliders)
+                Physics.OverlapSphereNonAlloc(transform.position, lockOnRadius, targetColliders, enemyLayer);
+                foreach (Collider col in targetColliders)
                 {
-                    Transform enemy = collider.transform;
+                    Transform enemy = col.transform;
                     if (nearbyTargets.Contains(enemy)) continue;
 
                     Vector3 screenPoint = MainCamera.WorldToScreenPoint(enemy.position);
@@ -151,13 +149,15 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
 
             void UpdateNearbyTargets()
             {
-                Collider[] colliders = Physics.OverlapSphere(transform.position, lockOnRadius, enemyLayer);
+                
+                Physics.OverlapSphereNonAlloc(transform.position, lockOnRadius, targetColliders, enemyLayer);
+                
                 HashSet<Transform> currentNearbyTargets = new HashSet<Transform>();
                 float screenWidth75 = Screen.width * 0.75f;
 
-                foreach (Collider collider in colliders)
+                foreach (Collider col in targetColliders)
                 {
-                    Transform enemy = collider.transform;
+                    Transform enemy = col.transform;
                     float worldDistance = Vector3.Distance(transform.position, enemy.position);
 
                     Vector3 screenPoint = MainCamera.WorldToScreenPoint(enemy.position);
@@ -255,32 +255,31 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
             moveCameraTarget.SetRotation(LockParams.LockOnTarget.position - transform.position);
 
             // 최종 이동 벡터 계산 및 반환, 목표 위치에 가까워질수록 감속하여 흔들림 방지
-            return directionToTarget.normalized * camTargetMoveSpeed * smoothingFactor * Time.deltaTime;
+            return directionToTarget.normalized * (camTargetMoveSpeed * smoothingFactor * Time.deltaTime);
         }
 
         public override void UpdateLockOnMarker()
         {
-            return;
-            Transform target = CurrentLockOnTargetT;
-
-            if (target != null)
-            {
-                Vector3 screenPoint = MainCamera.WorldToScreenPoint(target.position + Vector3.up * LockParams.MarkerHeight);
-
-                if (screenPoint.z > 0)
-                {
-                    lockOnMarker.transform.position = screenPoint;
-                    lockOnMarker.enabled = true;
-                }
-                else
-                {
-                    lockOnMarker.enabled = false; // 대상이 보이지 않으면 비활성화
-                }
-            }
-            else
-            {
-                lockOnMarker.enabled = false; // LockOn 대상이 없으면 비활성화
-            }
+            // Transform target = CurrentLockOnTargetT;
+            //
+            // if (target != null)
+            // {
+            //     Vector3 screenPoint = MainCamera.WorldToScreenPoint(target.position + Vector3.up * LockParams.MarkerHeight);
+            //
+            //     if (screenPoint.z > 0)
+            //     {
+            //         lockOnMarker.transform.position = screenPoint;
+            //         lockOnMarker.enabled = true;
+            //     }
+            //     else
+            //     {
+            //         lockOnMarker.enabled = false; // 대상이 보이지 않으면 비활성화
+            //     }
+            // }
+            // else
+            // {
+            //     lockOnMarker.enabled = false; // LockOn 대상이 없으면 비활성화
+            // }    
         }
     }
 }

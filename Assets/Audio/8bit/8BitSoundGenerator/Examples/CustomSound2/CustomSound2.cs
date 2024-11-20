@@ -1,6 +1,4 @@
 ﻿using EightBitSoundGenerator;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CustomSound2 : MonoBehaviour

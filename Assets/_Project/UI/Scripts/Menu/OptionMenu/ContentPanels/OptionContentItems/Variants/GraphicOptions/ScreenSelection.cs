@@ -32,7 +32,7 @@ namespace _Project.UI.OptionMenu
                 // Screen.fullScreen = false;
                 Screen.fullScreenMode = FullScreenMode.Windowed;
             }
-            FindObjectOfType<GameManager>().DelayedOnApply().Forget();
+            FindAnyObjectByType<GameManager>().DelayedOnApply().Forget();
         }
 
         protected override void SetDescription(string value = "")
