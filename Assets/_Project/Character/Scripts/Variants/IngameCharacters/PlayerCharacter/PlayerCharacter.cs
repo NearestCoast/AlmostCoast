@@ -201,7 +201,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("GroundParams.SlopeAngleDeg : " + GroundParams.SlopeAngleDeg);
             // DrawLabel("GroundParams.SlopeAngleRad : " + GroundParams.SlopeAngleRad);
             // DrawLabel("");
-            // DrawLabel("VerticalParams.IsWalled : " + VerticalParams.IsWalled);
+            DrawLabel("VerticalParams.IsWalled : " + VerticalParams.IsWalled);
             // DrawLabel("VerticalParams.IsWallPerpendicularToGround : " + VerticalParams.IsWallPerpendicularToGround);
             // DrawLabel("VerticalParams.WallNormal : " + VerticalParams.WallNormal);
             // DrawLabel("VerticalParams.WallPoint : " + VerticalParams.WallPoint);

@@ -13,21 +13,17 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             get
             {
                 if (MoveParams.IsUnderCrowdControl) return false;
-                if (VerticalParams.WallNormal is null)
-                {
-                    if (PrevState.Type == StateType.Climb) Debug.Log("WallNormal Is Null.");
-                }
                 if (VerticalParams.WallNormal is not null)
                 {
                     var isDirectionCorrect = inputChecker.Direction2.y > 0;
                     var dot = Vector3.Dot(-VerticalParams.WallNormal.Value, transform.forward);
                     var isLookingAtWall = 1 - dot < 0.05f;
                     
-                    Debug.Log("#### ClimbOverLedge ####");
-                    Debug.Log("isDirectionCorrect : " + isDirectionCorrect);
-                    Debug.Log("isLookingAtWall: " + isLookingAtWall);
-                    Debug.Log("checker.GetIsSightOpened(): " + checker.GetIsSightOpened());
-                    Debug.Log("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
+                    // Debug.Log("#### ClimbOverLedge ####");
+                    // Debug.Log("isDirectionCorrect : " + isDirectionCorrect);
+                    // Debug.Log("isLookingAtWall: " + isLookingAtWall);
+                    // Debug.Log("checker.GetIsSightOpened(): " + checker.GetIsSightOpened());
+                    // Debug.Log("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
                     
                     return isDirectionCorrect &&
                            isLookingAtWall &&

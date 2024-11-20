@@ -233,11 +233,6 @@ namespace _Project.Characters.IngameCharacters.Core
             MoveParams.ResetSkillJumpCount();
             
             CharacterControllerEnveloper.OnSpawn();
-
-            foreach (var componentsInChild in GetComponentsInChildren<SpecificTrigger>())
-            {
-                componentsInChild.Reset();
-            }
             
             ResetModelTransform();
 

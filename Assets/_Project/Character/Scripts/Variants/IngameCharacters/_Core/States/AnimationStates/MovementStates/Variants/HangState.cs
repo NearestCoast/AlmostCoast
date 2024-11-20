@@ -49,6 +49,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.ResetAcceleration();
             
             IsJustEntered = true;
+            
+            WallNormalSnap = VerticalParams.WallNormal is null ? -transform.forward : VerticalParams.WallNormal.Value;
         }
 
         public override void OnExitState()
@@ -60,6 +62,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         // [SerializeField] private float maxTime = 0.1f;
         [SerializeField] private float distanceOffset = 0.2f;
         private bool IsJustEntered { get; set; }
+        private Vector3 WallNormalSnap { get; set; }
         protected override Vector3 GetVelocity()
         {
             MoveParams.DecreaseClimbStaminaPerFrame();
@@ -69,31 +72,13 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 IsJustEntered = false;
                 return Vector3.up * (VerticalParams.DistanceToTopEdge - characterControllerEnveloper.Height + distanceOffset);
             }
-            // if (StateTime < maxTime)
-            // {
-            //     var value = Vector3.up * (VerticalParams.DistanceToTopEdge + distanceOffset) / maxTime;
-            //     return value * Time.deltaTime;
-            // }
-            // else
-            // {
-            //     
-            // }
             
             return Vector3.zero;
         }
 
         protected override Quaternion GetRotation()
         {
-            // WallNormal이 유효하지 않을 경우 현재 회전 유지
-            if (VerticalParams.WallNormal == null)
-            {
-                return transform.rotation;
-            }
-
-            // WallNormal을 기반으로 회전 생성
-            Vector3 wallNormal = VerticalParams.WallNormal.Value; // nullable 처리
-            Quaternion targetRotation = Quaternion.LookRotation(-wallNormal, Vector3.up);
-
+            Quaternion targetRotation = Quaternion.LookRotation(-WallNormalSnap, Vector3.up);
             return targetRotation;
         }
 
