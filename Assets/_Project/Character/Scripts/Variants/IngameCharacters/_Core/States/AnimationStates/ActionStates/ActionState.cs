@@ -79,61 +79,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
         public virtual Vector3 GetVelocity()
         {
             if (masterCharacter is PlayerCharacter) return Vector3.zero;
-            if (GroundParams.IsGrounded)
-            {
-                if (GroundParams.GroundNormal == Vector3.up)
-                // if (GroundParams.GroundNormalDotWithGroundPlane > 0.98f)
-                {
-                    MoveParams.GravityTime = 0f;
-                    if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
-                    {
-                        MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);
-                        if (MoveParams.HasMovingPlatform)
-                        {
-                            MoveParams.Gravity = Vector3.zero;
-                        }
-                    }
-                    else
-                    {
-                        MoveParams.Gravity = Vector3.zero;
-                    }
-                }
-                else
-                {
-                    var normalGravity = movementStateValues.GetGravity();
-                    MoveParams.GravityTime += Time.deltaTime;
-                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
-                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
-                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
-                    {
-                        
-                        MoveParams.Gravity = gravityDir * normalGravity.magnitude * slopeDownSpeed;
-                        // MoveParams.Gravity = gravityDir * normalGravity.magnitude;
-                    }
-                    else
-                    {
-                        MoveParams.GravityTime = 0f;
-                        MoveParams.Gravity = Vector3.zero;
-                    }
-                    
-                    Debug.DrawRay(transform.position, MoveParams.Gravity * 10, Color.green);
-                    
-                    if (!characterControllerEnveloper.IsGrounded)
-                    {
-                        var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
-                        if (sphereCastHit)
-                        {
-                            MoveParams.Gravity += Vector3.down * sphereCastHitInfo.distance * 0.1f;
-                            // Debug.Log(hitInfo.distance);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                MoveParams.Gravity = movementStateValues.GetGravity();
-                MoveParams.GravityTime += Time.deltaTime;
-            }
+            movementStateValues.SetGravity();
 
             return MoveParams.Gravity;
         }

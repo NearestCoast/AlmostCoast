@@ -99,7 +99,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public void ResetJumpCount() => JumpCount = 1;
         public void DecreaseJumpCount() => JumpCount -= 1;
 
-        [SerializeField] private int maxWallJumpCount = 1;
+        [SerializeField] private int maxWallJumpCount = 0;
         public int MaxWallJumpCount
         {
             get => maxWallJumpCount;

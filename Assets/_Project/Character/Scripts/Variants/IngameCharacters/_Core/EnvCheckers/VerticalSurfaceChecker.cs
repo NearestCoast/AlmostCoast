@@ -17,6 +17,7 @@ namespace _Project.Characters.IngameCharacters.Core
 
         // private BoxCollider boxCollider;
         private LayerMask surfaceLayers;
+        private LayerMask obstacleLayers;
 
         private void Awake()
         {
@@ -28,6 +29,10 @@ namespace _Project.Characters.IngameCharacters.Core
 
             surfaceLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") |
                             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling");
+            
+            obstacleLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") |
+                             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling")
+                             | 1 << LayerMask.NameToLayer("Hazard");
 
             VerticalParams.IsWalled = false;
         }
@@ -149,16 +154,16 @@ namespace _Project.Characters.IngameCharacters.Core
             Vector3 forwardMiddleLeftOrigin = HeadOrigin + Vector3.up * characterControllerEnveloper.Height / 2 - transform.right * characterControllerEnveloper.Radius;
             Vector3 forwardUpOrigin = HeadOrigin + Vector3.up * characterControllerEnveloper.Height;
             
-            float forwardRayLength = characterControllerEnveloper.Radius * 3f;
+            float forwardRayLength = characterControllerEnveloper.Radius * 4.5f;
 
             // 위쪽 공간이 열려있는지 검사
-            bool isUpOpen = !Physics.Raycast(upOrigin, upDirection, upRayLength, surfaceLayers);
+            bool isUpOpen = !Physics.Raycast(upOrigin, upDirection, upRayLength, obstacleLayers);
 
-            bool isForwardBottomOpen = !Physics.Raycast(forwardBottomOrigin, transform.forward, forwardRayLength, surfaceLayers);
-            bool isForwardUpOpen = !Physics.Raycast(forwardUpOrigin, transform.forward, forwardRayLength, surfaceLayers);
+            bool isForwardBottomOpen = !Physics.Raycast(forwardBottomOrigin, transform.forward, forwardRayLength, obstacleLayers);
+            bool isForwardUpOpen = !Physics.Raycast(forwardUpOrigin, transform.forward, forwardRayLength, obstacleLayers);
 
-            bool isForwardMidRightOpen = !Physics.Raycast(forwardMiddleRightOrigin, transform.forward, forwardRayLength, surfaceLayers);
-            bool isForwardMidLeftOpen = !Physics.Raycast(forwardMiddleLeftOrigin, transform.forward, forwardRayLength, surfaceLayers);
+            bool isForwardMidRightOpen = !Physics.Raycast(forwardMiddleRightOrigin, transform.forward, forwardRayLength, obstacleLayers);
+            bool isForwardMidLeftOpen = !Physics.Raycast(forwardMiddleLeftOrigin, transform.forward, forwardRayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
             Debug.DrawRay(upOrigin, upDirection * upRayLength, isUpOpen ? Color.green : Color.red);
@@ -173,18 +178,18 @@ namespace _Project.Characters.IngameCharacters.Core
 
         public bool GetIsLeftSightOpened()
         {
-            float rayLength = characterControllerEnveloper.Radius * 3;
+            float rayLength = characterControllerEnveloper.Radius * 4.5f;
             
             Vector3 origin1 = BodyOrigin + (-transform.right) * characterControllerEnveloper.Radius;
             Vector3 origin2 = origin1 + (-transform.right) * (characterControllerEnveloper.Radius * 2);
             Vector3 origin3 = origin1 + Vector3.up * characterControllerEnveloper.Height / 2 + (-transform.right) * (characterControllerEnveloper.Radius);
             Vector3 origin4 = origin1 + Vector3.down * characterControllerEnveloper.Height / 2 + (-transform.right) * (characterControllerEnveloper.Radius);
             
-            bool isLeftOpen = !Physics.Raycast(origin1, -transform.right, rayLength, surfaceLayers);
-            bool isOrigin1ForwardOpen = !Physics.Raycast(origin1, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin2ForwardOpen = !Physics.Raycast(origin2, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin3ForwardOpen = !Physics.Raycast(origin3, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, surfaceLayers);
+            bool isLeftOpen = !Physics.Raycast(origin1, -transform.right, rayLength, obstacleLayers);
+            bool isOrigin1ForwardOpen = !Physics.Raycast(origin1, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin2ForwardOpen = !Physics.Raycast(origin2, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin3ForwardOpen = !Physics.Raycast(origin3, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
             Debug.DrawRay(origin1, -transform.right * rayLength, isLeftOpen ? Color.green : Color.red);
@@ -199,18 +204,18 @@ namespace _Project.Characters.IngameCharacters.Core
 
         public bool GetIsRightSightOpened()
         {
-            float rayLength = characterControllerEnveloper.Radius * 3;
+            float rayLength = characterControllerEnveloper.Radius * 4.5f;
             
             Vector3 origin1 = BodyOrigin + (transform.right) * characterControllerEnveloper.Radius;
             Vector3 origin2 = origin1 + (transform.right) * (characterControllerEnveloper.Radius * 2);
             Vector3 origin3 = origin1 + Vector3.up * characterControllerEnveloper.Height / 2 + (transform.right) * (characterControllerEnveloper.Radius);
             Vector3 origin4 = origin1 + Vector3.down * characterControllerEnveloper.Height / 2 + (transform.right) * (characterControllerEnveloper.Radius);
             
-            bool isRightOpen = !Physics.Raycast(origin1, transform.right, rayLength, surfaceLayers);
-            bool isOrigin1ForwardOpen = !Physics.Raycast(origin1, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin2ForwardOpen = !Physics.Raycast(origin2, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin3ForwardOpen = !Physics.Raycast(origin3, transform.forward, rayLength, surfaceLayers);
-            bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, surfaceLayers);
+            bool isRightOpen = !Physics.Raycast(origin1, transform.right, rayLength, obstacleLayers);
+            bool isOrigin1ForwardOpen = !Physics.Raycast(origin1, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin2ForwardOpen = !Physics.Raycast(origin2, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin3ForwardOpen = !Physics.Raycast(origin3, transform.forward, rayLength, obstacleLayers);
+            bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
             Debug.DrawRay(origin1, transform.right * rayLength, isRightOpen ? Color.green : Color.red);

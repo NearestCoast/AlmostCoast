@@ -49,82 +49,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         protected override Vector3 GetVelocity()
         {
-            if (GroundParams.IsGrounded)
-            {
-                if (GroundParams.GroundNormal == Vector3.up)
-                // if (GroundParams.GroundNormalDotWithGroundPlane > 0.98f)
-                {
-                    MoveParams.GravityTime = 0f;
-                    if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
-                    {
-                        MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);
-                        if (MoveParams.HasMovingPlatform)
-                        {
-                            MoveParams.Gravity = Vector3.zero;
-                        }
-                    }
-                    else
-                    {
-                        MoveParams.Gravity = Vector3.zero;
-                    }
-                }
-                else
-                {
-                    var normalGravity = movementStateValues.GetGravity();
-                    MoveParams.GravityTime += Time.deltaTime;
-                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
-                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
-                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
-                    {
-                        
-                        MoveParams.Gravity = gravityDir * normalGravity.magnitude * slopeDownSpeed;
-                        // MoveParams.Gravity = gravityDir * normalGravity.magnitude;
-                    }
-                    else
-                    {
-                        MoveParams.GravityTime = 0f;
-                        MoveParams.Gravity = Vector3.zero;
-                    }
-                    
-                    Debug.DrawRay(transform.position, MoveParams.Gravity * 10, Color.green);
-                    
-                    if (!characterControllerEnveloper.IsGrounded)
-                    {
-                        var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
-                        if (sphereCastHit)
-                        {
-                            MoveParams.Gravity += Vector3.down * sphereCastHitInfo.distance * 0.1f;
-                            // Debug.Log(hitInfo.distance);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                MoveParams.Gravity = movementStateValues.GetGravity();
-                MoveParams.GravityTime += Time.deltaTime;
-            }
-            
-            
-            var exceptionalMoveValue = Vector3.zero;
-            
-            // var rayOrigin = transform.position + Vector3.up * characterControllerEnveloper.Height / 2;
-            // var rayDistance = characterControllerEnveloper.Height;
-            // var layerMask = LayerMask.GetMask("Player", "Character");
-            // if (Physics.Raycast(rayOrigin, Vector3.down, out var hitInfo, rayDistance, layerMask))
-            // {
-            //     // 레이어가 "Player" 또는 "Character"일 때 실행할 로직
-            //     // Debug.Log($"Hit {hitInfo.collider.gameObject.name} on 'Player' or 'Character' layer");
-            //
-            //     if (hitInfo.collider.attachedRigidbody && 
-            //         hitInfo.collider.attachedRigidbody.gameObject != characterControllerEnveloper.gameObject)
-            //     {
-            //         exceptionalMoveValue = transform.forward * exceptionalMove * Time.deltaTime;
-            //     }
-            // }
-            
-            
-            return (MoveParams.Gravity + exceptionalMoveValue);
+            movementStateValues.SetGravity();
+            return (MoveParams.Gravity);
         }
 
         protected override Quaternion GetRotation()

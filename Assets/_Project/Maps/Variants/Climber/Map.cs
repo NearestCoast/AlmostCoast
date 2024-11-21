@@ -15,6 +15,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
+using AnimationState = _Project.Characters._Core.States.AnimationStates.AnimationState;
 
 namespace _Project.Maps.Climber
 {
@@ -29,6 +30,7 @@ namespace _Project.Maps.Climber
         [SerializeField] private Transform mapInstanceContainer;
 
         [SerializeField, TitleGroup("Instances")] private Ability abilityInstance;
+        [SerializeField, TitleGroup("Instances")] private WallJumpCountUp wallJumpCountUp;
         [SerializeField, TitleGroup("Instances")] private MovingPlatform movingPlatformInstance;
         [SerializeField, TitleGroup("Instances")] private SpotLight spotLightInstance;
         [SerializeField, TitleGroup("Instances")] private Transform objectPrefabContainer;
@@ -40,6 +42,7 @@ namespace _Project.Maps.Climber
             mapInstanceContainer ??= Extensions.FindInactiveObjectByName("MapInstances").transform;
             objectPrefabContainer ??= Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
             abilityInstance ??= Extensions.FindInactiveObjectByName("AbilityInstance").GetComponent<Ability>();
+            wallJumpCountUp ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
             // movingPlatformInstance = GameObject.Find("MovingPlatformInstance").GetComponent<MovingPlatform>();
             movingPlatformInstance ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
             spotLightInstance ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
@@ -527,42 +530,47 @@ namespace _Project.Maps.Climber
                         rb.isKinematic = true;
                         var boxCollider = child.AddComponent<BoxCollider>();
                     }
+                    else if (split[1].Contains("WJumpCountUp"))
+                    {
+                        child.GetComponent<MeshRenderer>().enabled = false;
+                        var ability = Instantiate(wallJumpCountUp, child.transform);
+                        ability.gameObject.SetActive(true);
+                    }
                     else if (split[1].Contains("Ability"))
                     {
-                        var ability = Instantiate(abilityInstance, child.transform);
-                        ability.gameObject.SetActive(true);
-                        // var sphereCollider = ability.gameObject.AddComponent<SphereCollider>();
-                        
+                        child.GetComponent<MeshRenderer>().enabled = false;
                         var abilityName = split[1].Split(".")[1];
                         var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
+                        var ability = Instantiate(abilityInstance, child.transform);
+                        ability.gameObject.SetActive(true);
                         
-                        if (abilityName.Contains("Attack_01"))
+                        if (abilityName.Contains("Attack"))
                         {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_01>(true);
+                            ability.TargetStates = new List<AnimationState>()
+                            {
+                                playerCharacter.transform.GetComponentInChildrenOfType<Attack_01>(true),
+                                playerCharacter.transform.GetComponentInChildrenOfType<Attack_02>(true),
+                                playerCharacter.transform.GetComponentInChildrenOfType<Attack_03>(true),
+                            };
                         }
-                        else if (abilityName.Contains("Attack_02"))
+                        else
                         {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_02>(true);
-                        }
-                        else if (abilityName.Contains("Attack_03"))
-                        {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<Attack_03>(true);
-                        }
-                        else if (abilityName.Contains("Jump"))
-                        {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<JumpState>(true);
-                        }
-                        else if (abilityName.Contains("SlideDash"))
-                        {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<SlideDashState>(true);
-                        }
-                        else if (abilityName.Contains("GroundPounding"))
-                        {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<GroundPoundingState>(true);
-                        }
-                        else if (abilityName.Contains("Climb"))
-                        {
-                            ability.TargetState = playerCharacter.transform.GetComponentInChildrenOfType<ClimbState>(true);
+                            if (abilityName.Contains("Jump"))
+                            {
+                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<JumpState>(true) };
+                            }
+                            else if (abilityName.Contains("SlideDash"))
+                            {
+                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<SlideDashState>(true) };
+                            }
+                            else if (abilityName.Contains("GroundPounding"))
+                            {
+                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<GroundPoundingState>(true) };
+                            }
+                            else if (abilityName.Contains("Climb"))
+                            {
+                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<ClimbState>(true) };
+                            }
                         }
                     }
                     else if (split[1].Contains("SpotLight"))

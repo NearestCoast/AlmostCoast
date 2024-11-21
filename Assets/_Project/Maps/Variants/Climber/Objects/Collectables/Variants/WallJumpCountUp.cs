@@ -1,32 +1,26 @@
 using System;
-using System.Collections.Generic;
+using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Managers.Scripts._Core.AudioManager;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
-using AnimationState = _Project.Characters._Core.States.AnimationStates.AnimationState;
 
 namespace _Project.Maps.Climber.Objects.Collectables
 {
-    public class Ability : Collectable
+    public class WallJumpCountUp : Collectable
     {
-        [SerializeField] private List<AnimationState> targetStates;
-
-        public List<AnimationState> TargetStates
+        private PlayerCharacter playerCharacter;
+        private void Awake()
         {
-            get => targetStates;
-            set => targetStates = value;
+            playerCharacter = FindAnyObjectByType<PlayerCharacter>();
         }
-
+        
         protected override void Work()
         {
             base.Work();
             
-            foreach (var targetState in TargetStates)
-            {
-                Debug.Log("Player Collected " + targetState.name);
-                targetState.gameObject.SetActive(true);
-            }
+            playerCharacter.MoveParams.MaxWallJumpCount += 1;
+            
+            Debug.Log("Player Collected WallJumpCountUp");
             
             FindAnyObjectByType<AudioManager>().SetClip(audioSource.clip);
             FindAnyObjectByType<AudioManager>().Play();
@@ -37,7 +31,7 @@ namespace _Project.Maps.Climber.Objects.Collectables
         
         private async UniTaskVoid DestroyAfterDelay()
         {
-            await UniTask.Delay(3000, ignoreTimeScale: true); // real-time으로 3초 대기
+            await UniTask.Delay(1000, ignoreTimeScale: true); // real-time으로 3초 대기
             Time.timeScale = 1;
             Destroy(gameObject);
         }

@@ -139,6 +139,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 cameraTarget?.Move(currentMoveValue);
             
                 PrevCamTargetMoveValue = currentMoveValue;
+                // if (IsJustStateChanged) Debug.Log(CurrentMovementState);
             }
         }
 
@@ -186,6 +187,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel(CurrentBrightnessState.Type + " " + (int)CurrentBrightnessState.StateTime);
             // DrawLabel(CurrentLockState.Type + " " + (int)CurrentLockState.StateTime);
             DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
+            DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
             // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
             // DrawLabel("GroundParams.IsGroundedOnCharacter : " + GroundParams.IsGroundedOnCharacter);
@@ -201,7 +203,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("GroundParams.SlopeAngleDeg : " + GroundParams.SlopeAngleDeg);
             // DrawLabel("GroundParams.SlopeAngleRad : " + GroundParams.SlopeAngleRad);
             // DrawLabel("");
-            DrawLabel("VerticalParams.IsWalled : " + VerticalParams.IsWalled);
+            // DrawLabel("VerticalParams.IsWalled : " + VerticalParams.IsWalled);
             // DrawLabel("VerticalParams.IsWallPerpendicularToGround : " + VerticalParams.IsWallPerpendicularToGround);
             // DrawLabel("VerticalParams.WallNormal : " + VerticalParams.WallNormal);
             // DrawLabel("VerticalParams.WallPoint : " + VerticalParams.WallPoint);
@@ -211,8 +213,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("VerticalParams.IsLeftSightOpened : " + VerticalParams.IsLeftSightOpened);
             // DrawLabel("VerticalParams.IsLeftLedgeMovable : " + VerticalParams.IsLeftLedgeMovable);
             // DrawLabel("");
-            DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
-            DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
+            // DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
+            // DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
             // DrawLabel("MoveParams.IsClimbing : " + MoveParams.IsClimbing);
             // DrawLabel("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
             // DrawLabel("MoveParams.ClimbStamina : " + MoveParams.ClimbStaminaTime);

@@ -127,6 +127,7 @@ namespace _Project.Characters.IngameCharacters.Core
             if (MoveParams.IsJustLedgeMoveEnded) MoveParams.ResetIsJustLedgeMoveEnded();
 
             IsJustStateChanged = PrevMovementState != CurrentMovementState;
+            // if (IsJustStateChanged) Debug.Log(CurrentMovementState);
 
             PrevMovementState = CurrentMovementState;
 

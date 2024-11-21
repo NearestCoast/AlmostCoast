@@ -429,7 +429,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     }
                 }
             
-                var dotMag = Mathf.Abs(Vector3.Dot(moveDirection, Vector3.right));
+                var camToPlayer = (transform.position - Camera.main.transform.position).XYZ3toX0Z3();
+                var rightOfCamToPlayer = Vector3.Cross(Vector3.up, camToPlayer).normalized;
+                
+                var dotMag = Mathf.Abs(Vector3.Dot(moveDirection, rightOfCamToPlayer));
                 var dir = (transform.position + moveDirection * (camTargetMoveAmount * inputDirSpeed * dotMag) - moveCameraTarget.transform.position).XYZ3toX0Z3() + Vector3.up * yRevision;
                 var value = dir * (camTargetMoveSpeed * inputSpeed);
                 return value * Time.deltaTime;

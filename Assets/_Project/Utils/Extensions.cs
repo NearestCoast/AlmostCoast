@@ -274,5 +274,41 @@ namespace _Project.Utils
             return null;
         }
 
+            
+        public static void ConservativeSetPositionAndRotation(this Transform t, Vector3 pos, Quaternion rot)
+        {
+            // Avoid precision creep
+            if (t.position.Equals(pos) && t.rotation.Equals(rot)) 
+                return;
+#if UNITY_EDITOR
+            // Avoid dirtying the scene with insignificant diffs
+            if (Application.isPlaying)
+                t.SetPositionAndRotation(pos, rot);
+            else
+            {
+                // Work in local space to reduce precision mismatches
+                if (t.parent != null)
+                {
+                    pos = t.parent.InverseTransformPoint(pos);
+                    rot = Quaternion.Inverse(t.parent.rotation) * rot;
+                }
+                const float tolerance = 0.0001f;
+                var p = t.localPosition;
+                if (Mathf.Abs(p.x - pos.x) < tolerance
+                    && Mathf.Abs(p.y - pos.y) < tolerance
+                    && Mathf.Abs(p.z - pos.z) < tolerance)
+                    pos = p;
+                var r = t.localRotation;
+                if (Mathf.Abs(r.x - rot.x) < tolerance
+                    && Mathf.Abs(r.y - rot.y) < tolerance 
+                    && Mathf.Abs(r.z - rot.z) < tolerance
+                    && Mathf.Abs(r.w - rot.w) < tolerance)
+                    rot = r;
+                t.SetLocalPositionAndRotation(pos, rot);
+            }
+#else
+            t.SetPositionAndRotation(pos, rot);
+#endif
+        }
     }
 }

@@ -27,12 +27,19 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         [SerializeField, TitleGroup("Velocity")] protected float accelerationFactor = 2;
         [SerializeField, TitleGroup("Velocity"), Range(0,1)] protected float stayHeightParameter = 1;
         [SerializeField, TitleGroup("Velocity"), Range(0,1)] protected float wallJumpSlowRate = 1;
-
+        
+        private IngameCharacter masterCharacter;
+        private CharacterControllerEnveloper characterControllerEnveloper;
         private MoveParams MoveParams;
-
+        private GroundParams GroundParams;
+        
         private void Awake()
         {
+            masterCharacter = GetComponentInParent<IngameCharacter>();
+            characterControllerEnveloper = GetComponentInParent<CharacterControllerEnveloper>();
             MoveParams = GetComponentInParent<MoveParams>();
+            GroundParams = GetComponentInParent<GroundParams>();
+            
             OriginalGravityPow = gravityPow;
             OriginalAccelerationFactor = accelerationFactor;
         }
@@ -69,6 +76,65 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             CurrentHeight = newHeight;
             isFinished = CurrentHeight == 0;
             return Vector3.down * fallDistance;
+        }
+
+        public void SetGravity()
+        {
+            if (GroundParams.IsGrounded)
+            {
+                if (GroundParams.GroundNormal == Vector3.up)
+                {
+                    MoveParams.GravityTime = 0f;
+                    if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0.00001f)
+                    {
+                        MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);
+                        if (MoveParams.HasMovingPlatform)
+                        {
+                            MoveParams.Gravity = Vector3.zero;
+                        }
+                    }
+                    else
+                    {
+                        MoveParams.Gravity = Vector3.zero;
+                    }
+                }
+                else
+                {
+                    var normalGravity = GetGravity();
+                    MoveParams.GravityTime += Time.deltaTime;
+                    var slopeDownSpeed = GroundParams.SlopeAngleDeg / 90;
+                    var gravityDir = Vector3.ProjectOnPlane(Vector3.down, GroundParams.GroundNormal).normalized;
+                    if (GroundParams.SlopeAngleDeg > characterControllerEnveloper.SlopeLimit)
+                    {
+                        MoveParams.Gravity = gravityDir * normalGravity.magnitude * slopeDownSpeed;
+                    }
+                    else
+                    {
+                        MoveParams.GravityTime = 0f;
+                        MoveParams.Gravity = Vector3.zero;
+                    }
+                    
+                    Debug.DrawRay(transform.position, MoveParams.Gravity * 10, Color.green);
+                    
+                    if (!characterControllerEnveloper.IsGrounded)
+                    {
+                        var sphereCastHit = Physics.SphereCast(transform.position, characterControllerEnveloper.Radius, Vector3.down, out var sphereCastHitInfo, characterControllerEnveloper.Height);
+                        if (sphereCastHit)
+                        {
+                            MoveParams.Gravity += Vector3.down * sphereCastHitInfo.distance * 0.1f;
+                            // Debug.Log(hitInfo.distance);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (!masterCharacter.CurrentMovingPlatform)
+                {
+                    MoveParams.Gravity = GetGravity();
+                    MoveParams.GravityTime += Time.deltaTime;
+                }
+            }
         }
     }
 }
