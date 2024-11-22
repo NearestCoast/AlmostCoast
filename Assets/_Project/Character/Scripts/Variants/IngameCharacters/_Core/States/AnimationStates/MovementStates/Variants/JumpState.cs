@@ -192,9 +192,45 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             if (MoveParams.IsWallJumping)
             {
                 HorizontalDirSnap = (HorizontalDirection3).XYZ3toX0Z3();
-                var dot = Vector3.Dot(HorizontalDirSnap, WallNormalSnap);
+                var signedAngle = Vector3.SignedAngle(HorizontalDirSnap, WallNormalSnap, Vector3.up);
+                // if (dot )
+                if (-30 < signedAngle && signedAngle < 30)
+                {
+                 HorizontalDirSnap = WallNormalSnap;
+                }
+                if (150 < signedAngle || signedAngle < -150)
+                {
+                    HorizontalDirSnap = WallNormalSnap;
+                }
+
+                if (-60 < signedAngle && signedAngle < -30)
+                {
+                    HorizontalDirSnap = HorizontalDirSnap;   
+                }
                 
-                IsClimbJumping = PrevState.Type == StateType.Climb && dot < 0;
+                if (-150 < signedAngle && signedAngle < -60)
+                {
+                    // -30도 회전을 위한 Quaternion 생성 (예: Y축 기준)
+                    Quaternion rotation = Quaternion.Euler(0, 60, 0);
+                    
+                    HorizontalDirSnap = rotation * WallNormalSnap;
+                }
+                
+
+                if (30 < signedAngle && signedAngle < 60)
+                {
+                    HorizontalDirSnap = HorizontalDirSnap;   
+                }
+                
+                if (60 < signedAngle && signedAngle < 150)
+                {
+                    // -30도 회전을 위한 Quaternion 생성 (예: Y축 기준)
+                    Quaternion rotation = Quaternion.Euler(0, -60, 0);
+                    
+                    HorizontalDirSnap = rotation * WallNormalSnap;
+                }
+                
+                // IsClimbJumping = PrevState.Type == StateType.Climb && dot < 0;
             }
             else
             {
@@ -280,7 +316,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 isLeapEnd = value;
                 
                 if (isLeapEnd)
-                {
+                {  
                     MoveParams.EndLeaping();
                     GroundParams.IsGrounded = false;
                 }
@@ -315,17 +351,25 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 IsLeapEnd = true;
             }
 
-            var inputMagnitudeAmplified = isPlayer ? Mathf.Pow(InputDirection.magnitude, 2) : 1; // 최대 1
+            
+            
             Vector3 moveValue;
             if (MoveParams.IsWallJumping)
             {
-                if (IsClimbJumping)
-                {
-                    moveValue = Vector3.zero;
-                }
+                var inputMagnitudeAmplified = 1;
+                // if (IsClimbJumping)
+                // {
+                //     moveValue = Vector3.zero;
+                // }
+                // else moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+                if (isPlayer) moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
                 else moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
             }
-            else moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+            else
+            {
+                var inputMagnitudeAmplified = isPlayer ? Mathf.Pow(InputDirection.magnitude, 2) : 1; // 최대 1
+                moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+            }
 
             var value = (moveValue) * (MoveParams.IsWallJumping ? 1.5f : 1);
             value *= Time.deltaTime;

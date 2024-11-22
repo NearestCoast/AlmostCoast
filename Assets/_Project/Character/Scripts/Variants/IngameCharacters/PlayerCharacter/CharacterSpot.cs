@@ -45,7 +45,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 
             async UniTaskVoid wait()
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
+                await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
                 CinemachineCore.SoloCamera = null;
             }
         }

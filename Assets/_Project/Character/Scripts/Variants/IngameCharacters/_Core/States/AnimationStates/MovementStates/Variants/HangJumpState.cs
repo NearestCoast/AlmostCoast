@@ -288,7 +288,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             set
             {
                 isLeapEnd = value;
-                if (isLeapEnd) MoveParams.EndLeaping();
+                
+                if (isLeapEnd)
+                {
+                    MoveParams.EndLeaping();
+                    GroundParams.IsGrounded = false;
+                }
             }
         }
 

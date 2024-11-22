@@ -12,8 +12,10 @@ namespace _Project.Utils
 
         [Button(ButtonSizes.Large)]
         [InfoBox("Scale UVs for all child MeshFilters to match the specified texel density.")]
-        public async void ScaleUVsToTexelDensity()
+        public async void ScaleUVsToTexelDensity(float texScale = 1)
         {
+            if (texScale == 0) texScale = 1;
+            textureScale = texScale;
             MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
 
             int processedCount = 0;

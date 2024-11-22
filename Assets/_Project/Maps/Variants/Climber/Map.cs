@@ -24,6 +24,7 @@ namespace _Project.Maps.Climber
         [SerializeField] private Level.Type levelType;
         [SerializeField] private bool useDeco;
         [SerializeField] private bool optimizeTexture;
+        [SerializeField] private float textureScale;
         [SerializeField] private GameObject cloneObj;
         [SerializeField] private List<Level> levels = new List<Level>();
         // [SerializeField] private GameObject ringdongPrefab;
@@ -213,7 +214,7 @@ namespace _Project.Maps.Climber
                 foreach (var level in levels)
                 {
                     var uvScaler = level.gameObject.AddComponent<UVScaler>();
-                    uvScaler.ScaleUVsToTexelDensity();
+                    uvScaler.ScaleUVsToTexelDensity(textureScale);
                 }
             }
 
