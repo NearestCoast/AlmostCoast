@@ -44,7 +44,17 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
 
         protected void SetBothIdle()
         {
+            SetMovementIdle();
+            SetActionIdle();
+        }
+
+        protected void SetMovementIdle()
+        {
             animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.Idle]);
+        }
+
+        protected void SetActionIdle()
+        {
             animationStateConductor.TrySetActionState(master.ActionStateContainer[ActionState.StateType.ActionIdle]);
         }
     }

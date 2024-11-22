@@ -16,22 +16,27 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
             base.OnStart();
             // Debug.Log("Chase");
             
-            commonStateConductor.TrySetLockState(master.LockStateContainer[LockState.StateType.LockOff]);
-            lockParams.LockOnTarget = null;
             
             pathfinder.SetTargetToPlayer();
         }
 
         public override TaskStatus OnUpdate()
         {
-            // SetBothIdle();
-            animationStateConductor.TrySetActionState(master.ActionStateContainer[ActionState.StateType.ActionIdle]);
+            SetActionIdle();
+            
             if (master.IsInAttackPhase)
             {
+                commonStateConductor.TrySetLockState(master.LockStateContainer[LockState.StateType.LockOn]);
+                lockParams.LockOnTarget = pathfinder.TargetCharacter.transform;
                 inputChecker.HorizontalDirection3 = Vector3.zero;
+                if (master.DebugCharacter) Debug.Log("C");
                 SetMovementState();
                 return TaskStatus.Running;
             }
+            
+            
+            commonStateConductor.TrySetLockState(master.LockStateContainer[LockState.StateType.LockOff]);
+            lockParams.LockOnTarget = null;
             
             pathfinder.CalculatePath();
             SetDirection();
@@ -58,8 +63,15 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
                     }
                     else
                     {
-                        var toNextPos = (pathfinder.NextNodePoint - transform.position).XYZ3toX0Z3();
-                        inputChecker.HorizontalDirection3 = toNextPos.XYZ3toX0Z3().normalized;
+                        if (pathfinder.IsPathComplete)
+                        {
+                            var toNextPos = (pathfinder.NextNodePoint - transform.position).XYZ3toX0Z3();
+                            inputChecker.HorizontalDirection3 = toNextPos.XYZ3toX0Z3().normalized;
+                        }
+                        else
+                        {
+                            inputChecker.HorizontalDirection3 = toTarget.normalized;
+                        }
                     }
                 }
             }
@@ -87,7 +99,6 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
                         {
                             var ray = new Ray(transform.position + inputChecker.HorizontalDirection3, Vector3.down);
                             var forwardBellowHit = Physics.Raycast(ray, out var hitInfo, 2, surfaceLayers);
-                            
                             if (!forwardBellowHit)
                             {
                                 animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.Jump]);

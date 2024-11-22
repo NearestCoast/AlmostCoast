@@ -21,6 +21,9 @@ namespace _Project.Characters.IngameCharacters.Core
 {
     public partial class IngameCharacter : _Project.Characters._Core.Character
     {
+        [SerializeField] private bool debug;
+        public bool DebugCharacter => debug;
+        
         protected IEnvironmentChecker[] environmentCheckers;
         protected CharacterControllerEnveloper characterControllerEnveloper;
 
@@ -132,6 +135,7 @@ namespace _Project.Characters.IngameCharacters.Core
                 Debug.Log("CurrentMovementState : " + CurrentMovementState);
                 Debug.Log("CurrentActionState : " + CurrentActionState);
             }
+            
             transform.rotation = CurrentMovementState.Rotation; 
 
             if (MoveParams.IsJustLedgeMoveEnded) MoveParams.ResetIsJustLedgeMoveEnded();

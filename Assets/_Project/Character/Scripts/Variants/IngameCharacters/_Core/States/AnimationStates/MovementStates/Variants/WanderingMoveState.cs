@@ -26,7 +26,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 if (inputChecker.HorizontalDirection3 == Vector3.zero) return false;
                 
                 return true;
-                return GroundParams.SlopeAngleDeg <= characterControllerEnveloper.SlopeLimit;
             }
         }
 
@@ -46,6 +45,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 };
                 return value;
             }
+        }
+
+        public override void OnEnterState()
+        {
+            base.OnEnterState();
+            if (masterCharacter.DebugCharacter) Debug.Log("Enter wander");
         }
     }
 

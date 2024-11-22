@@ -3,6 +3,7 @@ using _Project.Characters.IngameCharacters.Core.ActionStates.MeleeAttacks;
 using _Project.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Character.Scripts.Enemies.PlatformingEnemies.AttackStates
 {
@@ -119,7 +120,13 @@ namespace _Project.Character.Scripts.Enemies.PlatformingEnemies.AttackStates
             set
             {
                 isLeapEnd = value;
-                if (isLeapEnd) MoveParams.EndLeaping();
+                
+                
+                if (isLeapEnd)
+                {
+                    MoveParams.EndLeaping();
+                    GroundParams.IsGrounded = false;
+                }
             }
         }
 

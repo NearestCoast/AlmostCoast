@@ -28,7 +28,7 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
         private bool IsWaiting { get; set; }
         public override TaskStatus OnUpdate()
         {
-            SetBothIdle();
+            // SetBothIdle();
             if (IsWaiting) return TaskStatus.Running;
             
             if (pathfinder.IsReachedToTarget)
@@ -37,7 +37,7 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
                 WaitAndResume().Forget(); // 3초 후 IsWaiting을 false로 설정하는 함수 호출
                 
                 inputChecker.HorizontalDirection3 = Vector3.zero;
-                
+                // if (master.DebugCharacter) Debug.Log(inputChecker.HorizontalDirection3);
                 pathfinder.SetTargetToWayPoint();
                 pathfinder.CalculatePath();
             }
@@ -45,17 +45,21 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
             {
                 var dir = (pathfinder.NextNodePoint - transform.position);
                 inputChecker.HorizontalDirection3 = dir.XYZ3toX0Z3().normalized;
+                // if (master.DebugCharacter) Debug.Log(inputChecker.HorizontalDirection3);
             }    
-                
-            if (pathfinder.IsReachedToNextNode) pathfinder.SetNextNode();
             
+            if (pathfinder.IsReachedToNextNode) pathfinder.SetNextNode();
+            // if (master.DebugCharacter) Debug.Log(inputChecker.HorizontalDirection3);
             if (inputChecker.HorizontalDirection3 != Vector3.zero)
             {
-                animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.WanderingMove]);
+                // if (master.DebugCharacter) Debug.Log(master.CurrentMovementState.Type);
+                // if (master.CurrentMovementState.Type != MovementState.StateType.WanderingMove) 
+                    animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.WanderingMove]);
             }
             else
             {
-                animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.Idle]);
+                // if (master.CurrentMovementState.Type != MovementState.StateType.Idle)
+                    animationStateConductor.TrySetMovementState(master.MovementStateContainer[MovementState.StateType.Idle]);
             }
             
             return TaskStatus.Running;

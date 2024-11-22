@@ -30,7 +30,7 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
 
         public override TaskStatus OnUpdate()
         {
-            SetBothIdle();
+            SetActionIdle();
             if (master.IsInAttackPhase)
             {
                 inputChecker.HorizontalDirection3 = Vector3.zero;

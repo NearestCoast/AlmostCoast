@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Characters._Core;
+using _Project.Utils;
 using Animancer;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -55,6 +56,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         protected override Quaternion GetRotation()
         {
+            if (LockParams.IsLockingOn)
+            {
+                return Quaternion.LookRotation((LockParams.LockOnTarget.position - transform.position).XYZ3toX0Z3());
+            }
             return transform.rotation;
         }
     }

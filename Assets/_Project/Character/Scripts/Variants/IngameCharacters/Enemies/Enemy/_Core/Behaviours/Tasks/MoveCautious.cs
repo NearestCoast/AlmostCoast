@@ -48,7 +48,7 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
 
         public override TaskStatus OnUpdate()
         {
-            SetBothIdle();
+            // SetBothIdle();
             return TaskStatus.Running;
         }
 

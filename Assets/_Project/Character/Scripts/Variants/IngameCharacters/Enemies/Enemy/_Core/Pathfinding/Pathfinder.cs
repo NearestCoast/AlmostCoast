@@ -15,7 +15,7 @@ public class Pathfinder : MonoBehaviour
     private PlayerCharacter targetCharacter;
     public PlayerCharacter TargetCharacter => targetCharacter;
 
-    private Vector3 nextNodePoint;
+    [ShowInInspector] private Vector3 nextNodePoint;
 
     public Vector3 NextNodePoint
     {
@@ -26,12 +26,12 @@ public class Pathfinder : MonoBehaviour
             // Debug.Log("Come");
         }
     }
-    public float DistanceToTargetCharacter => Vector3.Distance(transform.position, TargetCharacter.transform.position);
-    public float DistanceToTarget => Vector3.Distance(transform.position, Target.position);
-    public float FlattenedDistanceToTarget => Vector3.Distance(transform.position.XYZ3toX0Z3(), Target.position.XYZ3toX0Z3());
-    public float FlattenedDistanceToNextNode => Vector3.Distance(transform.position.XYZ3toX0Z3(), NextNodePoint.XYZ3toX0Z3());
-    public bool IsReachedToTarget => FlattenedDistanceToTarget < 0.5f; // 추후 노드사이즈로 변경
-    public bool IsReachedToNextNode => FlattenedDistanceToNextNode < 0.5f; // 추후 노드사이즈로 변경
+    [ShowInInspector] public float DistanceToTargetCharacter => Vector3.Distance(transform.position, TargetCharacter.transform.position);
+    [ShowInInspector] public float DistanceToTarget => Vector3.Distance(transform.position, Target.position);
+    [ShowInInspector] public float FlattenedDistanceToTarget => Vector3.Distance(transform.position.XYZ3toX0Z3(), Target.position.XYZ3toX0Z3());
+    [ShowInInspector] public float FlattenedDistanceToNextNode => Vector3.Distance(transform.position.XYZ3toX0Z3(), NextNodePoint.XYZ3toX0Z3());
+    [ShowInInspector] public bool IsReachedToTarget => FlattenedDistanceToTarget < 0.5f; // 추후 노드사이즈로 변경
+    [ShowInInspector] public bool IsReachedToNextNode => FlattenedDistanceToNextNode < 0.5f; // 추후 노드사이즈로 변경
 
     private void Awake()
     {

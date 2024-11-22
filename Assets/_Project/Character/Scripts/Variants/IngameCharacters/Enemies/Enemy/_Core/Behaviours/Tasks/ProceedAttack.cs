@@ -4,6 +4,7 @@ using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates;
+using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates.Variants;
 using _Project.Utils;
 using Animancer.FSM;
 using BehaviorDesigner.Runtime.Tasks;
@@ -17,12 +18,19 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
         public override void OnStart()
         {
             base.OnStart();
+            
+            if (commonStateConductor.CurrentLockState is LockOffState)
+            {
+                commonStateConductor.TrySetLockState(master.LockStateContainer[LockState.StateType.LockOn]);
+                lockParams.LockOnTarget = pathfinder.TargetCharacter.transform;
+            }
+            
             master.IsFightMoveEnd = false;
         }
 
         public override TaskStatus OnUpdate() 
         {
-            SetBothIdle();
+            // SetBothIdle();
             if (!master.IsInAttackPhase)
             {
                 inputChecker.Direction2 = Vector2.zero;
@@ -46,12 +54,11 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
             {
                 master.IsInAttackPhase = true;
                 var currentAttackState = master.PredictedAttackState;
-                await UniTask.WaitUntil(() =>
-                {
-                    return master.CurrentActionState.Type != currentAttackState.Type;
-                });
+
+                await UniTask.WaitUntil(() => master.CurrentActionState.Type != currentAttackState.Type);
                 animationStateConductor.TrySetActionState(master.ActionStateContainer[ActionState.StateType.ActionIdle]);
                 animationStateConductor.SetActionMaskFullBody();
+                transform.rotation = Quaternion.LookRotation(pathfinder.TargetCharacter.transform.position);
                 
                 await UniTask.Delay(TimeSpan.FromSeconds(master.PredictedAttackState.AfterActionDelayTime));
                 master.PredictedAttackState = null;

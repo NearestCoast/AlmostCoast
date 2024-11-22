@@ -659,7 +659,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1481865474867877425}
-  - {fileID: 4927586576109463733}
   m_Father: {fileID: 6860019316360225733}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &945532407557735603
@@ -871,74 +870,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
---- !u!1 &1236849205504674020
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4927586576109463733}
-  - component: {fileID: 7802717998495691880}
-  - component: {fileID: 16534506513647609}
-  m_Layer: 0
-  m_Name: PlayerEnteringChecker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &4927586576109463733
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236849205504674020}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2178543169952183340}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7802717998495691880
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236849205504674020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a90732fedc8e4c128818643196ca7029, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  master: {fileID: 0}
-  trigger: {fileID: 16534506513647609}
---- !u!135 &16534506513647609
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1236849205504674020}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 1206912118
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 120
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1352315720800413701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1570,13 +1501,13 @@ MonoBehaviour:
   stat:
     maxHealth: 100
     currentHealth: 100
+  debug: 0
   wallSoundEndTime: 0.5
   sightAngle: 120
   viewDistance: 60
   soundDistance: 10
   isInFightDistance: 8
   maxWaitingTime: 60
-  playerEnteringChecker: {fileID: 0}
   exceptionalMove: 20
 --- !u!114 &7065998555178995624
 MonoBehaviour:
@@ -1727,7 +1658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stealthMoveVelocity: 4
-  maxWallJumpCount: 0
+  maxWallJumpCount: 10
 --- !u!114 &2591582378703648184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3978,6 +3909,23 @@ MonoBehaviour:
     _Clip: {fileID: -3577979661970795860, guid: 79b9abb7550894f2c8399549bd46f671,
       type: 3}
     _NormalizedStartTime: NaN
+  onAnimEnded:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7065998555178995624}
+        m_TargetAssemblyTypeName: _Project.Characters._Core.States.AnimationStates.AnimationStateConductor,
+          Assembly-CSharp
+        m_MethodName: TrySetMovementState
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 4744323591874712702}
+          m_ObjectArgumentAssemblyTypeName: _Project.Characters.IngameCharacters.Core.MovementStates.MovementState,
+            Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   references:
     version: 2
     RefIds: []
@@ -4699,7 +4647,7 @@ MonoBehaviour:
     - {fileID: 3652268175520400125}
   animationStateConductor: {fileID: 0}
   animCutStartNormalizedTime: 0
-  animCutEndNormalizedTime: 1
+  animCutEndNormalizedTime: 0.75
   holdActionVelocity: 1
   actionRange: 1.5
   afterActionDelayTime: 1

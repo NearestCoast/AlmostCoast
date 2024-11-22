@@ -4,8 +4,6 @@ using _Project.Characters.IngameCharacters.Core.ActionStates;
 using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
-using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.UI.InGame;
 using Cysharp.Threading.Tasks;
 using Renge.PPB;
@@ -14,6 +12,7 @@ namespace _Project.Character.IngameCharacters.Enemies
 {
     public partial class Enemy : IngameCharacter
     {
+        
         [SerializeField, TitleGroup("BehaviourParams")] private float sightAngle = 120;
         [SerializeField, TitleGroup("BehaviourParams")] private float viewDistance = 60;
         [SerializeField, TitleGroup("BehaviourParams")] private float soundDistance = 10;
@@ -21,8 +20,6 @@ namespace _Project.Character.IngameCharacters.Enemies
         [SerializeField, TitleGroup("BehaviourParams")] private float isInFightDistance = 8;
         
         [SerializeField, TitleGroup("BehaviourParams")] private float maxWaitingTime = 60;
-
-        public float ActiveAreaRadius => playerEnteringChecker.TriggerRadius * characterControllerEnveloper.CurrentScale;
          
         public float SightAngle => sightAngle;
         public float ViewDistance => viewDistance;
@@ -37,7 +34,6 @@ namespace _Project.Character.IngameCharacters.Enemies
     {
         private Behavior behavior;
 
-        [SerializeField] private PlayerEnteringChecker playerEnteringChecker;
         private WorldHealthBar worldHealthBar;
         private ProceduralProgressBar progressBar;
         
@@ -68,13 +64,6 @@ namespace _Project.Character.IngameCharacters.Enemies
                 return velocity;
             }
         }
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            playerEnteringChecker = GetComponentInChildren<PlayerEnteringChecker>();
-        }
-#endif
 
         protected override void Awake()
         {

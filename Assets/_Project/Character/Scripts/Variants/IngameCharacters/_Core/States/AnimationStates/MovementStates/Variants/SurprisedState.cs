@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Characters.IngameCharacters.Core.MovementStates
 {
@@ -24,6 +25,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 
                 return IsAnimEnded || value;
             }
+        }
+
+        [SerializeField] private UnityEvent onAnimEnded;
+
+        protected override Vector3 GetVelocity()
+        {
+            if (IsAnimEnded) onAnimEnded?.Invoke();
+            return base.GetVelocity();
         }
     }
 }
