@@ -22,11 +22,13 @@ namespace _Project.Characters.IngameCharacters.Core
         public  bool IsJumpButtonPerforming { get; private set; }
         public  int JumpCount { get; private set; }
         public  int WallJumpCount { get; private set; }
+        public  int ClimbJumpCount { get; private set; }
         public  int KickCount { get; private set; }
         public  int SkillJumpCount { get; private set; }
         // public static bool IsJumpable => JumpCount > 0 && !IsJumpButtonPerforming && GroundParams.IsGrounded;
-        public  bool IsJumpable => JumpCount > 0;
-        public  bool IsWallJumpable => !GroundParams.IsGrounded && VerticalParams.IsWalled && WallJumpCount > 0;
+        public bool IsJumpable => JumpCount > 0;
+        public bool IsWallJumpable => !GroundParams.IsGrounded && VerticalParams.IsWalled && WallJumpCount > 0;
+        public bool IsClimbJumpable => !GroundParams.IsGrounded && VerticalParams.IsWalled && ClimbJumpCount > 0;
 
         public  bool IsJumping { get; private set; }
         public  bool IsLeaping { get; private set; }
@@ -108,6 +110,9 @@ namespace _Project.Characters.IngameCharacters.Core
         
         public  void ResetWallJumpCount() => WallJumpCount = maxWallJumpCount;
         public  void DecreaseWallJumpCount() => WallJumpCount -= 1;
+        
+        public  void ResetClimbJumpCount() => ClimbJumpCount = 1;
+        public  void DecreaseClimbJumpCount() => ClimbJumpCount -= 1;
 
         public  void ResetKickCount() => KickCount = 1;
         public  void DecreaseKickCount() => KickCount -= 1;

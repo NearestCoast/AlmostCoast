@@ -50,6 +50,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
             MoveParams.ResetJumpCount();
             MoveParams.ResetWallJumpCount();
+            MoveParams.ResetClimbJumpCount();
             MoveParams.ResetKickCount();
             MoveParams.ResetSkillJumpCount();
         }

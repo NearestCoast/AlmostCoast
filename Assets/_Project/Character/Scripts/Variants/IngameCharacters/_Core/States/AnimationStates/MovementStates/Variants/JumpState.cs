@@ -95,7 +95,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 if (MoveParams.IsUnderCrowdControl) return false;
                 
                 return (GroundParams.IsGrounded || VerticalParams.IsWalled) &&
-                       (MoveParams.IsJumpable || MoveParams.IsWallJumpable) &&
+                       (MoveParams.IsJumpable || MoveParams.IsWallJumpable || MoveParams.IsClimbJumpable) &&
                        IsJumpPossible;
             }
         }
@@ -162,7 +162,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         public override void OnEnterState()
         {
             base.OnEnterState();
-            
+
             if (MoveParams.IsWallJumpable) MoveParams.SetIsWallJumping();
             
             WallNormalSnap = (MoveParams.IsWallJumpable) ? VerticalParams.WallNormal.Value : Vector3.zero;
@@ -192,8 +192,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             if (MoveParams.IsWallJumping)
             {
                 HorizontalDirSnap = (HorizontalDirection3).XYZ3toX0Z3();
+                
+                var dot = Vector3.Dot(HorizontalDirSnap, WallNormalSnap);
+                IsClimbJumping = PrevState.Type == StateType.Climb && dot < 0 && MoveParams.IsClimbJumpable;
+                
                 var signedAngle = Vector3.SignedAngle(HorizontalDirSnap, WallNormalSnap, Vector3.up);
-                // if (dot )
+                
                 if (-30 < signedAngle && signedAngle < 30)
                 {
                  HorizontalDirSnap = WallNormalSnap;
@@ -229,8 +233,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     
                     HorizontalDirSnap = rotation * WallNormalSnap;
                 }
-                
-                // IsClimbJumping = PrevState.Type == StateType.Climb && dot < 0;
             }
             else
             {
@@ -256,6 +258,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             if (MoveParams.IsWallJumpable)
             {
                 MoveParams.DecreaseWallJumpCount();
+                if (IsClimbJumping) MoveParams.DecreaseClimbJumpCount();
             }
             else
             {
@@ -356,14 +359,16 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             Vector3 moveValue;
             if (MoveParams.IsWallJumping)
             {
-                var inputMagnitudeAmplified = 1;
-                // if (IsClimbJumping)
-                // {
-                //     moveValue = Vector3.zero;
-                // }
-                // else moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
-                if (isPlayer) moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
-                else moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+                if (IsClimbJumping)
+                {
+                    moveValue = Vector3.zero;
+                }
+                else
+                {
+                    var inputMagnitudeAmplified = 1;
+                    if (isPlayer) moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+                    else moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+                }
             }
             else
             {
