@@ -122,7 +122,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public void SetIsJumpButtonPerforming() => IsJumpButtonPerforming = true;
         public void ResetIsJumpButtonPerforming() => IsJumpButtonPerforming = false;
 
-        public  void ResetClimbStamina() => ClimbStaminaTime = 4;
+        public  void ResetClimbStamina() => ClimbStaminaTime = 100;
         public  void DecreaseClimbStaminaPerFrame() => ClimbStaminaTime -= Time.deltaTime;
         public  void DecreaseClimbStaminaAmount(float amount) => ClimbStaminaTime -= amount;
         public  void DecreaseClimbStaminaPerJump() => ClimbStaminaTime -= 1;

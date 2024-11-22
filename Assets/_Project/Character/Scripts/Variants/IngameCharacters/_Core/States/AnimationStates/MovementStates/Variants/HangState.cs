@@ -11,8 +11,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             get
             {
-                VerticalParams.IsEdgeOfPlatform = checker.GetIsEdgeOfPlatform();
-                return MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform;
+                // VerticalParams.IsEdgeOfPlatform = checker.GetIsEdgeOfPlatform();
+                if (masterCharacter.CurrentMovingPlatform) return false;
+                return MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatformFromTop;
+                // return !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform;
             }
         }
 
@@ -20,7 +22,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             get
             {
-                if (!MoveParams.IsClimbable) return true;
+                // if (!MoveParams.IsClimbable) return true;
 
                 switch (NextState.Type)
                 {
@@ -51,6 +53,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             IsJustEntered = true;
             
             WallNormalSnap = VerticalParams.WallNormal is null ? -transform.forward : VerticalParams.WallNormal.Value;
+            EdgeHeightSnap = VerticalParams.EdgeHeight;
         }
 
         public override void OnExitState()
@@ -63,15 +66,29 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         [SerializeField] private float distanceOffset = 0.2f;
         private bool IsJustEntered { get; set; }
         private Vector3 WallNormalSnap { get; set; }
+        private float EdgeHeightSnap { get; set; }
         protected override Vector3 GetVelocity()
         {
             MoveParams.DecreaseClimbStaminaPerFrame();
             
-            if (IsJustEntered)
-            {
-                IsJustEntered = false;
-                return Vector3.up * (VerticalParams.DistanceToTopEdge - characterControllerEnveloper.Height + distanceOffset);
-            }
+            // if (IsJustEntered)
+            // {
+            //     IsJustEntered = false;
+            //     
+            //     // return Vector3.up * (VerticalParams.DistanceToTopEdge - characterControllerEnveloper.Height + distanceOffset);
+                var value = (EdgeHeightSnap - (transform.position.y + characterControllerEnveloper.Height) + distanceOffset);
+                
+                if (float.IsNaN(value))
+                {
+                    Debug.Log(EdgeHeightSnap);
+                    Debug.Log(transform.position.y);
+                    Debug.Log(characterControllerEnveloper.Height);
+                    Debug.Log(distanceOffset);
+                    Debug.Log(value);
+                    return Vector3.zero;
+                }
+                return Vector3.up * value;
+            // }
             
             return Vector3.zero;
         }

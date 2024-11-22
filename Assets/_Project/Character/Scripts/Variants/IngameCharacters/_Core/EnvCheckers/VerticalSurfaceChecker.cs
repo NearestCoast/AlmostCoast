@@ -29,10 +29,10 @@ namespace _Project.Characters.IngameCharacters.Core
 
             surfaceLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") |
                             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling");
-            
+
             obstacleLayers = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("GroundUnlit") |
-                             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling")
-                             | 1 << LayerMask.NameToLayer("Hazard");
+                             1 << LayerMask.NameToLayer("Wall") | 1 << LayerMask.NameToLayer("Ceiling");
+                             // | 1 << LayerMask.NameToLayer("Hazard");
 
             VerticalParams.IsWalled = false;
         }
@@ -68,14 +68,13 @@ namespace _Project.Characters.IngameCharacters.Core
             VerticalParams.IsSightOpened = GetIsSightOpened();
             VerticalParams.IsRightSightOpened = GetIsRightSightOpened();
             VerticalParams.IsLeftSightOpened = GetIsLeftSightOpened();
-            VerticalParams.IsLeftLedgeMovable = GetIsLeftLedgeMovable();
             // if (VerticalParams.IsRightSightOpened) VerticalParams.IsRightLedgeMovable = GetIsRightLedgeMovable();
             // else VerticalParams.IsRightLedgeMovable = false;
             // if (VerticalParams.IsLeftSightOpened) VerticalParams.IsLeftLedgeMovable = GetIsLeftLedgeMovable();
             // else VerticalParams.IsLeftLedgeMovable = false; 
 
             VerticalParams.IsHeadOpen = GetIsHeadOpen();
-            VerticalParams.IsEdgeOfPlatform = GetIsEdgeOfPlatform();
+            VerticalParams.IsEdgeOfPlatformFromTop = GetIsEdgeOfPlatform();
         }
 
         [SerializeField] private float headOffset = 0.25f;
@@ -166,11 +165,11 @@ namespace _Project.Characters.IngameCharacters.Core
             bool isForwardMidLeftOpen = !Physics.Raycast(forwardMiddleLeftOrigin, transform.forward, forwardRayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
-            Debug.DrawRay(upOrigin, upDirection * upRayLength, isUpOpen ? Color.green : Color.red);
-            Debug.DrawRay(forwardBottomOrigin, transform.forward * forwardRayLength, isForwardBottomOpen ? Color.green : Color.red);
-            Debug.DrawRay(forwardUpOrigin, transform.forward * forwardRayLength, isForwardUpOpen ? Color.green : Color.red);
-            Debug.DrawRay(forwardMiddleRightOrigin, transform.forward * forwardRayLength, isForwardMidRightOpen ? Color.green : Color.red);
-            Debug.DrawRay(forwardMiddleLeftOrigin, transform.forward * forwardRayLength, isForwardMidLeftOpen ? Color.green : Color.red);
+            // Debug.DrawRay(upOrigin, upDirection * upRayLength, isUpOpen ? Color.green : Color.red);
+            // Debug.DrawRay(forwardBottomOrigin, transform.forward * forwardRayLength, isForwardBottomOpen ? Color.green : Color.red);
+            // Debug.DrawRay(forwardUpOrigin, transform.forward * forwardRayLength, isForwardUpOpen ? Color.green : Color.red);
+            // Debug.DrawRay(forwardMiddleRightOrigin, transform.forward * forwardRayLength, isForwardMidRightOpen ? Color.green : Color.red);
+            // Debug.DrawRay(forwardMiddleLeftOrigin, transform.forward * forwardRayLength, isForwardMidLeftOpen ? Color.green : Color.red);
 
             // 위쪽과 앞쪽의 두 공간이 모두 열려있는 경우에만 true 반환
             return isUpOpen && isForwardUpOpen && isForwardBottomOpen && isForwardMidRightOpen && isForwardMidLeftOpen;
@@ -192,11 +191,11 @@ namespace _Project.Characters.IngameCharacters.Core
             bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
-            Debug.DrawRay(origin1, -transform.right * rayLength, isLeftOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin1, transform.forward * rayLength, isOrigin1ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin2, transform.forward * rayLength, isOrigin2ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin3, transform.forward * rayLength, isOrigin3ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin4, transform.forward * rayLength, isOrigin4ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin1, -transform.right * rayLength, isLeftOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin1, transform.forward * rayLength, isOrigin1ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin2, transform.forward * rayLength, isOrigin2ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin3, transform.forward * rayLength, isOrigin3ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin4, transform.forward * rayLength, isOrigin4ForwardOpen ? Color.green : Color.red);
 
             // 왼쪽과 왼쪽 앞 두 공간이 모두 열려있는 경우에만 true 반환
             return isLeftOpen && isOrigin1ForwardOpen && isOrigin2ForwardOpen && isOrigin3ForwardOpen && isOrigin4ForwardOpen;
@@ -218,11 +217,11 @@ namespace _Project.Characters.IngameCharacters.Core
             bool isOrigin4ForwardOpen = !Physics.Raycast(origin4, transform.forward, rayLength, obstacleLayers);
 
             // Debug용 Ray 시각화
-            Debug.DrawRay(origin1, transform.right * rayLength, isRightOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin1, transform.forward * rayLength, isOrigin1ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin2, transform.forward * rayLength, isOrigin2ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin3, transform.forward * rayLength, isOrigin3ForwardOpen ? Color.green : Color.red);
-            Debug.DrawRay(origin4, transform.forward * rayLength, isOrigin4ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin1, transform.right * rayLength, isRightOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin1, transform.forward * rayLength, isOrigin1ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin2, transform.forward * rayLength, isOrigin2ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin3, transform.forward * rayLength, isOrigin3ForwardOpen ? Color.green : Color.red);
+            // Debug.DrawRay(origin4, transform.forward * rayLength, isOrigin4ForwardOpen ? Color.green : Color.red);
 
             // 왼쪽과 왼쪽 앞 두 공간이 모두 열려있는 경우에만 true 반환
             return isRightOpen && isOrigin1ForwardOpen && isOrigin2ForwardOpen && isOrigin3ForwardOpen && isOrigin4ForwardOpen;
@@ -247,8 +246,8 @@ namespace _Project.Characters.IngameCharacters.Core
             // return HitDetectLeftMovable;
         }
 
-        [SerializeField] private float topOriginOffset = 1;
-        [SerializeField] private float edgeCheckOffset = 0.25f;
+        [SerializeField] private float topOriginOffset = 0;
+        [SerializeField] private float edgeCheckOffset = 1;
 
         public bool GetIsEdgeOfPlatform()
         {
@@ -271,23 +270,24 @@ namespace _Project.Characters.IngameCharacters.Core
             // Ray 길이
             float rayLength = characterControllerEnveloper.Radius * 2;
 
-            // Debug용 Ray 시각화
-            // Debug.DrawRay(topOrigin, rayDirection * rayLength, Color.red);
-            // Debug.DrawRay(offsetOrigin, rayDirection * rayLength, Color.blue);
-
             // Raycast hit 정보를 저장할 변수
             RaycastHit topHitInfo;
             RaycastHit offsetHitInfo;
 
             // 캐릭터 최상단에서 forward 방향 Ray
             bool isTopHit = Physics.Raycast(topOrigin, rayDirection, out topHitInfo, rayLength, surfaceLayers);
-
+            VerticalParams.IsEdgeOfPlatformFromBottom = isTopHit;
             // 캐릭터 최상단 + offset 위치에서 forward 방향 Ray
             bool isOffsetHit = Physics.Raycast(offsetOrigin, rayDirection, out offsetHitInfo, rayLength, surfaceLayers);
+
+            // Debug용 Ray 시각화
+            Debug.DrawRay(topOrigin, rayDirection * rayLength, isTopHit ? Color.green : Color.red);
+            Debug.DrawRay(offsetOrigin, rayDirection * rayLength, isOffsetHit ? Color.green : Color.red);
 
             // Edge 판정 조건을 만족하는 경우
             if (isTopHit && !isOffsetHit)
             {
+                
                 // 위에서 아래로 다시 Ray를 쏘아 정확한 Edge point를 구함
                 Vector3 downRayOrigin = topHitInfo.point + Vector3.up; // Ray 시작 위치를 충돌 지점 위로 약간 올림
                 Vector3 downRayDirection = Vector3.down;

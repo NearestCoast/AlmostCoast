@@ -6,14 +6,13 @@ namespace _Project.Characters.IngameCharacters.Core
     {
         public bool IsWalled {get;set;}
         public bool PrevIsWalled {get;set;}
-        public bool IsEdgeOfPlatform { get; set; }
+        public bool IsEdgeOfPlatformFromTop { get; set; }
+        public bool IsEdgeOfPlatformFromBottom { get; set; }
         public float DistanceToTopEdge { get; set; }
         public float EdgeHeight { get; set; }
         public bool IsSightOpened {get;set;}
         public bool IsRightSightOpened {get;set;}
         public bool IsLeftSightOpened {get;set;}
-        public bool IsRightLedgeMovable {get;set;}
-        public bool IsLeftLedgeMovable {get;set;}
         
         // public static bool IsPrevWalled {get;set;}
         public Vector3? WallNormal { get; set; }

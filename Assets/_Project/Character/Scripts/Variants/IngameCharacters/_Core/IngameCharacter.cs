@@ -121,7 +121,17 @@ namespace _Project.Characters.IngameCharacters.Core
             }
 
             SetAttackMask();
-            characterControllerEnveloper.Move(Velocity);
+            var velocity = Velocity;
+            if (!float.IsNaN(velocity.x) && !float.IsNaN(velocity.y) && !float.IsNaN(velocity.z))
+            {
+                characterControllerEnveloper.Move(velocity);
+            }
+            else
+            {
+                Debug.Log("### Velocity Nan Happened. " + velocity);
+                Debug.Log("CurrentMovementState : " + CurrentMovementState);
+                Debug.Log("CurrentActionState : " + CurrentActionState);
+            }
             transform.rotation = CurrentMovementState.Rotation; 
 
             if (MoveParams.IsJustLedgeMoveEnded) MoveParams.ResetIsJustLedgeMoveEnded();

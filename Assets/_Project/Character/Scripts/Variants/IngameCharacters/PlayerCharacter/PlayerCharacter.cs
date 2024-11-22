@@ -38,12 +38,49 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             get
             {
                 var velocity = CurrentMovementState.Velocity;
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
+                
                 velocity += CurrentActionState.GetVelocity();
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
                 velocity += CurrentActionState.Acc * Time.deltaTime;
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
                 
                 velocity += CurrentMovingPlatform ? CurrentMovingPlatform.Velocity : Vector3.zero;
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
                 velocity += CurrentRollingCube ? CurrentRollingCube.Velocity : Vector3.zero;
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
                 velocity += MoveParams.Acceleration * Time.deltaTime;
+#if UNITY_EDITOR
+                if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+                {
+                    Debug.Log(velocity);
+                }
+#endif
                 return velocity;
             }
         }
@@ -87,7 +124,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 }
             }
             
-            if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatform)
+            if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatformFromTop)
             {
                 animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Hang]);
             }

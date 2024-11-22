@@ -21,21 +21,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             AnimancerState.NormalizedTime = animCutStartNormalizedTime;
         }
 
-        // protected override void PlaySound()
-        // {
-        //     var value = PrevState.Type switch
-        //     {
-        //         StateType.ClimbLeftLedge => false,
-        //         StateType.ClimbOverLedge => false,
-        //         StateType.ClimbRightLedge => false,
-        //         _=> true,
-        //     };
-        //     if (value)
-        //     {
-        //         // if (audioSource) audioSource.Play();
-        //     }
-        // }
-
         public override bool CanEnterState
         {
             get
@@ -71,9 +56,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 var value = NextState.Type switch
                 {
                     StateType.Jump => true,
-                    StateType.ClimbOverLedge => true,
-                    StateType.ClimbRightLedge => true,
-                    StateType.ClimbLeftLedge => true,
+                    StateType.Hang => true,
+                    StateType.ClimbOverLedge => VerticalParams.IsSightOpened,
+                    StateType.ClimbRightLedge => VerticalParams.IsRightSightOpened,
+                    StateType.ClimbLeftLedge => VerticalParams.IsLeftSightOpened,
                     
                     StateType.ClimbLeftTransition => true,
                     StateType.ClimbRightTransition => true,
@@ -116,8 +102,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         [SerializeField, TitleGroup("Velocity")] private PressingOnlyInput connectedInput;
         [SerializeField, TitleGroup("Velocity")] private float maxSpeed = 6;
         [SerializeField, TitleGroup("Velocity")] private float attachTime = 0.1f;
-        [SerializeField, TitleGroup("Fx")] private float audioTick = 1;
-        private float AudioTickTimer { get; set; }
         
         protected override Vector3 GetVelocity()
         {
@@ -125,16 +109,23 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             var inputMagnitudeAmplified = Mathf.Pow(InputDirection.magnitude, 2);
 
-
             var depthValue = Vector3.zero;
             if (VerticalParams.WallPoint is not null)
             {
                 var dist = Vector3.Distance(VerticalParams.WallPoint.Value, transform.position);
                 if (dist > characterControllerEnveloper.Radius) depthValue = transform.forward * (dist - characterControllerEnveloper.Radius - characterControllerEnveloper.SkinWidth) / attachTime;
             }
-            
-            // var moveValue = Vector3.zero;
-            var moveValue = VerticalDirection3 * (inputMagnitudeAmplified * maxSpeed);
+
+            var moveValue = Vector3.zero;
+            var dotToUp = Vector3.Dot(VerticalDirection3, Vector3.up);
+            if (VerticalParams.IsEdgeOfPlatformFromBottom)
+            {
+                moveValue = VerticalDirection3 * (inputMagnitudeAmplified * maxSpeed);
+            }
+            else
+            {
+                if (dotToUp <= 0) moveValue = VerticalDirection3 * (inputMagnitudeAmplified * maxSpeed);
+            }
             
             if (InputDirection.y > 0) // Upper  
             {
@@ -185,24 +176,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     anims.State.Parameter = 0;
                 }
             }
-            
-            if (anims.State.Parameter != 0)
-            {
-                if (AudioTickTimer > audioTick)
-                {
-                    // audioSource.Play();
-                    AudioTickTimer = 0;
-                }
-            }
-            else
-            {
-                AudioTickTimer = audioTick;
-            }
 
-            AudioTickTimer += Time.deltaTime;
-            
             return (moveValue + depthValue) * Time.deltaTime;
-            // return (moveValue) * Time.deltaTime + depthValue;
         }
 
         protected override Quaternion GetRotation()
