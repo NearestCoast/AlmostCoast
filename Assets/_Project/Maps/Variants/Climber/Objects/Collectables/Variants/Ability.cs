@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
+using _Project.Characters.IngameCharacters.Core.ActionStates;
+using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Managers.Scripts._Core.AudioManager;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -10,6 +13,12 @@ namespace _Project.Maps.Climber.Objects.Collectables
 {
     public class Ability : Collectable
     {
+        private PlayerCharacter playerCharacter;
+        private void Awake()
+        {
+            playerCharacter = FindAnyObjectByType<PlayerCharacter>();
+        }
+
         [SerializeField] private List<AnimationState> targetStates;
 
         public List<AnimationState> TargetStates
@@ -26,7 +35,17 @@ namespace _Project.Maps.Climber.Objects.Collectables
             {
                 Debug.Log("Player Collected " + targetState.name);
                 targetState.gameObject.SetActive(true);
+
+                if (targetState is MovementState)
+                {
+                    playerCharacter.GetComponentInChildren<MovementStateContainer>().UpdateDictionary();
+                }
+                else if (targetState is ActionState)
+                {
+                    playerCharacter.GetComponentInChildren<ActionStateContainer>().UpdateDictionary();
+                }
             }
+            
             
             FindAnyObjectByType<AudioManager>().SetClip(audioSource.clip);
             FindAnyObjectByType<AudioManager>().Play();

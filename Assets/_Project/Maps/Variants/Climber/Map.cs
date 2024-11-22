@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 using AnimationState = _Project.Characters._Core.States.AnimationStates.AnimationState;
+using Random = UnityEngine.Random;
 
 namespace _Project.Maps.Climber
 {
@@ -214,7 +215,8 @@ namespace _Project.Maps.Climber
                 foreach (var level in levels)
                 {
                     var uvScaler = level.gameObject.AddComponent<UVScaler>();
-                    uvScaler.ScaleUVsToTexelDensity(textureScale);
+                    // uvScaler.ScaleUVsToTexelDensity(textureScale);
+                    uvScaler.ScaleUVsToTexelDensity(Random.Range(2f, 3f));
                 }
             }
 

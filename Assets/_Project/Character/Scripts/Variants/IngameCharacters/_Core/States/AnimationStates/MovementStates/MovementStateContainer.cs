@@ -18,6 +18,11 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         private void Awake()
         {
+            UpdateDictionary();
+        }
+
+        public void UpdateDictionary()
+        {
             ActionStateObjDict = new Dictionary<MovementState.StateType, MovementState>();
             var children = GetComponentsInChildren<MovementState>();
             foreach (var movementState in children)

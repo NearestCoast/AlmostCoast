@@ -17,6 +17,17 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
 
         private void Awake()
         {
+            UpdateDictionary();
+        }
+
+        // ContainsKey 메서드 추가
+        public bool ContainsKey(ActionState.StateType stateType)
+        {
+            return StateObjDict.ContainsKey(stateType);
+        }
+
+        public void UpdateDictionary()
+        {
             StateObjDict = new Dictionary<ActionState.StateType, ActionState>();
             var children = GetComponentsInChildren<ActionState>();
             foreach (var actionState in children)
@@ -25,12 +36,6 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
                 var type = actionState.Type;
                 StateObjDict.Add(type, actionState);
             }
-        }
-
-        // ContainsKey 메서드 추가
-        public bool ContainsKey(ActionState.StateType stateType)
-        {
-            return StateObjDict.ContainsKey(stateType);
         }
     }
 }

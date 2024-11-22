@@ -99,6 +99,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             get
             {
+                if (PrevState.Type != StateType.Hang) return false;
                 if (MoveParams.IsUnderCrowdControl) return false;
 
                 return IsJumpPossible;
