@@ -1,12 +1,5 @@
-using System;
-using System.Threading;
 using _Project.Characters.IngameCharacters.Core;
-using Cysharp.Threading.Tasks;
-using DG.Tweening;
-using Sirenix.OdinInspector;
-using Unity.Mathematics;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace _Project.Maps.Climber.Objects
 {

@@ -13,7 +13,11 @@ namespace _Project.Maps.Climber.Objects
         public Level Level
         {
             get => level;
-            set => level = value;
+            set
+            {
+                level = value;
+                level.SavePoints.Add(this);
+            }
         }
 
         private LayerMask targetLayers;
@@ -28,13 +32,13 @@ namespace _Project.Maps.Climber.Objects
             if (other.gameObject.layer.IsInLayerMask(targetLayers))
             {
                 var character = other.gameObject.GetComponent<IngameCharacter>();
+                //
+                // if (character.gameObject.layer == LayerMask.NameToLayer("Player"))
+                // {
+                //     if (character.CurrentLevel != level) level.StartLevel();
+                // }
                 
-                if (character.gameObject.layer == LayerMask.NameToLayer("Player"))
-                {
-                    if (character.CurrentLevel != level) level.StartLevel();
-                }
-                
-                character.CurrentLevel = level;
+                // character.CurrentLevel = level;
                 character.SavePoint = this;
             }
         }

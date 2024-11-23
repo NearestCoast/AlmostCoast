@@ -366,7 +366,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 else
                 {
                     var inputMagnitudeAmplified = 1;
-                    if (isPlayer) moveValue = HorizontalDirSnap * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
+                    if (isPlayer) moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
                     else moveValue = HorizontalDirection3 * (inputMagnitudeAmplified * MaxLength / (MaxHeightTime + FallingTime));
                 }
             }

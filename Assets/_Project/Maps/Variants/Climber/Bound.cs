@@ -16,23 +16,36 @@ namespace _Project.Maps.Climber
             set => level = value;
         }
 
-        private LayerMask targetLayers;
+        private LayerMask enemyLayers;
 
         private void Awake()
         {
-            targetLayers = 1 << LayerMask.NameToLayer("Character");
+            enemyLayers = 1 << LayerMask.NameToLayer("Character");
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            // Debug.Log(other);
-            if (!other.attachedRigidbody) return;
-            if (other.attachedRigidbody.gameObject.layer.IsInLayerMask(targetLayers))
+            if (other.gameObject.layer.IsInLayerMask(enemyLayers))
             {
-                var enemy = other.attachedRigidbody.GetComponent<Enemy>();
+                var enemy = other.gameObject.GetComponent<Enemy>();
                 if (level.Enemies.Contains(enemy)) return;
                 enemy.CurrentLevel = level;
                 level.Enemies.Add(enemy);
+            }
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                var character = other.gameObject.GetComponent<IngameCharacter>();
+                if (character.CurrentLevel != level)
+                {
+                    character.CurrentLevel = level;
+                    level.StartLevel();
+
+                    if (!character.SavePoint)
+                    {
+                        character.SavePoint = level.SavePoints[0];
+                    }
+                }
             }
         }
     }

@@ -18,7 +18,7 @@ namespace _Project.Maps.Climber
 
         [SerializeField] private Type type = Type.Normal;
         [SerializeField, DisableInEditorMode] private string id;
-        [SerializeField] private List<SavePoint> savePoints;
+        [SerializeField] private List<SavePoint> savePoints = new List<SavePoint>();
         [SerializeField] private List<Hazard> hazards = new List<Hazard>();
         [SerializeField] private List<MovingPlatform> movingPlatforms = new List<MovingPlatform>();
         [SerializeField] private List<DingdongDoor> dingdongDoors = new List<DingdongDoor>();
@@ -38,12 +38,7 @@ namespace _Project.Maps.Climber
             set => id = value;
         }
 
-        public List<SavePoint> SavePoints
-        {
-            get => savePoints;
-            set => savePoints = value;
-        }
-
+        public List<SavePoint> SavePoints => savePoints;
         public List<Hazard> Hazards => hazards;
         public List<MovingPlatform> MovingPlatforms => movingPlatforms;
         public List<DingdongDoor> DingdongDoors => dingdongDoors;
