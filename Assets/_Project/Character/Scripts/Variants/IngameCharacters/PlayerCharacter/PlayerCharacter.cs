@@ -8,6 +8,8 @@ using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates
 using _Project.Combat.HitObjects;
 using _Project.InputSystem;
 using _Project.Maps.Climber;
+using _Project.Maps.Climber.Objects;
+using _Project.Maps.Climber.Objects.Collectables;
 using _Project.UI.InGame;
 using Cysharp.Threading.Tasks;
 using Renge.PPB;
@@ -24,6 +26,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         private Vector3 PrevCamTargetMoveValue { get; set; }
         public bool IsStealthMove => MoveParams.IsStealthMove;
         private ChargingUI[] chargingUIs;
+
         protected override void Awake()
         {
             base.Awake();
@@ -193,9 +196,16 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             cameraTarget?.ResetRotationAsync(SavePoint.transform.forward);
         }
 
+        [SerializeField] private SavePoint initialSavePoint;
+        public SavePoint InitialSavePoint
+        {
+            get => initialSavePoint;
+            set => initialSavePoint = value;
+        }
         public override void Die()
         {
             base.Die();
+            
             WaitAndRespawn().Forget();
             
             return;
@@ -203,12 +213,56 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(4));
                 IsDead = false;
+                SavePoint = initialSavePoint;
                 MoveToSavePoint();
                 MoveParams.ResetCrowdControlled();
                 characterControllerEnveloper.ResetCharacterController();
                 Stat.CurrentHealth = 100;
                 
                 animationStateConductor.ForceSetActionState(actionStateContainer[ActionState.StateType.ActionIdle]);
+            }
+        }
+        
+        
+
+        [SerializeField] private int silverKeyAmount;
+        [SerializeField] private int goldKeyAmount;
+
+        public int SilverKeyAmount => silverKeyAmount;
+        public int GoldKeyAmount => goldKeyAmount;
+
+        public void AddKey(Key.Type keyType)
+        {
+            switch (keyType)
+            {
+                case Key.Type.Silver:
+                {
+                    silverKeyAmount += 1;
+                    break;
+                }
+                case Key.Type.Gold:
+                {
+                    goldKeyAmount += 1;
+                    break;
+                }
+            }
+            
+        }
+
+        public void UseKey(Key.Type keyType)
+        {
+            switch (keyType)
+            {
+                case Key.Type.Silver:
+                {
+                    silverKeyAmount -= 1;
+                    break;
+                }
+                case Key.Type.Gold:
+                {
+                    goldKeyAmount -= 1;
+                    break;
+                }
             }
         }
 
@@ -224,7 +278,10 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel(CurrentBrightnessState.Type + " " + (int)CurrentBrightnessState.StateTime);
             // DrawLabel(CurrentLockState.Type + " " + (int)CurrentLockState.StateTime);
             DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
-            DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
+            // DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
+            // DrawLabel("MoveParams.JumpCount : " + MoveParams.JumpCount);
+            DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
+            // DrawLabel("MoveParams.ClimbJumpCount : " + MoveParams.ClimbJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
             // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
             // DrawLabel("GroundParams.IsGroundedOnCharacter : " + GroundParams.IsGroundedOnCharacter);

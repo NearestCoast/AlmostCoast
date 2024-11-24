@@ -28,7 +28,7 @@ namespace _Project.Characters.IngameCharacters.Core
         // public static bool IsJumpable => JumpCount > 0 && !IsJumpButtonPerforming && GroundParams.IsGrounded;
         public bool IsJumpable => JumpCount > 0;
         public bool IsWallJumpable => !GroundParams.IsGrounded && VerticalParams.IsWalled && WallJumpCount > 0;
-        public bool IsClimbJumpable => !GroundParams.IsGrounded && VerticalParams.IsWalled && ClimbJumpCount > 0;
+        public bool IsClimbJumpable => IsWallJumpable && ClimbJumpCount > 0;
 
         public  bool IsJumping { get; private set; }
         public  bool IsLeaping { get; private set; }
@@ -127,7 +127,7 @@ namespace _Project.Characters.IngameCharacters.Core
         public void SetIsJumpButtonPerforming() => IsJumpButtonPerforming = true;
         public void ResetIsJumpButtonPerforming() => IsJumpButtonPerforming = false;
 
-        public  void ResetClimbStamina() => ClimbStaminaTime = 100;
+        public  void ResetClimbStamina() => ClimbStaminaTime = 4;
         public  void DecreaseClimbStaminaPerFrame() => ClimbStaminaTime -= Time.deltaTime;
         public  void DecreaseClimbStaminaAmount(float amount) => ClimbStaminaTime -= amount;
         public  void DecreaseClimbStaminaPerJump() => ClimbStaminaTime -= 1;

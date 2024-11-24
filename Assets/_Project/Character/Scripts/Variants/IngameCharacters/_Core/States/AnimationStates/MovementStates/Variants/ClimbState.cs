@@ -127,57 +127,60 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 if (dotToUp <= 0) moveValue = VerticalDirection3 * (inputMagnitudeAmplified * maxSpeed);
             }
             
-            if (InputDirection.y > 0) // Upper  
-            {
-                // anims.State.Parameter = 3;
-                
-                if (InputDirection.x > 0) // Right
-                {
-                    anims.State.Parameter = 4;
-                }
-                else if (InputDirection.x < 0) // Left
-                {
-                    anims.State.Parameter = 5;
-                }
-                else // Stay Center
-                {
-                    anims.State.Parameter = 3;
-                }
-            }
-            else if (InputDirection.y < 0)// Lower
-            {
-                // anims.State.Parameter = 6;
-                
-                if (InputDirection.x > 0) // Right
-                {
-                    anims.State.Parameter = 7;
-                }
-                else if (InputDirection.x < 0) // Left
-                {
-                    anims.State.Parameter = 8;
-                }
-                else // Stay Center
-                {
-                    anims.State.Parameter = 6;
-                }
-            }
-            else // Stay Height
-            {
-                if (InputDirection.x > 0) // Right
-                {
-                    anims.State.Parameter = 1;
-                }
-                else if (InputDirection.x < 0) // Left
-                {
-                    anims.State.Parameter = 2;
-                }
-                else // Stay Center
-                {
-                    anims.State.Parameter = 0;
-                }
-            }
+            
+            return (depthValue) * Time.deltaTime;
+            
+            // if (InputDirection.y > 0) // Upper  
+            // {
+            //     // anims.State.Parameter = 3;
+            //     
+            //     if (InputDirection.x > 0) // Right
+            //     {
+            //         anims.State.Parameter = 4;
+            //     }
+            //     else if (InputDirection.x < 0) // Left
+            //     {
+            //         anims.State.Parameter = 5;
+            //     }
+            //     else // Stay Center
+            //     {
+            //         anims.State.Parameter = 3;
+            //     }
+            // }
+            // else if (InputDirection.y < 0)// Lower
+            // {
+            //     // anims.State.Parameter = 6;
+            //     
+            //     if (InputDirection.x > 0) // Right
+            //     {
+            //         anims.State.Parameter = 7;
+            //     }
+            //     else if (InputDirection.x < 0) // Left
+            //     {
+            //         anims.State.Parameter = 8;
+            //     }
+            //     else // Stay Center
+            //     {
+            //         anims.State.Parameter = 6;
+            //     }
+            // }
+            // else // Stay Height
+            // {
+            //     if (InputDirection.x > 0) // Right
+            //     {
+            //         anims.State.Parameter = 1;
+            //     }
+            //     else if (InputDirection.x < 0) // Left
+            //     {
+            //         anims.State.Parameter = 2;
+            //     }
+            //     else // Stay Center
+            //     {
+            //         anims.State.Parameter = 0;
+            //     }
+            // }
 
-            return (moveValue + depthValue) * Time.deltaTime;
+            // return (moveValue + depthValue) * Time.deltaTime;
         }
 
         protected override Quaternion GetRotation()

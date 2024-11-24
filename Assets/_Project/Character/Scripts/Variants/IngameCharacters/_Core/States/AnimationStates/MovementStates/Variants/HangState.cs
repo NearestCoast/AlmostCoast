@@ -64,6 +64,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         // [SerializeField] private float maxTime = 0.1f;
         [SerializeField] private float distanceOffset = 0.2f;
+        [SerializeField] private float attachTime = 0.1f;
         private bool IsJustEntered { get; set; }
         private Vector3 WallNormalSnap { get; set; }
         private float EdgeHeightSnap { get; set; }
@@ -71,23 +72,31 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             MoveParams.DecreaseClimbStaminaPerFrame();
             
+            var depthValue = Vector3.zero;
+            if (VerticalParams.WallPoint is not null)
+            {
+                var dist = Vector3.Distance(VerticalParams.WallPoint.Value, transform.position);
+                if (dist > characterControllerEnveloper.Radius) depthValue = transform.forward * (dist - characterControllerEnveloper.Radius - characterControllerEnveloper.SkinWidth) / attachTime;
+            }
+            
             // if (IsJustEntered)
             // {
             //     IsJustEntered = false;
             //     
             //     // return Vector3.up * (VerticalParams.DistanceToTopEdge - characterControllerEnveloper.Height + distanceOffset);
-                var value = (EdgeHeightSnap - (transform.position.y + characterControllerEnveloper.Height) + distanceOffset);
-                
-                if (float.IsNaN(value))
-                {
-                    Debug.Log(EdgeHeightSnap);
-                    Debug.Log(transform.position.y);
-                    Debug.Log(characterControllerEnveloper.Height);
-                    Debug.Log(distanceOffset);
-                    Debug.Log(value);
-                    return Vector3.zero;
-                }
-                return Vector3.up * value;
+            var value = (EdgeHeightSnap - (transform.position.y + characterControllerEnveloper.Height) + distanceOffset);
+            
+            if (float.IsNaN(value))
+            {
+                Debug.Log(EdgeHeightSnap);
+                Debug.Log(transform.position.y);
+                Debug.Log(characterControllerEnveloper.Height);
+                Debug.Log(distanceOffset);
+                Debug.Log(value);
+                return Vector3.zero;
+            }
+            // return Vector3.up * value + depthValue;
+            return Vector3.up * value;
             // }
             
             return Vector3.zero;

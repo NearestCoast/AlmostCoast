@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Character.IngameCharacters.Enemies;
 using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
@@ -12,6 +13,7 @@ using _Project.Maps.Climber.Objects.Variants;
 using _Project.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
@@ -30,24 +32,35 @@ namespace _Project.Maps.Climber
         [SerializeField] private List<Level> levels = new List<Level>();
         // [SerializeField] private GameObject ringdongPrefab;
         [SerializeField] private Transform mapInstanceContainer;
+        [SerializeField] private Transform enemiesContainer;
 
-        [SerializeField, TitleGroup("Instances")] private Ability abilityInstance;
-        [SerializeField, TitleGroup("Instances")] private WallJumpCountUp wallJumpCountUp;
-        [SerializeField, TitleGroup("Instances")] private MovingPlatform movingPlatformInstance;
-        [SerializeField, TitleGroup("Instances")] private SpotLight spotLightInstance;
-        [SerializeField, TitleGroup("Instances")] private Transform objectPrefabContainer;
+        [SerializeField, TitleGroup("Prefabs")] private Transform objectPrefabContainer;
+        [SerializeField, TitleGroup("Prefabs")] private Ability abilityInstance;
+        [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUp;
+        [SerializeField, TitleGroup("Prefabs")] private MovingPlatform movingPlatformPrefab;
+        [SerializeField, TitleGroup("Prefabs")] private SpotLight spotLightPrefab;
+        [SerializeField, TitleGroup("Prefabs")] private Key silverKeyPrefab;
+        [SerializeField, TitleGroup("Prefabs")] private Key goldKeyPrefab;
+
+        [SerializeField] private NavMeshSurface navMeshSurface; 
 
         private void OnValidate()
         {
             if (Application.isPlaying) return;   
             
-            mapInstanceContainer ??= Extensions.FindInactiveObjectByName("MapInstances").transform;
-            objectPrefabContainer ??= Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
+            if (!mapInstanceContainer) mapInstanceContainer = Extensions.FindInactiveObjectByName("MapInstances").transform;
+            if (!enemiesContainer) enemiesContainer = Extensions.FindInactiveObjectByName("EnemySpotsContainer").transform;
+            if (!objectPrefabContainer) objectPrefabContainer = Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
+            
             abilityInstance ??= Extensions.FindInactiveObjectByName("AbilityInstance").GetComponent<Ability>();
             wallJumpCountUp ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
             // movingPlatformInstance = GameObject.Find("MovingPlatformInstance").GetComponent<MovingPlatform>();
-            movingPlatformInstance ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
-            spotLightInstance ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
+            movingPlatformPrefab ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
+            spotLightPrefab ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
+            silverKeyPrefab ??= Extensions.FindInactiveObjectByName("SilverKey").GetComponent<Key>();
+            goldKeyPrefab ??= Extensions.FindInactiveObjectByName("GoldKey").GetComponent<Key>();
+            
+            navMeshSurface ??= Extensions.FindInactiveObjectByName("NavMesh Surface").GetComponent<NavMeshSurface>();
         }
 
         [Button]
@@ -79,6 +92,15 @@ namespace _Project.Maps.Climber
             
             var decoMPDict = new Dictionary<string, Transform>();
             var decoBrokableDict = new Dictionary<string, Transform>();
+
+            var enemySpotsToSpawnDict = new Dictionary<string, GameObject>();
+            for (var i = 0; i < enemiesContainer.transform.childCount; i++)
+            {
+                var enemySpotObj = enemiesContainer.transform.GetChild(i).gameObject;
+                var split = enemySpotObj.name.Split("_");
+                var id = split[1];
+                enemySpotsToSpawnDict.Add(id, enemySpotObj);
+            }
 
             for (var i = 0; i < cloneObj.transform.childCount; i++)
             {
@@ -220,6 +242,7 @@ namespace _Project.Maps.Climber
                 }
             }
 
+            navMeshSurface.BuildNavMesh();
             return;
             void TraverseCollectionLevel(Transform T, Level level, out Dictionary<string, List<Dingdong>> dingdongDict, out Dictionary<string, List<Dingdong>> ringdongDict)
             {
@@ -321,7 +344,7 @@ namespace _Project.Maps.Climber
                                 child.gameObject.tag = "IgnoreCamCollider";
                                 var mp = child.AddComponent<FallingMovingPlatform>();
                                 var audioSource = mp.gameObject.AddComponent<AudioSource>();
-                                audioSource.clip = movingPlatformInstance.FinishAudioSource.clip;
+                                audioSource.clip = movingPlatformPrefab.FinishAudioSource.clip;
                                 audioSource.playOnAwake = false;
                                 audioSource.volume = 0.3f;
                                 audioSource.maxDistance = 50;
@@ -364,7 +387,7 @@ namespace _Project.Maps.Climber
                                 child.gameObject.tag = "IgnoreCamCollider";
                                 var mp = child.AddComponent<AccMovingPlatform>();
                                 var audioSource = mp.gameObject.AddComponent<AudioSource>();
-                                audioSource.clip = movingPlatformInstance.FinishAudioSource.clip;
+                                audioSource.clip = movingPlatformPrefab.FinishAudioSource.clip;
                                 audioSource.playOnAwake = false;
                                 audioSource.volume = 0.3f;
                                 mp.Level = level;
@@ -596,7 +619,7 @@ namespace _Project.Maps.Climber
                                 rb.isKinematic = true;
                                 spotLightSwitchList.Add(spotLightSwitch);
                         
-                                var spotLight = Instantiate(spotLightInstance);
+                                var spotLight = Instantiate(spotLightPrefab);
                                 spotLight.transform.position = child.transform.position;
                                 spotLight.gameObject.SetActive(true);
                                 spotLight.OwnSwitch = spotLightSwitch;
@@ -623,7 +646,7 @@ namespace _Project.Maps.Climber
                                 rb.isKinematic = true;
                                 spotLightSwitchList.Add(spotLightSwitch);
                         
-                                var spotLight = Instantiate(spotLightInstance);
+                                var spotLight = Instantiate(spotLightPrefab);
                                 spotLight.transform.position = child.transform.position;
                                 spotLight.gameObject.SetActive(true);
                                 spotLight.OwnSwitch = spotLightSwitch;
@@ -662,7 +685,7 @@ namespace _Project.Maps.Climber
                                 spotLightSwitch.ID = descriptionSplit[1];
                                 spotLightContainerDict.Add(spotLightSwitch.ID, spotLightSwitch);
 
-                                var spotLight = Instantiate(spotLightInstance, child.transform);
+                                var spotLight = Instantiate(spotLightPrefab, child.transform);
                                 var meshCollider = spotLight.GetComponentInChildren<MeshCollider>();
                                 meshCollider.enabled = false;
                                 spotLight.LightCompo.intensity = 0;
@@ -684,7 +707,7 @@ namespace _Project.Maps.Climber
                             rb.isKinematic = true;
                             spotLightSwitchList.Add(spotLightSwitch);
                         
-                            var spotLight = Instantiate(spotLightInstance);
+                            var spotLight = Instantiate(spotLightPrefab);
                             spotLight.transform.position = child.transform.position;
                             spotLight.gameObject.SetActive(true);
                             spotLight.OwnSwitch = spotLightSwitch;
@@ -726,6 +749,11 @@ namespace _Project.Maps.Climber
                         var savePoint = child.AddComponent<SavePoint>();
                         savePoint.Level = level;
                         // level.SavePoint = savePoint;
+
+                        if (split[1].Contains("InitialSavePoint"))
+                        {
+                            FindAnyObjectByType<PlayerCharacter>().InitialSavePoint = savePoint;
+                        }
                     }
                     else if (split[1].Contains("Ground"))
                     {
@@ -734,6 +762,29 @@ namespace _Project.Maps.Climber
                         // var rb = child.AddComponent<Rigidbody>();
                         // rb.isKinematic = true;
                         // child.AddComponent<MeshCollider>();
+                    }
+                    else if (split[1].Contains("Enemy"))
+                    {
+                        var strings = split[1].Split(".");
+                        var id = strings[1];
+                        var enemySpotInstanceToSpawn = enemySpotsToSpawnDict[id];
+                        var enemySpotObj = Instantiate(enemySpotInstanceToSpawn, child.transform.position, child.transform.rotation, child.transform);
+                        enemySpotObj.SetActive(true);
+                        
+                        child.GetComponent<MeshRenderer>().enabled = false;
+
+                        if (strings.Length > 2)
+                        {
+                            var lootObjName = strings[2];
+                            if (lootObjName == "SilverKey")
+                            {
+                                enemySpotObj.GetComponent<Enemy>().LootObj = silverKeyPrefab.gameObject;
+                            }
+                            else if (lootObjName == "GoldKey")
+                            {
+                                enemySpotObj.GetComponent<Enemy>().LootObj = goldKeyPrefab.gameObject;
+                            }
+                        }
                     }
                 }
                 

@@ -193,8 +193,10 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             {
                 HorizontalDirSnap = (HorizontalDirection3).XYZ3toX0Z3();
                 
-                var dot = Vector3.Dot(HorizontalDirSnap, WallNormalSnap);
-                IsClimbJumping = PrevState.Type == StateType.Climb && dot < 0 && MoveParams.IsClimbJumpable;
+                // var dot = Vector3.Dot(HorizontalDirSnap, WallNormalSnap);
+                // Debug.Log(dot);
+                // IsClimbJumping = PrevState.Type == StateType.Climb&& MoveParams.IsClimbJumpable &&
+                //                  (HorizontalDirSnap == Vector3.zero || dot < -0.5f);
                 
                 var signedAngle = Vector3.SignedAngle(HorizontalDirSnap, WallNormalSnap, Vector3.up);
                 
@@ -257,8 +259,9 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
             if (MoveParams.IsWallJumpable)
             {
+                MoveParams.DecreaseJumpCount();
                 MoveParams.DecreaseWallJumpCount();
-                if (IsClimbJumping) MoveParams.DecreaseClimbJumpCount();
+                // if (IsClimbJumping) MoveParams.DecreaseClimbJumpCount();
             }
             else
             {

@@ -7,12 +7,14 @@ using UnityEngine;
 using _Project.UI.InGame;
 using Cysharp.Threading.Tasks;
 using Renge.PPB;
+using Unity.Mathematics;
+using UnityEngine.Serialization;
 
 namespace _Project.Character.IngameCharacters.Enemies
 {
     public partial class Enemy : IngameCharacter
     {
-        
+        // [SerializeField] private string specificID;
         [SerializeField, TitleGroup("BehaviourParams")] private float sightAngle = 120;
         [SerializeField, TitleGroup("BehaviourParams")] private float viewDistance = 60;
         [SerializeField, TitleGroup("BehaviourParams")] private float soundDistance = 10;
@@ -26,7 +28,6 @@ namespace _Project.Character.IngameCharacters.Enemies
         public float SoundDistance => soundDistance;
         
         public float IsInFightDistance => isInFightDistance;
-        
         public float MaxWaitingTime => maxWaitingTime;
     }
 
@@ -96,6 +97,14 @@ namespace _Project.Character.IngameCharacters.Enemies
             worldHealthBar?.Close();
         }
 
+        [SerializeField] private GameObject lootObjPrefab;
+
+        public GameObject LootObj
+        {
+            get => lootObjPrefab;
+            set => lootObjPrefab = value;
+        }
+        
         public override void Die()
         {
             base.Die();
@@ -105,6 +114,12 @@ namespace _Project.Character.IngameCharacters.Enemies
             return;
             async UniTaskVoid WaitAndRespawn()
             {
+                if (lootObjPrefab)
+                {
+                    var lootObj = Instantiate(lootObjPrefab, StartPosition, quaternion.identity);
+                    lootObj.SetActive(true);
+                }
+                
                 await UniTask.Delay(TimeSpan.FromSeconds(4));
                 enabled = false;
             }
