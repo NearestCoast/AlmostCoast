@@ -43,6 +43,7 @@ namespace _Project.Characters.IngameCharacters.Core
             characterController ??= GetComponent<UnityEngine.CharacterController>();
             OriginalHeight = characterController.height;
             OriginalCenter = characterController.center;
+            OriginalRadius = characterController.radius;
             OriginalLayer = gameObject.layer;
         }
 
@@ -60,6 +61,7 @@ namespace _Project.Characters.IngameCharacters.Core
         }
         
         private float OriginalHeight { get; set; }
+        private float OriginalRadius { get; set; }
         private Vector3 OriginalCenter { get; set; }
         private int OriginalLayer { get; set; }
 
@@ -67,18 +69,21 @@ namespace _Project.Characters.IngameCharacters.Core
         {
             characterController.height = OriginalHeight / 2;
             characterController.center = OriginalCenter / 2;
+            characterController.radius = OriginalRadius / 2;
         }
 
         public void OnSlideStart()
         {
-            characterController.height = OriginalHeight / 4;
-            characterController.center = OriginalCenter / 4;
+            characterController.height = OriginalHeight / 8;
+            characterController.center = OriginalCenter / 8;
+            characterController.radius = OriginalRadius / 8;
         }
 
         public void ResetCharacterController()
         {
             characterController.height = OriginalHeight;
             characterController.center = OriginalCenter;
+            characterController.radius = OriginalRadius;
         }
 
         public void OnDying()

@@ -283,7 +283,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
             // DrawLabel("MoveParams.ClimbJumpCount : " + MoveParams.ClimbJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
-            // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
+            DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
             // DrawLabel("GroundParams.IsGroundedOnCharacter : " + GroundParams.IsGroundedOnCharacter);
             // DrawLabel("MoveParams.HasMovingPlatform : " + MoveParams.HasMovingPlatform);
             // DrawLabel("CurrentLevel : " + CurrentLevel);
@@ -307,8 +307,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("VerticalParams.IsLeftSightOpened : " + VerticalParams.IsLeftSightOpened);
             // DrawLabel("VerticalParams.IsLeftLedgeMovable : " + VerticalParams.IsLeftLedgeMovable);
             // DrawLabel("");
-            // DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
-            // DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
+            DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
+            DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
             // DrawLabel("MoveParams.IsClimbing : " + MoveParams.IsClimbing);
             // DrawLabel("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
             // DrawLabel("MoveParams.ClimbStamina : " + MoveParams.ClimbStaminaTime);

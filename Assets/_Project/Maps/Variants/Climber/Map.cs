@@ -776,13 +776,15 @@ namespace _Project.Maps.Climber
                         if (strings.Length > 2)
                         {
                             var lootObjName = strings[2];
-                            if (lootObjName == "SilverKey")
+                            var enemy = enemySpotObj.GetComponentInChildren<Enemy>();
+                            
+                            if (lootObjName.Contains("SilverKey"))
                             {
-                                enemySpotObj.GetComponent<Enemy>().LootObj = silverKeyPrefab.gameObject;
+                                enemy.LootObj = silverKeyPrefab.gameObject;
                             }
-                            else if (lootObjName == "GoldKey")
+                            else if (lootObjName.Contains("GoldKey"))
                             {
-                                enemySpotObj.GetComponent<Enemy>().LootObj = goldKeyPrefab.gameObject;
+                                enemy.LootObj = goldKeyPrefab.gameObject;
                             }
                         }
                     }

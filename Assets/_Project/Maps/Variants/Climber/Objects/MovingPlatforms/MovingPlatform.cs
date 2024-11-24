@@ -72,7 +72,7 @@ namespace _Project.Maps.Climber.Objects
         protected bool isWorking = false;
         protected float GoStartTime { get; set; }
         protected float GoEndTime { get; set; }
-        
+
         public virtual void MoveStart()
         {
             GoStartTime = 0;

@@ -88,6 +88,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             if (float.IsNaN(value))
             {
+                Debug.Log("###");
                 Debug.Log(EdgeHeightSnap);
                 Debug.Log(transform.position.y);
                 Debug.Log(characterControllerEnveloper.Height);

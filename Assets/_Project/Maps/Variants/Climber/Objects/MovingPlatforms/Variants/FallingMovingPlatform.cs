@@ -24,14 +24,13 @@ namespace _Project.Maps.Climber.Objects
         public override void Move()
         {
             if (rope || IsWorked) return;
-            if (!isGoDir) IsWorked = true;
+            if (!isGoDir)
+            {
+                IsWorked = true;
+                enabled = false;
+            }
             base.Move();
             Acc = Vector3.zero;
-        }
-
-        public override void ResetMovingPlatform()
-        {
-            return;
         }
     }
 }

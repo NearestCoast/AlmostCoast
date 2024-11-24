@@ -129,7 +129,11 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
             else
             {
-                if (!masterCharacter.CurrentMovingPlatform)
+                if (masterCharacter.CurrentMovingPlatform && masterCharacter.CurrentMovingPlatform.enabled)
+                {
+                    
+                }
+                else 
                 {
                     MoveParams.Gravity = GetGravity();
                     MoveParams.GravityTime += Time.deltaTime;
