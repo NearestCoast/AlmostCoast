@@ -142,13 +142,17 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                     {
                         return StateTime > 0.2f;
                     }
+                    
+                    case StateType.Landing:
+                    {
+                        return IsLeapEnd;
+                    }
                 }
                 
                 var value = NextState.Type switch
                 {
                     StateType.SkillJumpUp => true,
                     StateType.AirDash => true,
-                    StateType.Landing => true,
                     StateType.BubbleReady => true,
                     
                     StateType.Die => true,
@@ -176,8 +180,17 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             {
                 if (MoveParams.IsWallJumping)
                 {
-                    MaxJumpHeight = defaultJumpHeight * 1.2f;
-                    FallingTime = minFallingTime * 1.2f;
+                    var dot = Vector3.Dot(HorizontalDirection3, WallNormalSnap);
+                    if (dot > 0)
+                    {
+                        MaxJumpHeight = defaultJumpHeight * 1.2f;
+                        FallingTime = minFallingTime * 1.2f;
+                    }
+                    else
+                    {
+                        MaxJumpHeight = defaultJumpHeight;
+                        FallingTime = minFallingTime;
+                    }
                 }
                 else
                 {
@@ -191,9 +204,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             if (MoveParams.IsWallJumping)
             {
-                HorizontalDirSnap = (HorizontalDirection3).XYZ3toX0Z3();
-                
-                // var dot = Vector3.Dot(HorizontalDirSnap, WallNormalSnap);
+                HorizontalDirSnap = (HorizontalDirection3).XYZ3toX0Z3();;
                 // Debug.Log(dot);
                 // IsClimbJumping = PrevState.Type == StateType.Climb&& MoveParams.IsClimbJumpable &&
                 //                  (HorizontalDirSnap == Vector3.zero || dot < -0.5f);
@@ -202,7 +213,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 
                 if (-30 < signedAngle && signedAngle < 30)
                 {
-                 HorizontalDirSnap = WallNormalSnap;
+                    HorizontalDirSnap = WallNormalSnap;
                 }
                 if (150 < signedAngle || signedAngle < -150)
                 {

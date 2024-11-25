@@ -20,6 +20,12 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         {
             UpdateDictionary();
         }
+        
+        // ContainsKey 메서드 추가
+        public bool ContainsKey(MovementState.StateType stateType)
+        {
+            return ActionStateObjDict.ContainsKey(stateType);
+        }
 
         public void UpdateDictionary()
         {

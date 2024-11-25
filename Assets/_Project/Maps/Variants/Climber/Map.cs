@@ -93,6 +93,10 @@ namespace _Project.Maps.Climber
             var decoMPDict = new Dictionary<string, Transform>();
             var decoBrokableDict = new Dictionary<string, Transform>();
 
+            var leverDict = new Dictionary<string, Lever>();
+            var leverDoorDict = new Dictionary<string, LeverDoor>();
+            var leverDoorEndDict = new Dictionary<string, Transform>();
+
             var enemySpotsToSpawnDict = new Dictionary<string, GameObject>();
             for (var i = 0; i < enemiesContainer.transform.childCount; i++)
             {
@@ -230,6 +234,16 @@ namespace _Project.Maps.Climber
                     var dingdongDoor = dingdongLockRollingCubesDict[mastarID];
                     dingdongDoor.Ringdongs = value;
                 }
+            }
+            
+            foreach (var leverDoor in leverDoorDict.Values)
+            {
+                var lever = leverDict[leverDoor.LeverID];
+                lever.ConnectedDoor = leverDoor;
+                
+                leverDoor.Lever = lever;
+                var endTransform = leverDoorEndDict[leverDoor.ID];
+                leverDoor.TargetPosition = endTransform.position;
             }
             
             if (optimizeTexture)
@@ -418,6 +432,78 @@ namespace _Project.Maps.Climber
                         var sphereCollider = child.AddComponent<SphereCollider>();
                         sphereCollider.isTrigger = true;
                         // child.gameObject.SetActive(false);
+                    }
+                    else if (split[1].Contains("Lever"))
+                    {
+                        var ddSplit = split[1].Split(".");
+                        var id = ddSplit[1].Split("_")[0];
+
+                        child.layer = LayerMask.NameToLayer("Ground");
+                        var lever = child.AddComponent<Lever>();
+                        // lever.ID = id;
+                        child.AddComponent<BoxCollider>();
+                        leverDict.Add(id, lever);
+                    }
+                    else if (split[1].Contains("Portal"))
+                    {
+                        
+                    }
+                    else if (split[1].Contains("KDoor"))
+                    {
+                        child.AddComponent<BoxCollider>();
+                        var split2 = split[1].Split(".");
+                        var position = split2[2];
+                        
+                        if (position.Contains("Start"))
+                        {
+                            var id = split2[0] + split2[1];
+                            
+                            var leverId = split2[3].Split("_")[0];
+                            var keyDoor = child.AddComponent<KeyDoor>();
+                            keyDoor.ID = id;
+                            keyDoor.LeverID = leverId;
+
+                            var keyType = split2[4];
+                            if (keyType.Contains("SilverKey"))
+                            {
+                                keyDoor.KeyType = Key.Type.Silver;
+                            }
+                            else if (keyType.Contains("SilverKey"))
+                            {
+                                keyDoor.KeyType = Key.Type.Gold;
+                            }
+                            
+                            leverDoorDict.Add(id, keyDoor);
+                        }
+                        else if (position.Contains("End"))
+                        {
+                            var id = split2[0] + split2[1];
+                            
+                            leverDoorEndDict.Add(id, child.transform);
+                        }
+                    }
+                    else if (split[1].Contains("LDoor")) 
+                    {
+                        child.AddComponent<BoxCollider>();
+                        var split2 = split[1].Split(".");
+                        var position = split2[2];
+                        
+                        if (position.Contains("Start"))
+                        {
+                            var id = split2[0] + split2[1];
+                            
+                            var leverId = split2[3].Split("_")[0];
+                            var leverDoor = child.AddComponent<LeverDoor>();
+                            leverDoor.ID = id;
+                            leverDoor.LeverID = leverId;
+                            leverDoorDict.Add(id, leverDoor);
+                        }
+                        else if (position.Contains("End"))
+                        {
+                            var id = split2[0] + split2[1];
+                            
+                            leverDoorEndDict.Add(id, child.transform);
+                        }
                     }
                     else if (split[1].Contains("DingdongDoor"))
                     {
@@ -767,6 +853,7 @@ namespace _Project.Maps.Climber
                     {
                         var strings = split[1].Split(".");
                         var id = strings[1];
+                        
                         var enemySpotInstanceToSpawn = enemySpotsToSpawnDict[id];
                         var enemySpotObj = Instantiate(enemySpotInstanceToSpawn, child.transform.position, child.transform.rotation, child.transform);
                         enemySpotObj.SetActive(true);

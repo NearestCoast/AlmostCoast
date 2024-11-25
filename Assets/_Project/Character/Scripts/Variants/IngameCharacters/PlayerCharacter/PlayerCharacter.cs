@@ -129,7 +129,10 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             
             if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatformFromTop)
             {
-                animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Hang]);
+                if (movementStateContainer.ContainsKey(MovementState.StateType.Hang))
+                {
+                    animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Hang]);
+                }
             }
             
             base.Update();
@@ -249,18 +252,28 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             
         }
 
-        public void UseKey(Key.Type keyType)
+        public void TryUseKey(Key.Type keyType, out bool success)
         {
+            success = false;
             switch (keyType)
             {
                 case Key.Type.Silver:
                 {
-                    silverKeyAmount -= 1;
+                    if (silverKeyAmount > 0)
+                    {
+                        success = true;
+                        silverKeyAmount -= 1;
+                    }
+                    
                     break;
                 }
                 case Key.Type.Gold:
                 {
-                    goldKeyAmount -= 1;
+                    if (goldKeyAmount > 0)
+                    {
+                        success = true;
+                        goldKeyAmount -= 1;
+                    }
                     break;
                 }
             }
