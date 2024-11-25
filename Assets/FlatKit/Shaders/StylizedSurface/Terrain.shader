@@ -46,9 +46,9 @@
         _LightContribution("[FOLDOUT(Advanced Lighting){5}]Light Color Contribution", Range(0, 1)) = 0
         _LightFalloffSize("Light edge width (point / spot)", Range(0, 1)) = 0
 
-        // Used to provide light direction to cel shading if all light in the scene is baked.
         [Space(5)]
-        [Toggle(DR_ENABLE_LIGHTMAP_DIR)]_OverrideLightmapDir("Override light direction", Int) = 0
+        // Used to provide light direction to cel shading if all light in the scene is baked.
+        [Toggle(DR_ENABLE_LIGHTMAP_DIR)]_OverrideLightmapDir("Override Light Direction", Int) = 0
         _LightmapDirectionPitch("[DR_ENABLE_LIGHTMAP_DIR]Pitch", Range(0, 360)) = 0
         _LightmapDirectionYaw("[DR_ENABLE_LIGHTMAP_DIR]Yaw", Range(0, 360)) = 0
         [HideInInspector] _LightmapDirection("Direction", Vector) = (0, 1, 0, 0)
@@ -138,11 +138,12 @@
 
             // -------------------------------------
             // Flat Kit
-            #pragma shader_feature_local __ _CELPRIMARYMODE_SINGLE _CELPRIMARYMODE_STEPS _CELPRIMARYMODE_CURVE
-            #pragma shader_feature_local DR_CEL_EXTRA_ON
-            #pragma shader_feature_local DR_GRADIENT_ON
-            #pragma shader_feature_local DR_SPECULAR_ON
-            #pragma shader_feature_local DR_RIM_ON
+            #pragma shader_feature_local_fragment __ _CELPRIMARYMODE_SINGLE _CELPRIMARYMODE_STEPS _CELPRIMARYMODE_CURVE
+            #pragma shader_feature_local_fragment DR_CEL_EXTRA_ON
+            #pragma shader_feature_local_fragment DR_GRADIENT_ON
+            #pragma shader_feature_local_fragment DR_SPECULAR_ON
+            #pragma shader_feature_local_fragment DR_RIM_ON
+            #pragma shader_feature_local_fragment DR_ENABLE_LIGHTMAP_DIR
             #pragma shader_feature_local __ _UNITYSHADOWMODE_MULTIPLY _UNITYSHADOWMODE_COLOR
 
             // -------------------------------------

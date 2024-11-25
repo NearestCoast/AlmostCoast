@@ -503,6 +503,8 @@ public class ES3
         if (settings.location == Location.Cache)
             return ES3File.GetOrCreateCachedFile(settings).Load<T>(key, defaultValue);
 
+        Debug.Log(settings.FullPath + " " + settings.location);
+
         using (var reader = ES3Reader.Create(settings))
         {
             if (reader == null)
@@ -1631,16 +1633,16 @@ public class ES3
         CacheFile(new ES3Settings(filePath));
     }
 
-    /// <summary>Creates a backup of a file.</summary>
+    /// <summary>Loads a file from persistent storage into the cache.</summary>
     /// <param name="filePath">The filename or path of the file we want to store the cached file to.</param>
-    /// <param name="settings">The settings of the file we want to store to.</param>
+    /// <param name="settings">The settings of the file we want to cache.</param>
     public static void CacheFile(string filePath, ES3Settings settings)
     {
         CacheFile(new ES3Settings(filePath, settings));
     }
 
-    /// <summary>Stores a cached file to persistent storage.</summary>
-    /// <param name="settings">The settings of the file we want to store to.</param>
+    /// <summary>Loads a file from persistent storage into the cache.</summary>
+    /// <param name="settings">The settings of the file we want to cache.</param>
     public static void CacheFile(ES3Settings settings)
     {
         ES3File.CacheFile(settings);
