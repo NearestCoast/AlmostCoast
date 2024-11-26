@@ -188,6 +188,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 
         public override void MoveToSavePoint()
         {
+            CharacterControllerEnveloper.OnSpawn();
+            
             gameObject.SetActive(false);
             transform.position = SavePoint.transform.position;
             gameObject.SetActive(true);

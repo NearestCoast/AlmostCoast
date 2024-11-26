@@ -86,7 +86,12 @@ namespace _Project.Character.IngameCharacters.Enemies
         public override void MoveToSavePoint()
         {
             if (IsDead) return;
+            CharacterControllerEnveloper.OnSpawn();
+            
+            gameObject.SetActive(false);
             transform.position = SavePoint ? SavePoint.transform.position : StartPosition;
+            gameObject.SetActive(true);
+            
             base.MoveToSavePoint();
         }
 

@@ -49,9 +49,8 @@ namespace _Project.Characters.IngameCharacters.Core
 
         public void OnSpawn()
         {
+            ResetCharacterController();
             characterController.enabled = true;
-            characterController.height = OriginalHeight;
-            characterController.center = OriginalCenter;
         }
             
 

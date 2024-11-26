@@ -9,6 +9,26 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M.Hazard
     second: {fileID: 2100000, guid: 985e2f08126264dce93f0385f84e04b2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M.PlaneDark
+    second: {fileID: 2100000, guid: c1ff7ebd8e93e4d7685e50dfa1269e17, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M.PlaneLight
+    second: {fileID: 2100000, guid: fce4696209d614ba0b384151c5aefbe3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M.Wall
+    second: {fileID: 2100000, guid: 866a66698eeac414faa3d9c72bf1f346, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M.Wall2
+    second: {fileID: 2100000, guid: cdab88881bbbc46b4aedb1a2439d687e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
