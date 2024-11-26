@@ -22,7 +22,7 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
             LockParams.LockOff();
             lockOnMarker.enabled = false; // LockOn 대상이 없으면 비활성화s
             
-            moveCameraTarget.CancelRecenter();
+            if (isPlayer) moveCameraTarget.CancelRecenter();
         }
     }
 }

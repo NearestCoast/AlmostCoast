@@ -15,6 +15,7 @@ using Cysharp.Threading.Tasks;
 using Renge.PPB;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 {
@@ -216,7 +217,11 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             return;
             async UniTaskVoid WaitAndRespawn()
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(4));
+                await UniTask.Delay(TimeSpan.FromSeconds(3));
+                string currentSceneName = SceneManager.GetActiveScene().name;
+                await SceneManager.LoadSceneAsync(currentSceneName);
+
+                return;
                 IsDead = false;
                 SavePoint = initialSavePoint;
                 MoveToSavePoint();
@@ -225,6 +230,13 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 Stat.CurrentHealth = 100;
                 
                 animationStateConductor.ForceSetActionState(actionStateContainer[ActionState.StateType.ActionIdle]);
+                
+                // 현재 Scene 이름 가져오기
+                
+
+                // 현재 Scene 다시 로드
+                // SceneManager.LoadScene(currentSceneName);
+                
             }
         }
         

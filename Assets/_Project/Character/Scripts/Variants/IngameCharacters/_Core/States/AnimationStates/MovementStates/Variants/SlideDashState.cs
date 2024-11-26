@@ -65,7 +65,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         
         protected override Vector3 GetVelocity()
         {
-            return (TargetDirSnap * (maxDashLength / (maxTime))) * Time.deltaTime;
+            var projection = Vector3.ProjectOnPlane(TargetDirSnap, GroundParams.GroundNormal).normalized;
+            return (projection * (maxDashLength / (maxTime))) * Time.deltaTime;
         }
 
         protected override Quaternion GetRotation()

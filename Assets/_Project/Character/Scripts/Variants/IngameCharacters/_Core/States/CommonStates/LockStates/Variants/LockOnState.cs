@@ -55,8 +55,6 @@ namespace _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnSt
                 }
                 
                 if (isPlayer) moveCameraTarget.RecenterImmediate();
-                
-                
             }
             Transform FindBestTarget()
             {
