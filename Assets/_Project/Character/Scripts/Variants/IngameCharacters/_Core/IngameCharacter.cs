@@ -264,6 +264,11 @@ namespace _Project.Characters.IngameCharacters.Core
             }
         }
 
+        public void MoveToPosition()
+        {
+            
+        }
+
         public HittingInfo HittingInfo { get; private set; }
         
         public override void TakeDamage(HittingInfo hittingInfo, int damage, SideEffect sideEffect = SideEffect.None)

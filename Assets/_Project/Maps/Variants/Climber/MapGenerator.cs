@@ -22,7 +22,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Maps.Climber
 {
-    public class Map : MonoBehaviour
+    public class MapGenerator : MonoBehaviour
     {
         [SerializeField] private Level.Type levelType;
         [SerializeField] private bool useDeco;
@@ -67,11 +67,14 @@ namespace _Project.Maps.Climber
         private void PutColliders()
         {
             levels = new List<Level>();
+            var portals = new List<Portal>();
             
             if (cloneObj) DestroyImmediate(cloneObj);
             cloneObj = Instantiate(gameObject, mapInstanceContainer);
-            var cloneMap = cloneObj.GetComponent<Map>();
-            cloneMap.levels = levels;
+            DestroyImmediate(cloneObj.GetComponent<MapGenerator>());
+            var cloneChapter = cloneObj.AddComponent<Chapter>();
+            cloneChapter.Levels = levels;
+            cloneChapter.Portals = portals;
 
             gameObject.SetActive(false);
             cloneObj.SetActive(true);
@@ -96,6 +99,9 @@ namespace _Project.Maps.Climber
             var leverDict = new Dictionary<string, Lever>();
             var leverDoorDict = new Dictionary<string, LeverDoor>();
             var leverDoorEndDict = new Dictionary<string, Transform>();
+            
+            var arrivalPortalDict = new Dictionary<string, Portal>();
+            var portalSavePointDict = new Dictionary<string, SavePoint>();
 
             var enemySpotsToSpawnDict = new Dictionary<string, GameObject>();
             for (var i = 0; i < enemiesContainer.transform.childCount; i++)
@@ -246,6 +252,11 @@ namespace _Project.Maps.Climber
                 leverDoor.TargetPosition = endTransform.position;
             }
             
+            foreach (var portal in arrivalPortalDict.Values)
+            {
+                portal.TargetSavePoint = portalSavePointDict[portal.ID];
+            }
+            
             if (optimizeTexture)
             {
                 foreach (var level in levels)
@@ -257,6 +268,8 @@ namespace _Project.Maps.Climber
             }
 
             navMeshSurface.BuildNavMesh();
+            
+            
             return;
             void TraverseCollectionLevel(Transform T, Level level, out Dictionary<string, List<Dingdong>> dingdongDict, out Dictionary<string, List<Dingdong>> ringdongDict)
             {
@@ -446,7 +459,23 @@ namespace _Project.Maps.Climber
                     }
                     else if (split[1].Contains("Portal"))
                     {
-                        
+                        var boxCollider = child.AddComponent<BoxCollider>();
+                        boxCollider.isTrigger = true;
+                        var portal = child.AddComponent<Portal>();
+                        var split2 = split[1].Split(".");
+                        var position = split2[2];
+                        portal.ID = split2[1];
+                        portals.Add(portal);
+                        if (position.Contains("Start"))
+                        {
+                            portal.PortalType = Portal.Type.Depart;
+                            portal.ArrivalID = split2[3].Split("_")[0];
+                        }
+                        else if (position.Contains("End"))
+                        {
+                            portal.PortalType = Portal.Type.Arrival;
+                            arrivalPortalDict.Add(portal.ID, portal);
+                        }
                     }
                     else if (split[1].Contains("KDoor"))
                     {
@@ -839,6 +868,16 @@ namespace _Project.Maps.Climber
                         if (split[1].Contains("InitialSavePoint"))
                         {
                             FindAnyObjectByType<PlayerCharacter>().InitialSavePoint = savePoint;
+                        }
+                        
+                        var split2 = split[1].Split(".");
+                        if (split2.Length > 1)
+                        {
+                            if (split2[1].Contains("PEnd"))
+                            {
+                                var portalID = split2[2].Split("_")[0];
+                                portalSavePointDict.Add(portalID, savePoint);
+                            }
                         }
                     }
                     else if (split[1].Contains("Ground"))

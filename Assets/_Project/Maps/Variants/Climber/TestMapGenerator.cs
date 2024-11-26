@@ -29,7 +29,7 @@ namespace _Project.Maps.Climber
             if (objMade) DestroyImmediate(objMade);
             var obj = new GameObject("TestMap");
             obj.transform.parent = transform.parent;
-            obj.AddComponent<Map>();
+            obj.AddComponent<MapGenerator>();
             objMade = obj;
 
             var firstPlane = Instantiate(plane, objMade.transform);
