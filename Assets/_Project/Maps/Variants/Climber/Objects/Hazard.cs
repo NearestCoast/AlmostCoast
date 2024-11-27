@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Characters._Core;
 using _Project.Characters.IngameCharacters.Core;
+using _Project.UI.InGame;
 using _Project.Utils;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -23,10 +24,10 @@ namespace _Project.Maps.Climber.Objects
         private void Awake()
         {
             targetLayers = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Character");
-            characters = new List<IngameCharacter>();
+            characters = new HashSet<IngameCharacter>();
         }
 
-        private List<IngameCharacter> characters;
+        private HashSet<IngameCharacter> characters;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -35,8 +36,9 @@ namespace _Project.Maps.Climber.Objects
                 var character = other.GetComponent<IngameCharacter>();
                 if (characters.Contains(character)) return;
                 if (character.IsDying || character.IsDead) return;
-                character.MoveToSavePoint();
                 characters.Add(character);
+                character.MoveToSavePoint();
+                
                 RemoveCharacterAfterDelay(character);
             }
         }

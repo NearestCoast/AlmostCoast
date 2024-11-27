@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
@@ -6,11 +7,16 @@ namespace _Project
 
     public class BGMManager : MonoBehaviour
     {
-        public AudioSource audioSource;  // AudioSource 컴포넌트
+        private AudioSource audioSource;  // AudioSource 컴포넌트
         public AudioClip[] bgmClips;     // 재생할 배경음악 리스트
         private int currentTrackIndex = 0; // 현재 재생 중인 트랙 인덱스
 
         private bool isPlaying = false;  // 재생 상태 확인
+
+        private void Awake()
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
 
         void Start()
         {

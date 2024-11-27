@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using _Project.Cameras;
 using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
@@ -35,6 +36,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             progressBar = GetComponentInChildren<ProceduralProgressBar>();
             
             Stat.OnHealthChange?.AddListener((value)=> progressBar.Value = value);
+            
+            cts = new CancellationTokenSource();
         }
 
         protected override Vector3 Velocity
@@ -186,20 +189,38 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 // if (IsJustStateChanged) Debug.Log(CurrentMovementState);
             }
         }
-
-        public override void MoveToSavePoint()
+        
+        private CancellationTokenSource cts;
+        private bool isApplicationQuitting = false;
+        public override async void MoveToSavePoint()
         {
-            CharacterControllerEnveloper.OnSpawn();
-            
-            gameObject.SetActive(false);
-            transform.position = SavePoint.transform.position;
-            gameObject.SetActive(true);
-            
-            base.MoveToSavePoint();
-            
-            CurrentLevel.ResetLevel();
-            commonStateConductor.TrySetLockState(LockStateContainer[LockState.StateType.LockOff]);
-            cameraTarget?.ResetRotationAsync(SavePoint.transform.forward);
+            var curtainUI = FindAnyObjectByType<CurtainUI>();
+
+            try
+            {
+                // FadeOut 호출 시 CancellationToken 전달
+                await curtainUI.FadeOut(cts.Token);
+
+                if (isApplicationQuitting) return;
+                CharacterControllerEnveloper.OnSpawn();
+
+                gameObject.SetActive(false);
+                transform.position = SavePoint.transform.position;
+                gameObject.SetActive(true);
+
+                base.MoveToSavePoint();
+
+                CurrentLevel.ResetLevel();
+                commonStateConductor.TrySetLockState(LockStateContainer[LockState.StateType.LockOff]);
+                cameraTarget?.ResetRotationAsync(SavePoint.transform.forward);
+
+                // FadeIn 호출 시 CancellationToken 전달
+                await curtainUI.FadeIn(cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log("MoveToSavePoint cancelled due to application quit.");
+            }
         }
 
         [SerializeField] private SavePoint initialSavePoint;
@@ -291,6 +312,20 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     break;
                 }
             }
+        }
+        
+        private void OnApplicationQuit()
+        {
+            isApplicationQuitting = true;
+            if (cts != null && !cts.IsCancellationRequested)
+            {
+                cts.Cancel(); // 작업 취소
+            }
+        }
+
+        private void OnDestroy()
+        {
+            cts?.Dispose(); // CancellationTokenSource 정리
         }
 
         private void OnGUI()
