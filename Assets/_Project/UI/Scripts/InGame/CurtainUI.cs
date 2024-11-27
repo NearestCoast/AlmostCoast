@@ -16,6 +16,10 @@ namespace _Project.UI.InGame
         private CancellationTokenSource cts;
         private bool isApplicationQuitting = false;
 
+        // 외부에서 Fade 상태를 확인할 수 있는 변수
+        public bool IsFadingIn { get; private set; }
+        public bool IsFadingOut { get; private set; }
+
         private void Awake()
         {
             fadeCanvasGroup = GetComponent<CanvasGroup>();
@@ -32,6 +36,7 @@ namespace _Project.UI.InGame
         public async UniTask FadeOut(CancellationToken cancellationToken = default)
         {
             float elapsed = 0f;
+            IsFadingOut = true;
 
             try
             {
@@ -50,11 +55,16 @@ namespace _Project.UI.InGame
             {
                 Debug.Log("FadeOut cancelled.");
             }
+            finally
+            {
+                IsFadingOut = false;
+            }
         }
 
         public async UniTask FadeIn(CancellationToken cancellationToken = default)
         {
             float elapsed = 0f;
+            IsFadingIn = true;
 
             try
             {
@@ -75,6 +85,10 @@ namespace _Project.UI.InGame
             catch (OperationCanceledException)
             {
                 Debug.Log("FadeIn cancelled.");
+            }
+            finally
+            {
+                IsFadingIn = false;
             }
         }
 

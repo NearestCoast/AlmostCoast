@@ -1,4 +1,5 @@
 using _Project.UI.MainMenu;
+using _Project.UI.Menu._Core;
 using _Project.UI.OptionMenu;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,7 +9,7 @@ namespace _Project.UI.ConfirmMenu
 {
     public class ApplyButton : MenuButton
     {
-        private OptionCanvas optionCanvas;
+        private AdditionalCanvas additionalCanvas;
         private OptionContentPanel[] optionContentPanels;
         [SerializeField] private Button applyButton;
         [SerializeField] private Button backButton;
@@ -17,7 +18,7 @@ namespace _Project.UI.ConfirmMenu
         {
             base.Awake();
             optionContentPanels = FindObjectsOfType<OptionContentPanel>();
-            optionCanvas = GetComponentInParent<OptionCanvas>();
+            additionalCanvas = GetComponentInParent<AdditionalCanvas>();
         }
 
         public void SetUpperSelectable(Selectable selectable)
@@ -41,13 +42,13 @@ namespace _Project.UI.ConfirmMenu
                 }
             }
             
-            optionCanvas.CloseCanvas();
+            additionalCanvas.CloseCanvas();
         }
 
         public override void OnCancel(BaseEventData eventData)
         {
             base.OnCancel(eventData);
-            optionCanvas.CloseCanvas();
+            additionalCanvas.CloseCanvas();
         }
 
         public override void OnPointerClick(PointerEventData eventData)

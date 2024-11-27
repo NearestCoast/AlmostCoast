@@ -1,20 +1,18 @@
+using UnityEngine;
 using UnityEngine.EventSystems;
+using _Project.UI.FileSelectionMenu;
 
 namespace _Project.UI.MainMenu
 {
     public class StartButton : MainMenuButton
     {
-        private LobbyManager LobbyManager { get; set; }
-        protected override void Awake()
-        {
-            base.Awake();
-            LobbyManager = FindObjectOfType<LobbyManager>();
-        }
+        [SerializeField] private FileSelectionCanvas fileSelectionCanvas;
 
         public override void OnSubmit(BaseEventData eventData)
         {
             base.OnSubmit(eventData);
-            LobbyManager.StartGame();
+            // LobbyManager.StartGame();
+            fileSelectionCanvas.OpenCanvas();
         }
     }
 }

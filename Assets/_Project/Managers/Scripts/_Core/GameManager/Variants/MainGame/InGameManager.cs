@@ -1,6 +1,7 @@
 using System;
 using _Project.InputSystem;
 using _Project.UI;
+using _Project.UI.InGame;
 using _Project.UI.MainMenu;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,11 +15,13 @@ namespace _Project
         [SerializeField] private InputActionReference escapeActionKey;
         private PlayerInputController playerInputController;
         private MainMenuCanvas mainMenuCanvas;
+        private CurtainUI curtainUI;
 
         private void Awake()
         {
             playerInputController = FindAnyObjectByType<PlayerInputController>();
             mainMenuCanvas = FindAnyObjectByType<MainMenuCanvas>();
+            curtainUI = FindAnyObjectByType<CurtainUI>();
         }
 
         private void Start()
@@ -41,6 +44,7 @@ namespace _Project
         private void PauseGame(InputAction.CallbackContext ctx)
         {
             if (!IsInGameScene) return;
+            if (curtainUI.IsFadingIn) return;
             Time.timeScale = 0f; // 게임 시간 정지
             playerInputController.ToggleInputActionMap(playMode = GameManager.PlayMode.Pause);
             mainMenuCanvas.OpenCanvas();

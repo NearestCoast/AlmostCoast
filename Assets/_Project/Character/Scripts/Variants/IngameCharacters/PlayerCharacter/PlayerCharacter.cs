@@ -6,8 +6,7 @@ using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.BrightnessState;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates;
-using _Project.Combat.HitObjects;
-using _Project.InputSystem;
+using _Project.Managers.Scripts._Core.SaveManager;
 using _Project.Maps.Climber;
 using _Project.Maps.Climber.Objects;
 using _Project.Maps.Climber.Objects.Collectables;
@@ -20,7 +19,7 @@ using UnityEngine.SceneManagement;
 
 namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 {
-    public class PlayerCharacter : IngameCharacter
+    public class PlayerCharacter : IngameCharacter, ISavable
     {
         [SerializeField, TitleGroup("CameraTarget")] private CameraTarget cameraTarget;
         private ProceduralProgressBar progressBar;
@@ -327,6 +326,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 
         private void OnDestroy()
         {
+            cts?.Cancel(); // 작업 취소
             cts?.Dispose(); // CancellationTokenSource 정리
         }
 
@@ -389,6 +389,37 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             {
                 GUI.Label(new Rect(0, i++ * 20, 500, guiStyle.fontSize * 1.1f), msg, guiStyle);
             }
-        } 
+        }
+
+        public bool EnrollToSaveManager => true;
+        public bool Save(string saveFileName)
+        {
+            // 현재 위치 저장
+            Vector3 position = transform.position;
+            ES3.Save("PlayerPosition", position, saveFileName);
+            Debug.Log($"Player position saved: {position}");
+            return true;
+        }
+
+        public bool Load(string saveFileName)
+        {
+            gameObject.SetActive(false);
+            // 저장된 위치 로드
+            if (ES3.KeyExists("PlayerPosition", saveFileName))
+            {
+                Vector3 position = ES3.Load<Vector3>("PlayerPosition", saveFileName);
+                transform.position = position; // 저장된 위치로 이동
+                Debug.Log($"Player position loaded: {position}");
+            }
+            else
+            {
+                Debug.LogWarning("No saved position found.");
+            }
+            
+            gameObject.SetActive(true);
+            
+            return true;
+        }
+
     }
 }
