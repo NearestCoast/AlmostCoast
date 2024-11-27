@@ -20,6 +20,13 @@ namespace _Project.UI.InGame
         {
             fadeCanvasGroup = GetComponent<CanvasGroup>();
             cts = new CancellationTokenSource();
+            fadeCanvasGroup.alpha = 1;
+        }
+
+        private void Start()
+        {
+            fadeCanvasGroup.alpha = 1;
+            FadeIn().Forget();
         }
 
         public async UniTask FadeOut(CancellationToken cancellationToken = default)

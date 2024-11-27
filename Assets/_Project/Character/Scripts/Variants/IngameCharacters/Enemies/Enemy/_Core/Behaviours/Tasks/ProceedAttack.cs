@@ -45,6 +45,10 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
                     WaitAndResetNextAttackState().Forget();
                 }
             }
+            else
+            {
+                animationStateConductor.TrySetActionState(master.ActionStateContainer[ActionState.StateType.ActionIdle]);
+            }
             return TaskStatus.Running;
         }
         
@@ -56,7 +60,6 @@ namespace _Project.Character.IngameCharacters.Enemies.Behaviours.Tasks
                 var currentAttackState = master.PredictedAttackState;
 
                 await UniTask.WaitUntil(() => master.CurrentActionState.Type != currentAttackState.Type);
-                animationStateConductor.TrySetActionState(master.ActionStateContainer[ActionState.StateType.ActionIdle]);
                 animationStateConductor.SetActionMaskFullBody();
                 transform.rotation = Quaternion.LookRotation(pathfinder.TargetCharacter.transform.position);
                 

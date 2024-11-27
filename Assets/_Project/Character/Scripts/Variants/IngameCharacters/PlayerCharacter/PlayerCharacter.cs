@@ -39,7 +39,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             
             cts = new CancellationTokenSource();
         }
-
+        
         protected override Vector3 Velocity
         {
             get
@@ -238,8 +238,10 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             return;
             async UniTaskVoid WaitAndRespawn()
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(3));
-                string currentSceneName = SceneManager.GetActiveScene().name;
+                var curtainUI = FindAnyObjectByType<CurtainUI>();
+                await curtainUI.FadeOut(cts.Token);
+                
+                var currentSceneName = SceneManager.GetActiveScene().name;
                 await SceneManager.LoadSceneAsync(currentSceneName);
 
                 return;
