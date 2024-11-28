@@ -7,7 +7,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
 {
     public class ActionStateContainer : MonoBehaviour, ISavable
     {
-        [SerializeField] private bool isPlayer = false;
+        // [SerializeField] private bool isPlayer = false;
         [ShowInInspector] public Dictionary<ActionState.StateType, ActionState> StateObjDict { get; set; }
         
         // 인덱서 추가

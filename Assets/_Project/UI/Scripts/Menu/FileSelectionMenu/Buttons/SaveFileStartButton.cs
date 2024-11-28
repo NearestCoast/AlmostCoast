@@ -69,6 +69,8 @@ namespace _Project.UI.FileSelectionMenu
                     return true;
                 }
 
+                loadedPlayTime = 0;
+                textCompo_playTime.text = $"{GetFormattedPlayTime(loadedPlayTime)}";
                 Debug.LogWarning($"No PlayTime found in save file: {saveFileName}");
                 return false;
             }

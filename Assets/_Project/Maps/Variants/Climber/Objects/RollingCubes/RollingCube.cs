@@ -34,7 +34,7 @@ namespace _Project.Maps.Climber.Objects
     {
 
         protected bool IsPlayerOnPlatform { get; private set; }
-        private async void OnTriggerStay(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             if (!other.attachedRigidbody) return;
             if (other.attachedRigidbody.gameObject.layer == LayerMask.NameToLayer("Player"))

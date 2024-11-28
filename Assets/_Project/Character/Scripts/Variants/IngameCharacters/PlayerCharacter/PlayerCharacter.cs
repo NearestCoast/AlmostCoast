@@ -234,7 +234,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             set => initialSavePoint = value;
         }
 
-        public override void SetDying()
+        protected override void SetDying()
         {
             base.SetDying();
             
@@ -256,22 +256,6 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 
                 var currentSceneName = SceneManager.GetActiveScene().name;
                 await SceneManager.LoadSceneAsync(currentSceneName);
-
-                return;
-                IsDead = false;
-                SavePoint = initialSavePoint;
-                MoveToSavePoint();
-                MoveParams.ResetCrowdControlled();
-                characterControllerEnveloper.ResetCharacterController();
-                Stat.CurrentHealth = 100;
-                
-                animationStateConductor.ForceSetActionState(actionStateContainer[ActionState.StateType.ActionIdle]);
-                
-                // 현재 Scene 이름 가져오기
-                
-
-                // 현재 Scene 다시 로드
-                // SceneManager.LoadScene(currentSceneName);
                 
             }
         }

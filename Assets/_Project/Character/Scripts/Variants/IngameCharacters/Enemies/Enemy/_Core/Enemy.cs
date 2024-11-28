@@ -47,7 +47,7 @@ namespace _Project.Character.IngameCharacters.Enemies
         public AttackState PredictedAttackState { get; set; }
         public AttackState AlternateAttackState { get; set; }
 
-        [SerializeField, TitleGroup("Velocity")] private float exceptionalMove = 20;
+        // [SerializeField, TitleGroup("Velocity")] private float exceptionalMove = 20;
         protected override Vector3 Velocity
         {
             get
@@ -91,7 +91,7 @@ namespace _Project.Character.IngameCharacters.Enemies
             base.MoveToSavePoint();
         }
 
-        public override void SetDying()
+        protected override void SetDying()
         {
             base.SetDying();
             behavior.DisableBehavior();

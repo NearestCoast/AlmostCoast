@@ -37,7 +37,7 @@ namespace _Project.Characters.IngameCharacters.Core
             VerticalParams.IsWalled = false;
         }
 
-        [SerializeField] private float sightCheckOffset = 0.2f;
+        // [SerializeField] private float sightCheckOffset = 0.2f;
 
         private readonly Vector3[] directions = new Vector3[]
         {
@@ -252,8 +252,6 @@ namespace _Project.Characters.IngameCharacters.Core
         public bool GetIsEdgeOfPlatform()
         {
             // Edge까지의 거리를 초기화 (-1은 충돌이 없음을 나타냄)
-            var edgeDistance = -1f;
-
             if (!VerticalParams.IsWalled || !VerticalParams.IsHeadOpen)
                 return false;
 
@@ -319,40 +317,40 @@ namespace _Project.Characters.IngameCharacters.Core
             return isTopHit && !isOffsetHit;
         }
         
-        private void OnDrawGizmos()
-        {
-            return;
-            if (!Application.isPlaying) return;
-
-            DrawBoxCast(BoxCastRayClimbOverLedge, transform.rotation, BoxCastRayLength, HitDetectClimbOverLedge);
-            DrawBoxCast(BoxCastRayLeftSight, transform.rotation, BoxCastRayLength, HitDetectLeftSight);
-            DrawBoxCast(BoxCastRayRightSight, transform.rotation, BoxCastRayLength, HitDetectRightSight);
-            // DrawBoxCast(BoxCastRayLeftMovable, transform.rotation, characterController.skinWidth, HitDetectLeftMovable);
-
-            void DrawBoxCast(Ray ray, Quaternion orientation, float rayLength, bool isHit)
-            {
-                // 시야 선(레이캐스트)의 시작점
-                Vector3 origin = ray.origin;
-                var direction = ray.direction;
-
-                // BoxCast 시작점과 끝점을 계산
-                Vector3 endPoint = origin + direction.normalized * rayLength;
-
-                // Gizmo 색상 설정
-                Gizmos.color = isHit ? Color.red : Color.green;
-
-                // BoxCast의 시작점 그리기 (회전 반영)
-                Gizmos.matrix = Matrix4x4.TRS(origin, orientation, Vector3.one);
-                Gizmos.DrawWireCube(Vector3.zero, HalfExtents * 2);
-
-                // BoxCast의 끝점 그리기 (회전 반영)
-                Gizmos.matrix = Matrix4x4.TRS(endPoint, orientation, Vector3.one);
-                Gizmos.DrawWireCube(Vector3.zero, HalfExtents * 2);
-
-                // BoxCast 경로를 선으로 그리기
-                Gizmos.matrix = Matrix4x4.identity;
-                Gizmos.DrawLine(origin, endPoint);
-            }
-        }
+        // private void OnDrawGizmos()
+        // {
+        //     return;
+        //     if (!Application.isPlaying) return;
+        //
+        //     DrawBoxCast(BoxCastRayClimbOverLedge, transform.rotation, BoxCastRayLength, HitDetectClimbOverLedge);
+        //     DrawBoxCast(BoxCastRayLeftSight, transform.rotation, BoxCastRayLength, HitDetectLeftSight);
+        //     DrawBoxCast(BoxCastRayRightSight, transform.rotation, BoxCastRayLength, HitDetectRightSight);
+        //     // DrawBoxCast(BoxCastRayLeftMovable, transform.rotation, characterController.skinWidth, HitDetectLeftMovable);
+        //
+        //     void DrawBoxCast(Ray ray, Quaternion orientation, float rayLength, bool isHit)
+        //     {
+        //         // 시야 선(레이캐스트)의 시작점
+        //         Vector3 origin = ray.origin;
+        //         var direction = ray.direction;
+        //
+        //         // BoxCast 시작점과 끝점을 계산
+        //         Vector3 endPoint = origin + direction.normalized * rayLength;
+        //
+        //         // Gizmo 색상 설정
+        //         Gizmos.color = isHit ? Color.red : Color.green;
+        //
+        //         // BoxCast의 시작점 그리기 (회전 반영)
+        //         Gizmos.matrix = Matrix4x4.TRS(origin, orientation, Vector3.one);
+        //         Gizmos.DrawWireCube(Vector3.zero, HalfExtents * 2);
+        //
+        //         // BoxCast의 끝점 그리기 (회전 반영)
+        //         Gizmos.matrix = Matrix4x4.TRS(endPoint, orientation, Vector3.one);
+        //         Gizmos.DrawWireCube(Vector3.zero, HalfExtents * 2);
+        //
+        //         // BoxCast 경로를 선으로 그리기
+        //         Gizmos.matrix = Matrix4x4.identity;
+        //         Gizmos.DrawLine(origin, endPoint);
+        //     }
+        // }
     }
 }

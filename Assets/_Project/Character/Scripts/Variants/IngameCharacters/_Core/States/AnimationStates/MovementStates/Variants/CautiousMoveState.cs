@@ -64,8 +64,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         [SerializeField, TitleGroup("Velocity")] private bool useInputMagnitude = false;
         [SerializeField, TitleGroup("Velocity")] private float maxLength = 8;
         [SerializeField, TitleGroup("Velocity")] private float maxTime = 1;
-        [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
-        [SerializeField, TitleGroup("Fx")] private float audioTick = 1;
+        // [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
+        // [SerializeField, TitleGroup("Fx")] private float audioTick = 1;
         private bool IsBlocked { get; set; }
         private float AudioTickTimer { get; set; }
         

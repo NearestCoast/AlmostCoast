@@ -9,7 +9,7 @@ namespace _Project.UI.MainMenu
         protected override void Awake()
         { 
             base.Awake(); 
-            inGameManager = FindObjectOfType<InGameManager>(); 
+            inGameManager = FindAnyObjectByType<InGameManager>(); 
         }
         
         public override void OnSubmit(BaseEventData eventData)

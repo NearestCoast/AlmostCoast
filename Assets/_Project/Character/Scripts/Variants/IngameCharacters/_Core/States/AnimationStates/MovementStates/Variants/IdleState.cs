@@ -45,8 +45,8 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             MoveParams.SetStealthMove();
         }
 
-        [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
-        [SerializeField, TitleGroup("Velocity")] private float exceptionalMove = 10;
+        // [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
+        // [SerializeField, TitleGroup("Velocity")] private float exceptionalMove = 10;
 
         protected override Vector3 GetVelocity()
         {

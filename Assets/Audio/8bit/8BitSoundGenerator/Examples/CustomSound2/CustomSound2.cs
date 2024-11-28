@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CustomSound2 : MonoBehaviour
 {
-    public Camera camera;
+    public new Camera camera;
     public void PlaySound0()
     {
         SoundClip sound = new SoundClip(SoundGenType.TRIANGLE, 4000, 20, 300, 0, 5.0f, false);

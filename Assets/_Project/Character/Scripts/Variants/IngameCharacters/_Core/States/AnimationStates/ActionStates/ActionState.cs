@@ -75,7 +75,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
             StateTime += Time.deltaTime;
         }
 
-        [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
+        // [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
         public virtual Vector3 GetVelocity()
         {
             if (masterCharacter is PlayerCharacter) return Vector3.zero;

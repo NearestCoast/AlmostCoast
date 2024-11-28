@@ -10,7 +10,7 @@ namespace _Project.UI.MainMenu
         protected override void Awake()
         {
             base.Awake();
-            gameManager = FindObjectOfType<GameManager>();
+            gameManager = FindAnyObjectByType<GameManager>();
         }
 
         public override void OnCancel(BaseEventData eventData)

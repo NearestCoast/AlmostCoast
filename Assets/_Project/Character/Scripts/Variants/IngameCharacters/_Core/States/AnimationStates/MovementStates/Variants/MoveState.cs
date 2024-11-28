@@ -29,7 +29,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 if (inputChecker.HorizontalDirection3 == Vector3.zero) return false;
                 
                 return true;
-                return GroundParams.SlopeAngleDeg <= characterControllerEnveloper.SlopeLimit;
+                // return GroundParams.SlopeAngleDeg <= characterControllerEnveloper.SlopeLimit;
             }
         }
 
@@ -67,7 +67,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         [SerializeField, TitleGroup("Velocity")] private bool useInputMagnitude = false;
         [SerializeField, TitleGroup("Velocity")] private float maxLength = 8;
         [SerializeField, TitleGroup("Velocity")] private float maxTime = 1;
-        [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
+        // [SerializeField, TitleGroup("Velocity"),Range(0,1)] private float angleGravityRate = 0.5f;
         [SerializeField, TitleGroup("Fx")] private float audioTick = 1;
         private bool IsBlocked { get; set; }
         private float AudioTickTimer { get; set; }
@@ -155,14 +155,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             }
             
             
-        
-            Vector3 CalculateMoveDirectionVerticalNegative(Vector3 forward, Vector2 inputDirection)
-            {
-                var right = Quaternion.Euler(0, -90, 0) * forward;
-                forward.y = 0;  
-                right.y = 0;
-                return (forward * inputDirection.y + right * inputDirection.x).normalized;
-            }
+            //
+            // Vector3 CalculateMoveDirectionVerticalNegative(Vector3 forward, Vector2 inputDirection)
+            // {
+            //     var right = Quaternion.Euler(0, -90, 0) * forward;
+            //     forward.y = 0;  
+            //     right.y = 0;
+            //     return (forward * inputDirection.y + right * inputDirection.x).normalized;
+            // }
         }
     }
 }

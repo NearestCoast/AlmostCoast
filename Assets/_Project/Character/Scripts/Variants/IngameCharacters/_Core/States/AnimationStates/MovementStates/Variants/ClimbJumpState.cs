@@ -86,7 +86,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
     }
     public partial class ClimbJumpState : MovementState
     {
-        [SerializeField, TitleGroup("Velocity")] private float maxSpeed = 6;
+        // [SerializeField, TitleGroup("Velocity")] private float maxSpeed = 6;
         private bool IsBlocked { get; set; }
         
         [SerializeField, TitleGroup("Velocity")] private PressingOnlyInput connectedInput;

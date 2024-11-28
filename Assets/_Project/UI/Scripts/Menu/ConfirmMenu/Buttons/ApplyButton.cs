@@ -17,7 +17,7 @@ namespace _Project.UI.ConfirmMenu
         protected override void Awake()
         {
             base.Awake();
-            optionContentPanels = FindObjectsOfType<OptionContentPanel>();
+            optionContentPanels = FindObjectsByType<OptionContentPanel>(FindObjectsSortMode.None);
             additionalCanvas = GetComponentInParent<AdditionalCanvas>();
         }
 

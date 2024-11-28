@@ -99,8 +99,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             // return Vector3.up * value + depthValue;
             return Vector3.up * value;
             // }
-            
-            return Vector3.zero;
         }
 
         protected override Quaternion GetRotation()

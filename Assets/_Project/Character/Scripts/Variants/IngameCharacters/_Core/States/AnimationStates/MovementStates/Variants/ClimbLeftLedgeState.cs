@@ -71,7 +71,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
     
     public partial class ClimbLeftLedgeState : BaseLayerClipMovementState
     {
-        [SerializeField, TitleGroup("Velocity")] private float ledgeOffset = 0.1f;
+        // [SerializeField, TitleGroup("Velocity")] private float ledgeOffset = 0.1f;
         [SerializeField, TitleGroup("Velocity")] private float readyTime = 0.1f;
         [SerializeField, TitleGroup("Velocity")] private float forwardTime = 0.1f;
         private bool IsReadyOver { get; set; }

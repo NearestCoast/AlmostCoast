@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  enrollToSaveManager: 0
 --- !u!1 &188743602199034547
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,6 +1399,7 @@ GameObject:
   - component: {fileID: 4552104846304874606}
   - component: {fileID: 1900024482578223286}
   - component: {fileID: 3694261955551167954}
+  - component: {fileID: 7403425913889939583}
   - component: {fileID: 7065998555178995624}
   - component: {fileID: 9201523442341337308}
   - component: {fileID: 3816804837094586814}
@@ -1498,9 +1500,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeb1e251f4d8447d8a68d8fe7c89cbdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stat:
-    maxHealth: 100
-    currentHealth: 100
   debug: 0
   wallSoundEndTime: 0.5
   sightAngle: 120
@@ -1509,6 +1508,21 @@ MonoBehaviour:
   isInFightDistance: 8
   maxWaitingTime: 60
   exceptionalMove: 20
+  lootObjPrefab: {fileID: 0}
+--- !u!114 &7403425913889939583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2508320721001914863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c00f935791ef477d96e0f03c4ffaf937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
 --- !u!114 &7065998555178995624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1658,7 +1672,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stealthMoveVelocity: 4
+  isSlideJumpPossible: 0
   maxWallJumpCount: 10
+  climbStaminaTime: 4
+  isPlayer: 0
 --- !u!114 &2591582378703648184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2122,6 +2139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 501a913067c74dbab813803412ca9301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
+  enrollToSaveManager: 0
 --- !u!1 &2978083936256996570
 GameObject:
   m_ObjectHideFlags: 0

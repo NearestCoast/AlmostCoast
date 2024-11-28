@@ -300,7 +300,7 @@ namespace _Project.Characters.IngameCharacters.Core
             }
         }
 
-        public override void SetDying()
+        protected override void SetDying()
         {
             base.SetDying();
             if (!IsDead)
