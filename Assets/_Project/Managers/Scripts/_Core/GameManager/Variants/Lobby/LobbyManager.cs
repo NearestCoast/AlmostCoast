@@ -4,7 +4,7 @@ namespace _Project
 {
     public class LobbyManager : GameManager
     {
-        public void StartGame()
+        public static void StartGame()
         {
             SceneManager.LoadSceneAsync("InGame");
         }
