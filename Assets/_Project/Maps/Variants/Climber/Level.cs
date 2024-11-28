@@ -47,6 +47,7 @@ namespace _Project.Maps.Climber
 
         public void StartLevel()
         {
+            Debug.Log("StartLevel");
             foreach (var movingPlatform in movingPlatforms)
             {
                 movingPlatform.MoveStart();

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using _Project.Cameras;
 using _Project.Characters.IngameCharacters.Core;
@@ -22,7 +23,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
     public class PlayerCharacter : IngameCharacter, ISavable
     {
         [SerializeField, TitleGroup("CameraTarget")] private CameraTarget cameraTarget;
-        private ProceduralProgressBar progressBar;
+        
         private int stateChangeFrameCount;
         private Vector3 PrevCamTargetMoveValue { get; set; }
         public bool IsStealthMove => MoveParams.IsStealthMove;
@@ -32,13 +33,17 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         {
             base.Awake();
             chargingUIs = GetComponentsInChildren<ChargingUI>(true);
-            progressBar = GetComponentInChildren<ProceduralProgressBar>();
-            
-            Stat.OnHealthChange?.AddListener((value)=> progressBar.Value = value);
             
             cts = new CancellationTokenSource();
         }
-        
+
+        protected override void Start()
+        {
+            base.Start();
+            
+            CurrentLevel?.StartLevel();
+        }
+
         protected override Vector3 Velocity
         {
             get
@@ -345,8 +350,13 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             guiStyle.fontSize = (int)(Screen.height * 0.02f);
             guiStyle.normal.textColor = Color.gray;
             
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
             DrawLabel("PlayTime : " + (int)Time.realtimeSinceStartup + "    " + FPS);
-            // DrawLabel(CurrentLevel + ", LevelType : " + CurrentLevel.LevelType);
+            if (CurrentLevel) DrawLabel(CurrentLevel.ID + ", LevelType : " + CurrentLevel.LevelType);
             // DrawLabel(CurrentSpotLight?.ToString());
             // DrawLabel(CurrentBrightnessState.Type + " " + (int)CurrentBrightnessState.StateTime);
             // DrawLabel(CurrentLockState.Type + " " + (int)CurrentLockState.StateTime);
@@ -406,6 +416,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             var position = IsDying ? Vector3.zero : transform.position;
             ISavable.EasySave("PlayerPosition", position, saveFileName);
             ISavable.EasySave("SavePoint", SavePoint, saveFileName);
+            ISavable.EasySave("CurrentLevel ID", CurrentLevel.ID, saveFileName);
             
             return true;
         }
@@ -415,6 +426,10 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             gameObject.SetActive(false);
             transform.position = ISavable.EasyLoad<Vector3>("PlayerPosition", saveFileName);
             SavePoint = ISavable.EasyLoad<SavePoint>("SavePoint", saveFileName);
+            
+            var levelID = ISavable.EasyLoad<string>("CurrentLevel ID", saveFileName);
+            var levels = FindObjectsByType<Level>(FindObjectsSortMode.None);
+            CurrentLevel = levels.ToList().Find(x => x.ID == levelID); 
             
             gameObject.SetActive(true);
             

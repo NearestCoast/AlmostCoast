@@ -171,11 +171,12 @@ namespace _Project.Maps.Climber
                 level.LevelType = levelType;
                 if (split.Length > 1)
                 {
-                    level.ID = collectionT.name.Split(".")[1];
+                    var id = collectionT.name.Split(".")[1];
+                    level.ID = $"{gameObject.name}_{id}";
                 }
                 else
                 {
-                    level.ID = "000";
+                    level.ID = $"{gameObject.name}_000";
                 }
                 levels.Add(level);
 

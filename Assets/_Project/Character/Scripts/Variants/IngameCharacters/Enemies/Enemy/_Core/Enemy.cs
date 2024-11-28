@@ -35,8 +35,7 @@ namespace _Project.Character.IngameCharacters.Enemies
     {
         private Behavior behavior;
 
-        private WorldHealthBar worldHealthBar;
-        private ProceduralProgressBar progressBar;
+        private EnemyWorldHealthBar enemyWorldHealthBar;
         
         private Vector3 StartPosition { get; set; }
         
@@ -71,16 +70,13 @@ namespace _Project.Character.IngameCharacters.Enemies
             base.Awake();
             behavior = GetComponentInChildren<Behavior>(true);
             behavior.StartWhenEnabled = false;
-            worldHealthBar = GetComponentInChildren<WorldHealthBar>();
-            progressBar = GetComponentInChildren<ProceduralProgressBar>(true);
-            
-            Stat.OnHealthChange?.AddListener((value)=> progressBar.Value = value);
+            enemyWorldHealthBar = GetComponentInChildren<EnemyWorldHealthBar>();
         }
 
         protected override void Update()
         {
             base.Update();
-            worldHealthBar?.UpdateHealthBarPosition(transform.position + Vector3.up * (characterControllerEnveloper.Height + 1), IsAwarePlayer);
+            enemyWorldHealthBar?.UpdateHealthBarPosition(transform.position + Vector3.up * (characterControllerEnveloper.Height + 1), IsAwarePlayer);
         }
 
         public override void MoveToSavePoint()
@@ -99,7 +95,7 @@ namespace _Project.Character.IngameCharacters.Enemies
         {
             base.SetDying();
             behavior.DisableBehavior();
-            worldHealthBar?.Close();
+            enemyWorldHealthBar?.Close();
         }
 
         [SerializeField] private GameObject lootObjPrefab;
@@ -133,6 +129,7 @@ namespace _Project.Character.IngameCharacters.Enemies
         private bool IsEnabled { get; set; }
         public void StartBehaviour()
         {
+            // Debug.Log(transform.parent.name + " " + IsEnabled);
             if (IsEnabled) return;
             behavior.EnableBehavior();
             StartPosition = transform.position;
@@ -141,6 +138,7 @@ namespace _Project.Character.IngameCharacters.Enemies
 
         public void ReturnToStartPosition()
         {
+            // Debug.Log(transform.parent.name + "Disable ");
             IsEnabled = false;
             behavior.DisableBehavior();
             

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.UI.InGame
 {
-    public class WorldHealthBar : MonoBehaviour
+    public class EnemyWorldHealthBar : HealthBar
     {
         private RectTransform uiElement;
         private UIElementAspectRatio aspectRatio;
@@ -12,8 +12,9 @@ namespace _Project.UI.InGame
 
         private Camera mainCamera => Camera.main;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             uiElement = GetComponent<RectTransform>();
             aspectRatio = GetComponent<UIElementAspectRatio>();
             obstacleLayers = 1 << LayerMask.NameToLayer("Ground") |

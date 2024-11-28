@@ -2,6 +2,7 @@ using System;
 using _Project._Core;
 using _Project.Characters._Core.Input;
 using _Project.Combat.HitObjects;
+using _Project.UI.InGame;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -53,18 +54,23 @@ namespace _Project.Characters._Core
     public class Character : MonoBehaviour, IDamageReceiver
     {
         [SerializeField] private Statistic stat;
-        public Statistic Stat => stat;
+        protected Statistic Stat => stat;
+        
+        private HealthBar healthBar;
+        
         public bool IsDying { get; protected set; }
         public bool IsDead { get; protected set; }
         
         protected virtual void Awake()
         {
-            Stat.OnDie.AddListener(SetDying);
+            healthBar = GetComponentInChildren<HealthBar>(true);
         }
 
         protected virtual void Start()
         {
-            stat.OnStart();
+            Stat.OnDie.AddListener(SetDying);
+            Stat.OnHealthChange?.AddListener((value)=> healthBar.ProceduralProgressBar.Value = value);
+            Stat.OnStart();
         }
 
         public virtual void SetDying()
