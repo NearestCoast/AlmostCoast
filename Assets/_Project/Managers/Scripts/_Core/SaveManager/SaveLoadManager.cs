@@ -84,6 +84,7 @@ namespace _Project.Managers.Scripts._Core.SaveManager
         private void OnEnable()
         {
             LoadGame();
+            SaveGame();
         }
 
         private void OnApplicationQuit()

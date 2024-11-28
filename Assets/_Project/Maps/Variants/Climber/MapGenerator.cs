@@ -640,8 +640,9 @@ namespace _Project.Maps.Climber
                         // child.gameObject.SetActive(false);
                         var meshRenderer = child.GetComponent<MeshRenderer>();
                         // meshRenderer.enabled = false;
-                        var boxCollider = child.AddComponent<BoxCollider>();
-                        boxCollider.isTrigger = true;
+                        var meshCollider = child.AddComponent<MeshCollider>();
+                        meshCollider.convex = true;
+                        meshCollider.isTrigger = true;
 
                         var exists = child.GetComponentsInChildren<Hazard>();
                         foreach (var exist in exists)
