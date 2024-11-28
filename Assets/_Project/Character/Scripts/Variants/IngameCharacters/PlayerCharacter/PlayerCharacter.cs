@@ -228,6 +228,15 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             get => initialSavePoint;
             set => initialSavePoint = value;
         }
+
+        public override void SetDying()
+        {
+            base.SetDying();
+            
+            var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
+            saveLoadManager.SaveGame();
+        }
+
         public override void Die()
         {
             base.Die();
@@ -394,27 +403,18 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         public bool EnrollToSaveManager => true;
         public bool Save(string saveFileName)
         {
-            // 현재 위치 저장
-            Vector3 position = transform.position;
-            ES3.Save("PlayerPosition", position, saveFileName);
-            Debug.Log($"Player position saved: {position}");
+            var position = IsDying ? Vector3.zero : transform.position;
+            ISavable.EasySave("PlayerPosition", position, saveFileName);
+            ISavable.EasySave("SavePoint", SavePoint, saveFileName);
+            
             return true;
         }
 
         public bool Load(string saveFileName)
         {
             gameObject.SetActive(false);
-            // 저장된 위치 로드
-            if (ES3.KeyExists("PlayerPosition", saveFileName))
-            {
-                Vector3 position = ES3.Load<Vector3>("PlayerPosition", saveFileName);
-                transform.position = position; // 저장된 위치로 이동
-                Debug.Log($"Player position loaded: {position}");
-            }
-            else
-            {
-                Debug.LogWarning("No saved position found.");
-            }
+            transform.position = ISavable.EasyLoad<Vector3>("PlayerPosition", saveFileName);
+            SavePoint = ISavable.EasyLoad<SavePoint>("SavePoint", saveFileName);
             
             gameObject.SetActive(true);
             

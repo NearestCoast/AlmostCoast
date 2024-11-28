@@ -64,6 +64,7 @@ namespace _Project.UI.InGame
                 );
             }
 
+            Debug.Log(progressBar);
             progressBar.InnerColor = targetColor;
         }
     }

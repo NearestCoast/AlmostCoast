@@ -81,6 +81,8 @@ namespace _Project.Maps.Climber
 
             RemoveColliders();
 
+            var collectableCount = 0;
+
             var movingPlatform_Start_Dict = new Dictionary<string, MovingPlatform>();
             var movingPlatform_End_Dict = new Dictionary<string, Transform>();
 
@@ -674,20 +676,22 @@ namespace _Project.Maps.Climber
                     else if (split[1].Contains("WJumpCountUp"))
                     {
                         child.GetComponent<MeshRenderer>().enabled = false;
-                        var ability = Instantiate(wallJumpCountUp, child.transform);
-                        ability.gameObject.SetActive(true);
+                        var collectable = Instantiate(wallJumpCountUp, child.transform);
+                        collectable.ID = $"Collectable_{level}{collectableCount++}";
+                        collectable.gameObject.SetActive(true);
                     }
                     else if (split[1].Contains("Ability"))
                     {
                         child.GetComponent<MeshRenderer>().enabled = false;
                         var abilityName = split[1].Split(".")[1];
                         var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
-                        var ability = Instantiate(abilityInstance, child.transform);
-                        ability.gameObject.SetActive(true);
+                        var collectable = Instantiate(abilityInstance, child.transform);
+                        collectable.ID = $"Collectable_{level}{collectableCount++}";
+                        collectable.gameObject.SetActive(true);
                         
                         if (abilityName.Contains("Attack"))
                         {
-                            ability.TargetStates = new List<AnimationState>()
+                            collectable.TargetStates = new List<AnimationState>()
                             {
                                 playerCharacter.transform.GetComponentInChildrenOfType<Attack_01>(true),
                                 playerCharacter.transform.GetComponentInChildrenOfType<Attack_02>(true),
@@ -698,19 +702,19 @@ namespace _Project.Maps.Climber
                         {
                             if (abilityName.Contains("Jump"))
                             {
-                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<JumpState>(true) };
+                                collectable.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<JumpState>(true) };
                             }
                             else if (abilityName.Contains("SlideDash"))
                             {
-                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<SlideDashState>(true) };
+                                collectable.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<SlideDashState>(true) };
                             }
                             else if (abilityName.Contains("GroundPounding"))
                             {
-                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<GroundPoundingState>(true) };
+                                collectable.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<GroundPoundingState>(true) };
                             }
                             else if (abilityName.Contains("Climb"))
                             {
-                                ability.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<ClimbState>(true) };
+                                collectable.TargetStates = new List<AnimationState>() { playerCharacter.transform.GetComponentInChildrenOfType<ClimbState>(true) };
                             }
                         }
                     }

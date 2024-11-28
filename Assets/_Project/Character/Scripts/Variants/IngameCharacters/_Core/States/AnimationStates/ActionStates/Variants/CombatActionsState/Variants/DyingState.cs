@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Characters.IngameCharacters.Core.ActionStates.CombatActionsState
 {
-    public class DieState : ActionLayerClipActionState
+    public class DyingState : ActionLayerClipActionState
     {
         public override StateType Type => StateType.Dying;
         public override bool CanExitState => false;

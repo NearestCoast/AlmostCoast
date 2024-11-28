@@ -68,7 +68,6 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             
             foreach (var stateType in loadedStateTypes)
             {
-                Debug.Log(stateType);
                 if (StateObjDict.ContainsKey(stateType))
                 {
                     var state = StateObjDict[stateType];

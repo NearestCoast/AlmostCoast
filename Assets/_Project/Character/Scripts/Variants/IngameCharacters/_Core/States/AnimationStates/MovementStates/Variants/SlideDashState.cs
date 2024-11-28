@@ -47,7 +47,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         public override void OnExitState()
         {
             base.OnExitState();
-            if (NextState.Type == StateType.Jump)
+            if (NextState.Type == StateType.Jump && MoveParams.IsSlideJumpPossible)
             {
                 MoveParams.Acceleration = TargetDirSnap * ((maxDashLength / maxTime) * afterAccelerationRate);
             }

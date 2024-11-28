@@ -95,9 +95,9 @@ namespace _Project.Character.IngameCharacters.Enemies
             base.MoveToSavePoint();
         }
 
-        public override void ProgressDying()
+        public override void SetDying()
         {
-            base.ProgressDying();
+            base.SetDying();
             behavior.DisableBehavior();
             worldHealthBar?.Close();
         }

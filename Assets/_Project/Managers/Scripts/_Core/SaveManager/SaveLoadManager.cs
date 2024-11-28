@@ -11,8 +11,31 @@ namespace _Project.Managers.Scripts._Core.SaveManager
         public bool EnrollToSaveManager { get; } // SaveManager에 등록 여부
         bool Save(string saveFileName);
         bool Load(string saveFileName);
+        
+        public static void EasySave<T>(string key, T item, string saveFileName)
+        {
+            ES3.Save(key, item, saveFileName);
+            Debug.Log($"{key} saved: {item}");
+        }
+
+        public static T EasyLoad<T>(string key, string saveFileName)
+        {
+            T item = default; // 기본값으로 초기화
+            if (ES3.KeyExists(key, saveFileName))
+            {
+                item = ES3.Load<T>(key, saveFileName);
+                Debug.Log($"{key} loaded: {item}");
+            }
+            else
+            {
+                Debug.LogWarning($"No data found for key: {key}");
+            }
+
+            return item;
+        }
     }
     
+    [DefaultExecutionOrder(-10000)]
     public class SaveLoadManager : MonoBehaviour
     {
         [ShowInInspector] private static string SaveFileName => SaveFileData.SelectedSaveFileName;
@@ -58,13 +81,9 @@ namespace _Project.Managers.Scripts._Core.SaveManager
             }
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            var fileExists = ES3.FileExists(SaveFileName);
-            if (fileExists)
-            {
-                LoadGame();
-            }
+            LoadGame();
         }
 
         private void OnApplicationQuit()
@@ -79,16 +98,21 @@ namespace _Project.Managers.Scripts._Core.SaveManager
             {
                 savable.Save(SaveFileName);
             }
+
             Debug.Log($"All savable objects have been saved. File name: {SaveFileName}");
         }
 
-        private void LoadGame()
+        public void LoadGame()
         {
-            foreach (var savable in savableObjects)
+            if (ES3.FileExists(SaveFileName))
             {
-                savable.Load(SaveFileName);
+                foreach (var savable in savableObjects)
+                {
+                    savable.Load(SaveFileName);
+                }
+                Debug.Log($"All savable objects have been loaded. File name: {SaveFileName}");
             }
-            Debug.Log($"All savable objects have been loaded. File name: {SaveFileName}");
+            else Debug.Log($"File Doesn't Exist. File name: {SaveFileName}");
         }
 
         [Button("Delete Save File")]

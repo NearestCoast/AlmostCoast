@@ -26,14 +26,7 @@ namespace _Project.Maps.Climber.Objects.Collectables
             FindAnyObjectByType<AudioManager>().Play();
             Time.timeScale = 0;
             
-            DestroyAfterDelay().Forget();
-        }
-        
-        private async UniTaskVoid DestroyAfterDelay()
-        {
-            await UniTask.Delay(1000, ignoreTimeScale: true); // real-time으로 3초 대기
-            Time.timeScale = 1;
-            Destroy(gameObject);
+            DeactivateAfterDelay().Forget();
         }
         
         [SerializeField] private AudioSource audioSource;

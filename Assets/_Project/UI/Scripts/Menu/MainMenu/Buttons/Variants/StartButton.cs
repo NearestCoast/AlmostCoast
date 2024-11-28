@@ -8,6 +8,12 @@ namespace _Project.UI.MainMenu
     {
         [SerializeField] private FileSelectionCanvas fileSelectionCanvas;
 
+        protected override void Start()
+        {
+            base.Start();
+            SetColorSelected();
+        }
+
         public override void OnSubmit(BaseEventData eventData)
         {
             base.OnSubmit(eventData);

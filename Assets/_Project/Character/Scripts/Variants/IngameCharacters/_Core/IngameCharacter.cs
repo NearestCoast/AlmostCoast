@@ -135,8 +135,8 @@ namespace _Project.Characters.IngameCharacters.Core
                 Debug.Log("CurrentMovementState : " + CurrentMovementState);
                 Debug.Log("CurrentActionState : " + CurrentActionState);
             }
-            
-            if (!IsDying || !IsDead) transform.rotation = CurrentMovementState.Rotation; 
+
+            if (!IsDying) transform.rotation = CurrentMovementState.Rotation;
 
             if (MoveParams.IsJustLedgeMoveEnded) MoveParams.ResetIsJustLedgeMoveEnded();
 
@@ -300,9 +300,9 @@ namespace _Project.Characters.IngameCharacters.Core
             }
         }
 
-        public override void ProgressDying()
+        public override void SetDying()
         {
-            base.ProgressDying();
+            base.SetDying();
             if (!IsDead)
             {
                 IsDying = true;

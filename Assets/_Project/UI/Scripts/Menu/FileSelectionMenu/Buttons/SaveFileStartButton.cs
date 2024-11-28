@@ -9,7 +9,9 @@ namespace _Project.UI.FileSelectionMenu
     public class SaveFileStartButton : MenuButton, ISavable
     {
         [SerializeField] private string saveFileName; // 저장 파일 이름
-        
+
+        public string SaveFileName => saveFileName;
+
         private FileSelectionCanvas fileSelectionCanvas;
 
         [SerializeField] private Text textCompo_playTime;
@@ -19,20 +21,20 @@ namespace _Project.UI.FileSelectionMenu
             base.Awake();
             fileSelectionCanvas = FindAnyObjectByType<FileSelectionCanvas>();
 
-            // PlayTime 로드 시도
-            if (!string.IsNullOrEmpty(saveFileName))
-            {
-                Load(saveFileName);
-            }
+            Load();
         }
 
+        public override void OnSelect(BaseEventData eventData)
+        {
+            base.OnSelect(eventData);
+            
+            // 선택된 저장 파일 설정
+            SaveFileData.SelectedSaveFileName = saveFileName;
+        }
+        
         public override void OnSubmit(BaseEventData eventData)
         {
             base.OnSubmit(eventData);
-
-            // 선택된 저장 파일 설정
-            SaveFileData.SelectedSaveFileName = saveFileName;
-
             // LobbyManager에서 InGame 씬으로 전환
             LobbyManager.StartGame();
         }
@@ -74,6 +76,15 @@ namespace _Project.UI.FileSelectionMenu
             {
                 Debug.LogError($"Failed to load PlayTime for {saveFileName}: {e.Message}");
                 return false;
+            }
+        }
+
+        public void Load()
+        {
+            // PlayTime 로드 시도
+            if (!string.IsNullOrEmpty(saveFileName))
+            {
+                Load(saveFileName);
             }
         }
 

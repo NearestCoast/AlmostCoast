@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
+using _Project.InputSystem;
 using _Project.Managers.Scripts._Core.AudioManager;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -45,20 +46,18 @@ namespace _Project.Maps.Climber.Objects.Collectables
                     playerCharacter.GetComponentInChildren<ActionStateContainer>().UpdateDictionary();
                 }
             }
-            
+
+            var attackInputBuffers = FindObjectsByType<AttackInputBuffer>(FindObjectsSortMode.None);
+            foreach (var attackInputBuffer in attackInputBuffers)
+            {
+                attackInputBuffer.CheckStateEnabled();
+            }
             
             FindAnyObjectByType<AudioManager>().SetClip(audioSource.clip);
             FindAnyObjectByType<AudioManager>().Play();
             Time.timeScale = 0;
             
-            DestroyAfterDelay().Forget();
-        }
-        
-        private async UniTaskVoid DestroyAfterDelay()
-        {
-            await UniTask.Delay(3000, ignoreTimeScale: true); // real-time으로 3초 대기
-            Time.timeScale = 1;
-            Destroy(gameObject);
+            DeactivateAfterDelay().Forget();
         }
         
         [SerializeField] private AudioSource audioSource;

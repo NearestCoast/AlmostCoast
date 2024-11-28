@@ -59,7 +59,7 @@ namespace _Project.Characters._Core
         
         protected virtual void Awake()
         {
-            Stat.OnDie.AddListener(ProgressDying);
+            Stat.OnDie.AddListener(SetDying);
         }
 
         protected virtual void Start()
@@ -67,7 +67,7 @@ namespace _Project.Characters._Core
             stat.OnStart();
         }
 
-        public virtual void ProgressDying()
+        public virtual void SetDying()
         {
             
         }

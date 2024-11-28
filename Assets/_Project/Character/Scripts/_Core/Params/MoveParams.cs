@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using _Project.Managers.Scripts._Core.SaveManager;
 using BehaviorDesigner.Runtime.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine.Serialization;
 
 namespace _Project.Characters.IngameCharacters.Core
 {
-    public class MoveParams : MonoBehaviour
+    public class MoveParams : MonoBehaviour, ISavable
     {
         private VerticalParams VerticalParams;
         private GroundParams GroundParams;
@@ -59,7 +60,9 @@ namespace _Project.Characters.IngameCharacters.Core
         public bool IsStealthMove { get; private set; }
         [SerializeField] private float stealthMoveVelocity = 4;
         public float StealthMoveVelocity => stealthMoveVelocity;
-            
+        [SerializeField] private bool isSlideJumpPossible;
+        public bool IsSlideJumpPossible => isSlideJumpPossible;
+
         public  Vector3 GetGroundProjectedDirection(Vector3 forward)
         {
             var groundNormal = GroundParams.GroundNormal;
@@ -127,7 +130,8 @@ namespace _Project.Characters.IngameCharacters.Core
         public void SetIsJumpButtonPerforming() => IsJumpButtonPerforming = true;
         public void ResetIsJumpButtonPerforming() => IsJumpButtonPerforming = false;
 
-        public  void ResetClimbStamina() => ClimbStaminaTime = 4;
+        [SerializeField] private float climbStaminaTime = 4;
+        public  void ResetClimbStamina() => ClimbStaminaTime = climbStaminaTime;
         public  void DecreaseClimbStaminaPerFrame() => ClimbStaminaTime -= Time.deltaTime;
         public  void DecreaseClimbStaminaAmount(float amount) => ClimbStaminaTime -= amount;
         public  void DecreaseClimbStaminaPerJump() => ClimbStaminaTime -= 1;
@@ -192,5 +196,58 @@ namespace _Project.Characters.IngameCharacters.Core
             if (IsStealthMove) ResetStealthMove();
             else SetStealthMove();
         }
+
+        [SerializeField] private bool isPlayer;
+        public bool EnrollToSaveManager => isPlayer;
+        public bool Save(string saveFileName)
+        {
+            ES3.Save("MaxWallJumpCount", MaxWallJumpCount, saveFileName);
+            Debug.Log($"MaxWallJumpCount saved: {MaxWallJumpCount}");
+            
+            ES3.Save("ClimbStaminaTime", climbStaminaTime, saveFileName);
+            Debug.Log($"ClimbStaminaTime saved: {climbStaminaTime}");
+            
+            ES3.Save("IsSlideJumpPossible", isSlideJumpPossible, saveFileName);
+            Debug.Log($"IsSlideJumpPossible saved: {isSlideJumpPossible}");
+            
+            return true;
+        }
+
+        public bool Load(string saveFileName)
+        {
+            if (ES3.KeyExists("MaxWallJumpCount", saveFileName))
+            {
+                MaxWallJumpCount = ES3.Load<int>("MaxWallJumpCount", saveFileName);
+                Debug.Log($"MaxWallJumpCount loaded: {MaxWallJumpCount}");
+            }
+            else
+            {
+                Debug.LogWarning("No MAxWallJumpCount found.");
+            }
+            
+            if (ES3.KeyExists("ClimbStaminaTime", saveFileName))
+            {
+                climbStaminaTime = ES3.Load<float>("ClimbStaminaTime", saveFileName);
+                Debug.Log($"ClimbStaminaTime loaded: {climbStaminaTime}");
+            }
+            else
+            {
+                Debug.LogWarning("No ClimbStaminaTime found.");
+            }
+            
+            
+            if (ES3.KeyExists("IsSlideJumpPossible", saveFileName))
+            {
+                isSlideJumpPossible = ES3.Load<bool>("IsSlideJumpPossible", saveFileName);
+                Debug.Log($"IsSlideJumpPossible loaded: {isSlideJumpPossible}");
+            }
+            else
+            {
+                Debug.LogWarning("No IsSlideJumpPossible found.");
+            }
+            
+            return true;
+        }
+
     }
 }

@@ -11,7 +11,7 @@ namespace _Project.InputSystem
     {
         [SerializeField] private InputActionAsset actionAsset;
         
-        private PlayerInput PlayerInput { get; set; }
+        public PlayerInput PlayerInput { get; private set; }
 
         private void Awake()
         {

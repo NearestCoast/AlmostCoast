@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq; // 활성화 필터링을 위해 필요
 using _Project.Characters._Core.States.AnimationStates;
@@ -6,6 +7,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace _Project.InputSystem
 {
@@ -15,19 +17,27 @@ namespace _Project.InputSystem
         [SerializeField] private List<AttackState> attackStates; // 공격 상태 목록
         [SerializeField] private float bufferPossibleRemainingTime = 1f; // 예약 가능한 남은 시간 임계값
         [SerializeField] private float attackTerm = 1f; // 공격 텀
-        [SerializeField] private UnityEvent onIdleState; // Idle 상태 이벤트
+        [FormerlySerializedAs("onIdleState")] [SerializeField] private UnityEvent setIdleState; // Idle 상태 이벤트
         [SerializeField] private float inputIdleTimeout = 0.5f; // 입력이 없을 경우 리셋되는 시간
 
         private AnimationStateConductor AnimationStateConductor { get; set; }
         [ShowInInspector] private int currentAttackIndex = 0; // 현재 공격 상태 인덱스
         private float inputIdleTimer = 0f; // 입력이 없을 때의 시간 경과
         private float attackHoldTime = 0f; // 공격 버튼 홀드 시간
+        
+        [ShowInInspector] private bool StateEnabled { get; set; }
 
         private void Awake()
         {
-            AnimationStateConductor = GetComponentInParent<AnimationStateConductor>();
+            AnimationStateConductor = GetComponentInParent<AnimationStateConductor>();   
+        }
+
+        private void Start()
+        {
             onUpdate?.Invoke(0);
             onPerformed?.Invoke();
+            
+            CheckStateEnabled();
         }
 
         private void OnEnable()
@@ -56,8 +66,10 @@ namespace _Project.InputSystem
 
         private void Update()
         {
+            if (!StateEnabled) return;
+            
             if (IsBuffered) ExecuteAttack();
-            else onIdleState?.Invoke();
+            else setIdleState?.Invoke();
 
             inputIdleTimer += Time.deltaTime;
             if (inputIdleTimer >= inputIdleTimeout)
@@ -79,6 +91,14 @@ namespace _Project.InputSystem
             }
         }
 
+        public void CheckStateEnabled()
+        {
+            foreach (var attackState in attackStates)
+            {
+                if (attackState.gameObject.activeSelf) StateEnabled = true;
+            }
+        }
+
         [SerializeField] private float demandedDuration = 0;
 
         // 활성화된 AttackState만 반환하는 메서드
@@ -90,6 +110,7 @@ namespace _Project.InputSystem
         // 공격 입력이 시작될 때 호출되는 함수
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
+            if (!StateEnabled) return;
             onStarted?.Invoke(); // onStarted 이벤트 호출
         }
 

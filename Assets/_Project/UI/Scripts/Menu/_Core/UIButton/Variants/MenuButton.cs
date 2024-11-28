@@ -55,5 +55,10 @@ namespace _Project.UI.MainMenu
         {
             base.OnSubmit(eventData);
         }
+
+        protected void SetColorSelected()
+        {
+            buttonText.color = colorSelected;
+        }
     }
 }
