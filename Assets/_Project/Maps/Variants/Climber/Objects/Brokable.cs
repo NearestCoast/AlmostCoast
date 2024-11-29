@@ -1,12 +1,12 @@
 using System;
 using _Project._Core;
 using _Project.Combat.HitObjects;
-using _Project.Utils;
+using _Project.Managers.Scripts._Core.SaveManager;
 using UnityEngine;
 
 namespace _Project.Maps.Climber.Objects
 {
-    public class Brokable : MonoBehaviour, IDamageReceiver
+    public class Brokable : MonoBehaviour, IDamageReceiver, ISavable
     {
         [SerializeField] private Level level;
 
@@ -24,6 +24,13 @@ namespace _Project.Maps.Climber.Objects
             set => id = value;
         }
         
+        private bool IsBroken { get; set; }
+
+        private void Start()
+        {
+            if (IsBroken) Destroy(gameObject);
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.layer != LayerMask.NameToLayer("HitObject")) return;
@@ -36,7 +43,26 @@ namespace _Project.Maps.Climber.Objects
         public void TakeDamage(HittingInfo hittingInfo, int damage, SideEffect sideEffect = SideEffect.None)
         {
             // Debug.Log("Come");
-            Destroy(gameObject);
+            destroy();
+
+            void destroy()
+            {
+                Destroy(gameObject);
+                IsBroken = true;
+            }
+        }
+
+        public bool EnrollToSaveManager => true;
+        public bool Save(string saveFileName)
+        {
+            ISavable.EasySave($"Brokable_{id}", IsBroken, saveFileName);
+            return true;
+        }
+
+        public bool Load(string saveFileName)
+        {
+            IsBroken = ISavable.EasyLoad<bool>($"Brokable_{id}", saveFileName);
+            return true;
         }
     }
 }

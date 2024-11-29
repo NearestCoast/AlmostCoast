@@ -81,7 +81,9 @@ namespace _Project.Managers.Scripts._Core.SaveManager
             }
         }
 
-        private void Start()
+        
+        // 타 OnEnable 단에서 Load되어야하는 스크립트들을 위해 이 스크립트에서 OnEnable에서 Load를 하고, ExecutionOrder를 설정하였다.
+        private void OnEnable()
         {
             LoadGame();
             SaveGame();

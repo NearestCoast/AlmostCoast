@@ -43,6 +43,7 @@ namespace _Project.Characters.IngameCharacters.Core.ActionStates
 
         public bool Save(string saveFileName)
         {
+            UpdateDictionary();
             if (saveFileName == string.Empty) return false;
             // 활성화된 상태를 StateObjDict에서 동적으로 검색
             var activeStateTypes = new List<ActionState.StateType>();

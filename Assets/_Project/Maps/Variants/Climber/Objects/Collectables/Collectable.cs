@@ -52,10 +52,12 @@ namespace _Project.Maps.Climber.Objects.Collectables
         
         protected async UniTaskVoid DeactivateAfterDelay()
         {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), ignoreTimeScale: true);
+            
             var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
             saveLoadManager.SaveGame();
             
-            await UniTask.Delay(1000, ignoreTimeScale: true);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), ignoreTimeScale: true);
             
             Time.timeScale = 1;
             gameObject.SetActive(false);

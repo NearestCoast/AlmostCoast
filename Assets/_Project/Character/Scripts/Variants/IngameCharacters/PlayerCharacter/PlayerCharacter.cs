@@ -348,6 +348,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
             // DrawLabel("MoveParams.JumpCount : " + MoveParams.JumpCount);
             DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
+            DrawLabel("SilverKeyAmount : " + SilverKeyAmount);
+            DrawLabel("GoldKeyAmount : " + GoldKeyAmount);
             // DrawLabel("MoveParams.ClimbJumpCount : " + MoveParams.ClimbJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
             DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);

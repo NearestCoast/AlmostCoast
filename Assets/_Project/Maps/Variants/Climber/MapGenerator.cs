@@ -365,7 +365,7 @@ namespace _Project.Maps.Climber
                             child.layer = LayerMask.NameToLayer("Ground");
                             var mpSplit = split[1].Split(".");
 
-                            var id = mpSplit[1];
+                            var id = $"FallingMP_{gameObject.name}_{ mpSplit[1]}";
                             var position = mpSplit[2];
 
                             if (position.Contains("Start"))
@@ -385,7 +385,7 @@ namespace _Project.Maps.Climber
                                 movingPlatform_Start_Dict.Add(id, mp);
                                 mp.ID = id;
 
-                                mp.RopeBrokableID = mpSplit[3].Split("_")[0];
+                                mp.RopeBrokableID = $"{gameObject.name}_{mpSplit[3].Split("_")[0]}";
                                 // mp.EaseCurveStart = movingPlatformEaseCurveStart;
                                 // mp.EaseCurveBack = movingPlatformEaseCurveEnd;
 
@@ -408,7 +408,7 @@ namespace _Project.Maps.Climber
                             child.layer = LayerMask.NameToLayer("Ground");
                             var mpSplit = split[1].Split(".");
 
-                            var id = mpSplit[1];
+                            var id = $"AccMP_{gameObject.name}_{mpSplit[1]}";
                             var position = mpSplit[2];
 
                             if (position.Contains("Start"))
@@ -665,7 +665,7 @@ namespace _Project.Maps.Climber
                         
                         child.layer = LayerMask.NameToLayer("Ground");
                         var mpSplit = split[1].Split(".");
-                        var id = mpSplit[1].Split("_")[0];
+                        var id = $"{gameObject.name}_{mpSplit[1].Split("_")[0]}";
 
                         var brokable = child.AddComponent<Brokable>();
                         brokable.ID = id;
