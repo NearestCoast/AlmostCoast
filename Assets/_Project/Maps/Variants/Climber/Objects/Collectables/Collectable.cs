@@ -1,4 +1,6 @@
 using System;
+using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
+using _Project.Managers.Scripts._Core.AudioManager;
 using _Project.Managers.Scripts._Core.SaveManager;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -16,6 +18,12 @@ namespace _Project.Maps.Climber.Objects.Collectables
         }
         
         private bool isWorked;
+        
+        protected PlayerCharacter playerCharacter;
+        private void Awake()
+        {
+            playerCharacter = FindAnyObjectByType<PlayerCharacter>();
+        }
 
         private void OnEnable()
         {
@@ -35,6 +43,11 @@ namespace _Project.Maps.Climber.Objects.Collectables
         protected virtual void Work()
         {
             isWorked = true;
+            
+            Time.timeScale = 0;
+            FindAnyObjectByType<AudioManager>().SetClip(audioSource.clip);
+            FindAnyObjectByType<AudioManager>().Play();
+            DeactivateAfterDelay().Forget();
         }
         
         protected async UniTaskVoid DeactivateAfterDelay()
@@ -47,19 +60,33 @@ namespace _Project.Maps.Climber.Objects.Collectables
             Time.timeScale = 1;
             gameObject.SetActive(false);
         }
+        
+        [SerializeField] private AudioSource audioSource;
+
+        public AudioSource AudioSource
+        {
+            get => audioSource;
+            set => audioSource = value;
+        }
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+#endif
 
         public bool EnrollToSaveManager => true;
         
         public bool Save(string saveFileName)
         {
-            ISavable.EasySave($"{ID}isWorked", isWorked, saveFileName);
+            if (ID != "") ISavable.EasySave($"{ID} isWorked", isWorked, saveFileName);
             
             return true;
         }
 
         public bool Load(string saveFileName)
         {
-            isWorked = ISavable.EasyLoad<bool>($"{ID}isWorked", saveFileName);
+            if (ID != "") isWorked = ISavable.EasyLoad<bool>($"{ID} isWorked", saveFileName);
             return true;
         }
     }

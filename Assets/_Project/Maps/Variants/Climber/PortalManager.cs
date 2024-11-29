@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using _Project.Maps.Climber.Objects;
 using UnityEngine;

@@ -2,15 +2,15 @@ using UnityEngine;
 
 namespace _Project.Maps.Climber.Objects.Collectables
 {
-    public class WallJumpCountUp : Collectable
+    public class SlideJumpUp : Collectable
     {
         protected override void Work()
         {
             base.Work();
+
+            playerCharacter.MoveParams.IsSlideJumpPossible = true;
             
-            playerCharacter.MoveParams.MaxWallJumpCount += 1;
-            
-            Debug.Log("Player Collected WallJumpCountUp");
+            Debug.Log("Player Collected SlideJumpUp");
         }
     }
 }

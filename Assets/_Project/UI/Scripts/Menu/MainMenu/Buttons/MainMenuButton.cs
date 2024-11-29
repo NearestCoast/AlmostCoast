@@ -18,19 +18,5 @@ namespace _Project.UI.MainMenu
             base.OnCancel(eventData);
             if (gameManager is InGameManager inGameManager) inGameManager.ResumeGame();
         }
-
-        public override void OnPointerClick(PointerEventData eventData)
-        {
-            base.OnPointerClick(eventData);
-            
-            if (isSelected)
-            {
-                OnSubmit(eventData);
-            }
-            else
-            {
-                
-            }
-        }
     }
 }

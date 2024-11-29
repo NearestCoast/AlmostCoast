@@ -35,7 +35,7 @@ namespace _Project.Managers.Scripts._Core.SaveManager
         }
     }
     
-    [DefaultExecutionOrder(-10000)]
+    [DefaultExecutionOrder(-10)]
     public class SaveLoadManager : MonoBehaviour
     {
         [ShowInInspector] private static string SaveFileName => SaveFileData.SelectedSaveFileName;
@@ -81,7 +81,7 @@ namespace _Project.Managers.Scripts._Core.SaveManager
             }
         }
 
-        private void OnEnable()
+        private void Start()
         {
             LoadGame();
             SaveGame();

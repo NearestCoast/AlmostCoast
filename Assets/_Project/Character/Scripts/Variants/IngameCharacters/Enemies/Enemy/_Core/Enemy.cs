@@ -1,6 +1,7 @@
 using System;
 using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
+using _Project.Managers.Scripts._Core.SaveManager;
 using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,7 +13,7 @@ using UnityEngine.Serialization;
 
 namespace _Project.Character.IngameCharacters.Enemies
 {
-    public partial class Enemy : IngameCharacter
+    public partial class Enemy : IngameCharacter, ISavable
     {
         // [SerializeField] private string specificID;
         [SerializeField, TitleGroup("BehaviourParams")] private float sightAngle = 120;
@@ -36,9 +37,9 @@ namespace _Project.Character.IngameCharacters.Enemies
         private Behavior behavior;
 
         private EnemyWorldHealthBar enemyWorldHealthBar;
-        
+
         private Vector3 StartPosition { get; set; }
-        
+
         public bool IsAwarePlayer { get; set; }
         public bool IsFightMoveEnd { get; set; }
         public bool IsAttackEnd { get; set; }
@@ -51,16 +52,16 @@ namespace _Project.Character.IngameCharacters.Enemies
         protected override Vector3 Velocity
         {
             get
-            { 
+            {
                 var velocity = CurrentActionState.Type == ActionState.StateType.ActionIdle
                     ? CurrentMovementState.Velocity
                     : CurrentActionState.GetVelocity();
                 velocity += CurrentActionState.Acc * Time.deltaTime;
-            
+
                 velocity += CurrentMovingPlatform ? CurrentMovingPlatform.Velocity : Vector3.zero;
                 velocity += CurrentRollingCube ? CurrentRollingCube.Velocity : Vector3.zero;
                 velocity += MoveParams.Acceleration * Time.deltaTime;
-                
+
                 return velocity;
             }
         }
@@ -76,18 +77,19 @@ namespace _Project.Character.IngameCharacters.Enemies
         protected override void Update()
         {
             base.Update();
-            enemyWorldHealthBar?.UpdateHealthBarPosition(transform.position + Vector3.up * (characterControllerEnveloper.Height + 1), IsAwarePlayer);
+            enemyWorldHealthBar?.UpdateHealthBarPosition(
+                transform.position + Vector3.up * (characterControllerEnveloper.Height + 1), IsAwarePlayer);
         }
 
         public override void MoveToSavePoint()
         {
             if (IsDead) return;
             CharacterControllerEnveloper.OnSpawn();
-            
+
             gameObject.SetActive(false);
             transform.position = SavePoint ? SavePoint.transform.position : StartPosition;
             gameObject.SetActive(true);
-            
+
             base.MoveToSavePoint();
         }
 
@@ -105,28 +107,33 @@ namespace _Project.Character.IngameCharacters.Enemies
             get => lootObjPrefab;
             set => lootObjPrefab = value;
         }
-        
+
+        private bool hasLootDropped;
+
         public override void Die()
         {
             base.Die();
-            
+
             WaitAndRespawn().Forget();
-            
+
             return;
+
             async UniTaskVoid WaitAndRespawn()
             {
-                if (lootObjPrefab)
+                if (!hasLootDropped && lootObjPrefab)
                 {
                     var lootObj = Instantiate(lootObjPrefab, StartPosition, quaternion.identity);
                     lootObj.SetActive(true);
+                    hasLootDropped = true;
                 }
-                
+
                 await UniTask.Delay(TimeSpan.FromSeconds(4));
                 enabled = false;
             }
         }
 
         private bool IsEnabled { get; set; }
+
         public void StartBehaviour()
         {
             // Debug.Log(transform.parent.name + " " + IsEnabled);
@@ -141,12 +148,36 @@ namespace _Project.Character.IngameCharacters.Enemies
             // Debug.Log(transform.parent.name + "Disable ");
             IsEnabled = false;
             behavior.DisableBehavior();
-            
+
             base.MoveToSavePoint();
-            
+
             transform.position = StartPosition;
 
             IsJustEncountered = true;
+        }
+    }
+
+    public partial class Enemy : IngameCharacter
+    {
+        [SerializeField] private string id;
+
+        public string ID
+        {
+            get => id;
+            set => id = value;
+        }
+        
+        public bool EnrollToSaveManager => true;
+        public bool Save(string saveFileName)
+        {
+            ISavable.EasySave($"{ID} hasLootDropped", hasLootDropped, saveFileName);
+            return true;
+        }
+
+        public bool Load(string saveFileName)
+        {
+            hasLootDropped = ISavable.EasyLoad<bool>($"{ID} hasLootDropped", saveFileName);
+            return true;
         }
     }
 }

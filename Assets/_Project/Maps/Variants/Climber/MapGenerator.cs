@@ -36,7 +36,8 @@ namespace _Project.Maps.Climber
 
         [SerializeField, TitleGroup("Prefabs")] private Transform objectPrefabContainer;
         [SerializeField, TitleGroup("Prefabs")] private Ability abilityInstance;
-        [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUp;
+        [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUpPrefab;
+        [SerializeField, TitleGroup("Prefabs")] private SlideJumpUp slideJumpUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private MovingPlatform movingPlatformPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SpotLight spotLightPrefab;
         [SerializeField, TitleGroup("Prefabs")] private Key silverKeyPrefab;
@@ -53,7 +54,8 @@ namespace _Project.Maps.Climber
             if (!objectPrefabContainer) objectPrefabContainer = Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
             
             abilityInstance ??= Extensions.FindInactiveObjectByName("AbilityInstance").GetComponent<Ability>();
-            wallJumpCountUp ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
+            wallJumpCountUpPrefab ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
+            slideJumpUpPrefab ??= Extensions.FindInactiveObjectByName("SlideJumpUp").GetComponent<SlideJumpUp>();
             // movingPlatformInstance = GameObject.Find("MovingPlatformInstance").GetComponent<MovingPlatform>();
             movingPlatformPrefab ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
             spotLightPrefab ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
@@ -602,7 +604,6 @@ namespace _Project.Maps.Climber
                         var ddSplit = split[1].Split(".");
 
                         var mastarID = "DingdongLockRollingCube" + ddSplit[1];
-                        Debug.Log(mastarID);
 
                         var dingdong = child.AddComponent<Dingdong>();
                         dingdong.masterID = mastarID;
@@ -678,8 +679,15 @@ namespace _Project.Maps.Climber
                     else if (split[1].Contains("WJumpCountUp"))
                     {
                         child.GetComponent<MeshRenderer>().enabled = false;
-                        var collectable = Instantiate(wallJumpCountUp, child.transform);
-                        collectable.ID = $"Collectable_{level}{collectableCount++}";
+                        var collectable = Instantiate(wallJumpCountUpPrefab, child.transform);
+                        collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
+                        collectable.gameObject.SetActive(true);
+                    }
+                    else if (split[1].Contains("SlideJumpUp"))
+                    {
+                        child.GetComponent<MeshRenderer>().enabled = false;
+                        var collectable = Instantiate(slideJumpUpPrefab, child.transform);
+                        collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
                         collectable.gameObject.SetActive(true);
                     }
                     else if (split[1].Contains("Ability"))
@@ -688,7 +696,7 @@ namespace _Project.Maps.Climber
                         var abilityName = split[1].Split(".")[1];
                         var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
                         var collectable = Instantiate(abilityInstance, child.transform);
-                        collectable.ID = $"Collectable_{level}{collectableCount++}";
+                        collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
                         collectable.gameObject.SetActive(true);
                         
                         if (abilityName.Contains("Attack"))
@@ -897,27 +905,28 @@ namespace _Project.Maps.Climber
                     else if (split[1].Contains("Enemy"))
                     {
                         var strings = split[1].Split(".");
-                        var id = strings[1];
+                        var prefabID = strings[1];
+                        var numberID = strings[2];
+                        var lootObjName = strings[3];
                         
-                        var enemySpotInstanceToSpawn = enemySpotsToSpawnDict[id];
+                        var enemySpotInstanceToSpawn = enemySpotsToSpawnDict[prefabID];
                         var enemySpotObj = Instantiate(enemySpotInstanceToSpawn, child.transform.position, child.transform.rotation, child.transform);
                         enemySpotObj.SetActive(true);
-                        
-                        child.GetComponent<MeshRenderer>().enabled = false;
 
-                        if (strings.Length > 2)
-                        {
-                            var lootObjName = strings[2];
-                            var enemy = enemySpotObj.GetComponentInChildren<Enemy>();
+                        child.GetComponent<MeshRenderer>().enabled = false;
+                        
+                        var enemy = enemySpotObj.GetComponentInChildren<Enemy>();
+                        var chapterID = gameObject.name;
+                        enemy.ID = $"{prefabID}_{chapterID}_{numberID}"; // 고유
+                       
                             
-                            if (lootObjName.Contains("SilverKey"))
-                            {
-                                enemy.LootObj = silverKeyPrefab.gameObject;
-                            }
-                            else if (lootObjName.Contains("GoldKey"))
-                            {
-                                enemy.LootObj = goldKeyPrefab.gameObject;
-                            }
+                        if (lootObjName.Contains("SilverKey"))
+                        {
+                            enemy.LootObj = silverKeyPrefab.gameObject;
+                        }
+                        else if (lootObjName.Contains("GoldKey"))
+                        {
+                            enemy.LootObj = goldKeyPrefab.gameObject;
                         }
                     }
                 }

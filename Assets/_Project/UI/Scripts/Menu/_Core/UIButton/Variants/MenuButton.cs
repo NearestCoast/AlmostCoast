@@ -39,6 +39,20 @@ namespace _Project.UI.MainMenu
             buttonText.color = isSelected ? colorSelected : colorDeselected;
         }
 
+        public override void OnPointerClick(PointerEventData eventData)
+        {
+            base.OnPointerClick(eventData);
+            
+            if (isSelected)
+            {
+                Button.OnSubmit(eventData);
+            }
+            else
+            {
+                Button.Select();
+            }
+        }
+
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);

@@ -400,7 +400,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             var position = IsDying ? Vector3.zero : transform.position;
             ISavable.EasySave("PlayerPosition", position, saveFileName);
             ISavable.EasySave("SavePoint", SavePoint, saveFileName);
-            ISavable.EasySave("CurrentLevel ID", CurrentLevel.ID, saveFileName);
+            if (CurrentLevel) ISavable.EasySave("CurrentLevel ID", CurrentLevel.ID, saveFileName);
             
             return true;
         }

@@ -15,6 +15,8 @@ namespace _Project
     {
         [SerializeField] private InputActionReference escapeActionKey;
         private PlayerInputController playerInputController;
+        private PlayerInput PlayerInput => playerInputController.PlayerInput;
+        
         private MainMenuCanvas mainMenuCanvas;
         private CurtainUI curtainUI;
 
@@ -57,8 +59,19 @@ namespace _Project
             playerInputController.ToggleInputActionMap(playMode = GameManager.PlayMode.Pause);
             mainMenuCanvas.OpenCanvas();
             
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            var lastDevice = PlayerInput.currentControlScheme;
+            if (lastDevice == "Keyboard&Mouse")
+            {
+                // 키보드와 마우스 입력일 경우 커서를 보이게 설정
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                // 게임패드나 기타 입력 장치일 경우 커서를 숨김
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
 
         public void ResumeGame()
@@ -68,8 +81,19 @@ namespace _Project
             playerInputController.ToggleInputActionMap(playMode = GameManager.PlayMode.Play);
             mainMenuCanvas.CloseCanvas();
             
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            var lastDevice = PlayerInput.currentControlScheme;
+            if (lastDevice == "Keyboard&Mouse")
+            {
+                // 키보드와 마우스 입력일 경우 커서를 보이게 설정
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                // 게임패드나 기타 입력 장치일 경우 커서를 숨김
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
         
         public void LoadLobbyScene()

@@ -33,6 +33,11 @@ namespace _Project.UI
             
         }
 
+        public virtual void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log(name + " PointerClick");
+        }
+
         public virtual void OnSelect(BaseEventData eventData)
         {
             Debug.Log(name + " Selected");
@@ -62,11 +67,6 @@ namespace _Project.UI
             if (!EventSystem.current || !Button) return;
             if (EventSystem.current.currentSelectedGameObject == Button.gameObject) return;
             Button.Select();
-        }
-
-        public virtual void OnPointerClick(PointerEventData eventData)
-        {
-            Debug.Log(name + " PointerClick");
         }
     }
 }

@@ -61,7 +61,12 @@ namespace _Project.Characters.IngameCharacters.Core
         [SerializeField] private float stealthMoveVelocity = 4;
         public float StealthMoveVelocity => stealthMoveVelocity;
         [SerializeField] private bool isSlideJumpPossible;
-        public bool IsSlideJumpPossible => isSlideJumpPossible;
+
+        public bool IsSlideJumpPossible
+        {
+            get => isSlideJumpPossible;
+            set => isSlideJumpPossible = value;
+        }
 
         public  Vector3 GetGroundProjectedDirection(Vector3 forward)
         {
@@ -201,50 +206,18 @@ namespace _Project.Characters.IngameCharacters.Core
         public bool EnrollToSaveManager => isPlayer;
         public bool Save(string saveFileName)
         {
-            ES3.Save("MaxWallJumpCount", MaxWallJumpCount, saveFileName);
-            Debug.Log($"MaxWallJumpCount saved: {MaxWallJumpCount}");
-            
-            ES3.Save("ClimbStaminaTime", climbStaminaTime, saveFileName);
-            Debug.Log($"ClimbStaminaTime saved: {climbStaminaTime}");
-            
-            ES3.Save("IsSlideJumpPossible", isSlideJumpPossible, saveFileName);
-            Debug.Log($"IsSlideJumpPossible saved: {isSlideJumpPossible}");
+            ISavable.EasySave("MaxWallJumpCount", MaxWallJumpCount, saveFileName);
+            ISavable.EasySave("ClimbStaminaTime", climbStaminaTime, saveFileName);
+            ISavable.EasySave("IsSlideJumpPossible", isSlideJumpPossible, saveFileName);
             
             return true;
         }
 
         public bool Load(string saveFileName)
         {
-            if (ES3.KeyExists("MaxWallJumpCount", saveFileName))
-            {
-                MaxWallJumpCount = ES3.Load<int>("MaxWallJumpCount", saveFileName);
-                Debug.Log($"MaxWallJumpCount loaded: {MaxWallJumpCount}");
-            }
-            else
-            {
-                Debug.LogWarning("No MAxWallJumpCount found.");
-            }
-            
-            if (ES3.KeyExists("ClimbStaminaTime", saveFileName))
-            {
-                climbStaminaTime = ES3.Load<float>("ClimbStaminaTime", saveFileName);
-                Debug.Log($"ClimbStaminaTime loaded: {climbStaminaTime}");
-            }
-            else
-            {
-                Debug.LogWarning("No ClimbStaminaTime found.");
-            }
-            
-            
-            if (ES3.KeyExists("IsSlideJumpPossible", saveFileName))
-            {
-                isSlideJumpPossible = ES3.Load<bool>("IsSlideJumpPossible", saveFileName);
-                Debug.Log($"IsSlideJumpPossible loaded: {isSlideJumpPossible}");
-            }
-            else
-            {
-                Debug.LogWarning("No IsSlideJumpPossible found.");
-            }
+            MaxWallJumpCount = ISavable.EasyLoad<int>("MaxWallJumpCount", saveFileName);
+            climbStaminaTime = ISavable.EasyLoad<float>("ClimbStaminaTime", saveFileName);
+            isSlideJumpPossible = ISavable.EasyLoad<bool>("IsSlideJumpPossible", saveFileName);
             
             return true;
         }
