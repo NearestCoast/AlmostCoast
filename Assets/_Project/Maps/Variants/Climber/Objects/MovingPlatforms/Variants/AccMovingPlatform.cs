@@ -4,11 +4,12 @@ namespace _Project.Maps.Climber.Objects
 {
     public class AccMovingPlatform : MovingPlatform
     {
-        [SerializeField] private float speedRate = 0.5f;
-        [SerializeField] private float returnSpeedRate = 0.2f;
-        [SerializeField] private float accReleaseBonusTime = 0.4f;
-        [SerializeField] private float accMaxLength = 18;
-        [SerializeField] private float accMaxTime = 1;
+        [SerializeField] protected float speedRate = 0.5f;
+        [SerializeField] protected float accPow = 4;
+        [SerializeField] protected float returnSpeedRate = 0.2f;
+        [SerializeField] protected float accReleaseBonusTime = 0.4f;
+        [SerializeField] protected float accMaxLength = 18;
+        [SerializeField] protected float accMaxTime = 1;
         public override void Move()
         {
             base.Move();
@@ -19,7 +20,7 @@ namespace _Project.Maps.Climber.Objects
                 // IsStartPoint = false;
                 var dir = (TargetPosition - StartPosition).normalized;
                 // Velocity = dir  * Time.deltaTime;
-                Velocity = dir * (Length * speedRate * Mathf.Pow(GoStartTime, 4) * Time.deltaTime);
+                Velocity = dir * (Length * speedRate * Mathf.Pow(GoStartTime, accPow) * Time.deltaTime);
                 
                 var farDir = TargetPosition - transform.position;
                 var nearDir = Velocity;

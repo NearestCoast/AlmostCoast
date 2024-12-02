@@ -59,6 +59,13 @@ namespace _Project.Utils
 
         private bool ProcessMeshUVs(Mesh mesh)
         {
+            // Read/Write 설정이 되어 있지 않은 경우 처리하지 않음
+            if (!mesh.isReadable)
+            {
+                Debug.LogWarning($"Mesh '{mesh.name}' is not readable. Skipping UV processing.");
+                return false;
+            }
+
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
             Vector2[] uvs = new Vector2[vertices.Length]; 
@@ -92,6 +99,7 @@ namespace _Project.Utils
             mesh.RecalculateBounds();
             return true;
         }
+
 
         private Vector2 CalculateUV(Vector3 localPos, Vector3 normal)
         {

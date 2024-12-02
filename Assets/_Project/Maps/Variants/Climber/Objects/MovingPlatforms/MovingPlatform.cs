@@ -35,7 +35,7 @@ namespace _Project.Maps.Climber.Objects
         protected Vector3 StartPosition { get; set; }
         protected float Length { get; set; }
         
-        private void Awake()
+        protected virtual void Awake()
         {
             StartPosition = transform.position;
             Length = Vector3.Distance(StartPosition, TargetPosition);

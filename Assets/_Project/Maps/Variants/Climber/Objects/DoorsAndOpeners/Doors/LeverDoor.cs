@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Maps.Climber.Objects
 {
-    public class LeverDoor : Door
+    public class LeverDoor : Door, ILeverUnlockable
     {
         [SerializeField] private string leverID;
 
@@ -27,6 +27,8 @@ namespace _Project.Maps.Climber.Objects
             StartPosition = transform.position;
             Length = Vector3.Distance(StartPosition, TargetPosition);
         }
+
+        public Transform Transform => transform;
 
         public override void Open()
         {

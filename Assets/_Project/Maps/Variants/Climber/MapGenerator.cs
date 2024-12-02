@@ -194,6 +194,14 @@ namespace _Project.Maps.Climber
                     {
                         fallingMovingPlatform.Rope = brokableDict[fallingMovingPlatform.RopeBrokableID];
                     }
+
+                    if (movingPlatform is LockedMovingPlatform lockedMovingPlatform)
+                    {
+                        var lever = leverDict[lockedMovingPlatform.LeverID];
+                        lever.ConnectedUnlockable = lockedMovingPlatform;
+                        lockedMovingPlatform.Lever = lever;
+                        lever.transform.SetParent(lockedMovingPlatform.transform);
+                    }
                 }
 
                 foreach (var dingdongDoor in dingdongDoor_Start_Dict.Values)
@@ -251,7 +259,7 @@ namespace _Project.Maps.Climber
             foreach (var leverDoor in leverDoorDict.Values)
             {
                 var lever = leverDict[leverDoor.LeverID];
-                lever.ConnectedDoor = leverDoor;
+                lever.ConnectedUnlockable = leverDoor;
                 
                 leverDoor.Lever = lever;
                 var endTransform = leverDoorEndDict[leverDoor.ID];
@@ -342,8 +350,9 @@ namespace _Project.Maps.Climber
                     if (split[1].Contains("Bound"))
                     {
                         child.layer = LayerMask.NameToLayer("Bound");
-                        var boxCollider = child.AddComponent<BoxCollider>();
-                        boxCollider.isTrigger = true;
+                        var meshCollider = child.AddComponent<MeshCollider>();
+                        meshCollider.convex = true;
+                        meshCollider.isTrigger = true;
                         var bound = child.AddComponent<Bound>();
                         bound.Level = level;
                         child.GetComponent<MeshRenderer>().enabled = false;
@@ -394,6 +403,42 @@ namespace _Project.Maps.Climber
                                 // var boxCollider2 = child.AddComponent<BoxCollider>();
                                 // boxCollider2.isTrigger = true;
                                 // boxCollider2.center = new Vector3(0, boxCollider2.size.y, 0);
+
+                                level.MovingPlatforms.Add(mp);
+                            }
+                            else if (position.Contains("End"))
+                            {
+                                movingPlatform_End_Dict.Add(id, child.transform);
+                                child.gameObject.SetActive(false);
+                            }
+                        }
+                        else if (split[1].Contains("Locked"))
+                        {
+                            child.layer = LayerMask.NameToLayer("Ground");
+                            var mpSplit = split[1].Split(".");
+
+                            var id = $"LockedMP_{gameObject.name}_{mpSplit[1]}";
+                            var position = mpSplit[2];
+
+                            if (position.Contains("Start"))
+                            {
+                                var exists = child.GetComponents<MovingPlatform>();
+                                foreach (var movingPlatform in exists) DestroyImmediate(movingPlatform);
+
+                                child.gameObject.tag = "IgnoreCamCollider";
+                                var mp = child.AddComponent<LockedMovingPlatform>();
+                                var audioSource = mp.gameObject.AddComponent<AudioSource>();
+                                audioSource.clip = movingPlatformPrefab.FinishAudioSource.clip;
+                                audioSource.playOnAwake = false;
+                                audioSource.volume = 0.3f;
+                                mp.Level = level;
+                                movingPlatform_Start_Dict.Add(id, mp);
+                                mp.ID = id;
+                                
+                                var leverId = mpSplit[3].Split("_")[0];
+                                mp.LeverID = leverId;
+
+                                var boxCollider1 = child.AddComponent<BoxCollider>();
 
                                 level.MovingPlatforms.Add(mp);
                             }
@@ -456,7 +501,7 @@ namespace _Project.Maps.Climber
                     {
                         var ddSplit = split[1].Split(".");
                         var id = ddSplit[1].Split("_")[0];
-
+                        
                         child.layer = LayerMask.NameToLayer("Ground");
                         var lever = child.AddComponent<Lever>();
                         // lever.ID = id;
@@ -514,6 +559,7 @@ namespace _Project.Maps.Climber
                         else if (position.Contains("End"))
                         {
                             leverDoorEndDict.Add(id, child.transform);
+                            child.gameObject.SetActive(false);
                         }
                     }
                     else if (split[1].Contains("LDoor")) 
@@ -537,6 +583,7 @@ namespace _Project.Maps.Climber
                             var id = split2[0] + split2[1];
                             
                             leverDoorEndDict.Add(id, child.transform);
+                            child.gameObject.SetActive(false);
                         }
                     }
                     else if (split[1].Contains("DingdongDoor"))
@@ -866,8 +913,9 @@ namespace _Project.Maps.Climber
 
                         var meshRenderer = child.GetComponent<MeshRenderer>();
                         meshRenderer.enabled = false;
-                        var boxCollider = child.AddComponent<BoxCollider>();
-                        boxCollider.isTrigger = true;
+                        var meshCollider = child.AddComponent<MeshCollider>();
+                        meshCollider.convex = true;
+                        meshCollider.isTrigger = true;
 
                         var exists = child.GetComponentsInChildren<SavePoint>();
                         foreach (var exist in exists)
