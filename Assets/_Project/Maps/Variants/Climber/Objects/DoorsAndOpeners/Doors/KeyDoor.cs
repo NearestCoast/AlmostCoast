@@ -26,7 +26,10 @@ namespace _Project.Maps.Climber.Objects
 
         public override void Open()
         {
-            playerCharacter.InventoryMaster.TryUse(new KeyData(IInventory.Type.Key, KeyType));
+            playerCharacter.InventoryMaster.TryUse(new KeyData(IInventory.Type.Key, KeyType), out var success);
+            
+            if (!success) return;
+            
             base.Open();
         }
     }

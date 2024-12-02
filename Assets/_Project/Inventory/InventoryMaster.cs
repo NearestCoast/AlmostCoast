@@ -15,9 +15,9 @@ namespace _Project.Inventories
         }
         
         public Type InvType { get; }
-
+        
         public void Add(ItemData itemData);
-        public void TryUse(ItemData itemData);
+        public void TryUse(ItemData itemData, out bool success);
     }
     
     [Serializable]
@@ -25,6 +25,11 @@ namespace _Project.Inventories
     {
         [SerializeField] private List<ItemData> items;
         public List<ItemData> Items => items;
+
+        public ItemStack()
+        {
+            items = new List<ItemData>();
+        }
     }
     
     public class InventoryMaster : MonoBehaviour
@@ -67,13 +72,14 @@ namespace _Project.Inventories
             }
         }
 
-        public void TryUse(ItemData itemData)
+        public void TryUse(ItemData itemData, out bool success)
         {
+            success = false;
             switch (itemData)
             {
                 case KeyData keyData:
                 {
-                    inventoriesDict[IInventory.Type.Key].TryUse(keyData);
+                    inventoriesDict[IInventory.Type.Key].TryUse(keyData, out success);
                     break;
                 }
             }
