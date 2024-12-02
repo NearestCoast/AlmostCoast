@@ -1,12 +1,13 @@
 using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Inventories;
 using _Project.Inventories.Items;
+using _Project.Managers.Scripts._Core.SaveManager;
 using _Project.Maps.Climber.Objects.Collectables;
 using UnityEngine;
 
 namespace _Project.Maps.Climber.Objects
 {
-    public class KeyDoor : LeverDoor
+    public class KeyDoor : LeverDoor, ISavable
     {
         [SerializeField] private KeyData.KeyType keyType;
 
@@ -24,13 +25,31 @@ namespace _Project.Maps.Climber.Objects
             playerCharacter = FindAnyObjectByType<PlayerCharacter>();
         }
 
+        private bool IsOpened { get; set; }
         public override void Open()
         {
             playerCharacter.InventoryMaster.TryUse(new KeyData(IInventory.Type.Key, KeyType), out var success);
             
             if (!success) return;
-            
+            IsOpened = true;
             base.Open();
+
+            var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
+            saveLoadManager.SaveGame();
+        }
+
+        public bool EnrollToSaveManager => true;
+        public bool Save(string saveFileName)
+        {
+            ISavable.EasySave($"{ID}", IsOpened, saveFileName);
+            return true;
+        }
+
+        public bool Load(string saveFileName)
+        {
+            IsOpened = ISavable.EasyLoad<bool>($"{ID}", saveFileName);
+            if (IsOpened) base.Open();
+            return true;
         }
     }
 }

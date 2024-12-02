@@ -488,15 +488,16 @@ namespace _Project.Maps.Climber
                         child.AddComponent<BoxCollider>();
                         var split2 = split[1].Split(".");
                         var position = split2[2];
+                        var id = level.ID + split2[0] + split2[1];
                         
                         if (position.Contains("Start"))
                         {
-                            var id = split2[0] + split2[1];
-                            
                             var leverId = split2[3].Split("_")[0];
                             var keyDoor = child.AddComponent<KeyDoor>();
                             keyDoor.ID = id;
+                            
                             keyDoor.LeverID = leverId;
+                            // Debug.Log(leverId);
 
                             var keyType = split2[4];
                             if (keyType.Contains("SilverKey"))
@@ -508,12 +509,10 @@ namespace _Project.Maps.Climber
                                 keyDoor.KeyType = KeyData.KeyType.Gold;
                             }
                             
-                            leverDoorDict.Add(id, keyDoor);
+                            leverDoorDict.Add(keyDoor.ID, keyDoor);
                         }
                         else if (position.Contains("End"))
                         {
-                            var id = split2[0] + split2[1];
-                            
                             leverDoorEndDict.Add(id, child.transform);
                         }
                     }

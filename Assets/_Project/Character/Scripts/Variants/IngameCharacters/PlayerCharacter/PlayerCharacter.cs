@@ -300,6 +300,17 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             DrawLabel("");
             DrawLabel("");
             DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
+            DrawLabel("");
             DrawLabel("PlayTime : " + (int)Time.realtimeSinceStartup + "    " + FPS);
             if (CurrentLevel) DrawLabel(CurrentLevel.ID + ", LevelType : " + CurrentLevel.LevelType);
             // DrawLabel(CurrentSpotLight?.ToString());
