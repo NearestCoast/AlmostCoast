@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Inventories.Items;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Inventories
 {
@@ -16,6 +17,8 @@ namespace _Project.Inventories
         
         public Type InvType { get; }
         
+        public IEnumerable<ItemStack> ItemStacks { get; }
+        
         public void Add(ItemData itemData);
         public void TryUse(ItemData itemData, out bool success);
     }
@@ -23,12 +26,49 @@ namespace _Project.Inventories
     [Serializable]
     public class ItemStack
     {
-        [SerializeField] private List<ItemData> items;
-        public List<ItemData> Items => items;
+        [SerializeField] private int amount;
+        public int Amount => amount;
 
-        public ItemStack()
+        [SerializeField] private UnityEvent<int> onUpdate = new UnityEvent<int>();
+        public UnityEvent<int> OnUpdate => onUpdate;
+
+        [SerializeField] private Sprite sprite;
+        public Sprite Sprite => sprite;
+
+        public ItemStack(int amount, Sprite sprite)
         {
-            items = new List<ItemData>();
+            this.amount = amount;
+            this.sprite = sprite;
+            onUpdate?.Invoke(this.amount);
+        }
+
+        public void Add()
+        {
+            amount += 1;
+            Debug.Log("COmeeeeeeeeeeeeeeeeeeeeeeeeee");
+            onUpdate?.Invoke(amount);
+        }
+
+        public void TryUse(out bool success)
+        {
+            success = false;
+            if (amount > 0)
+            {
+                amount -= 1;
+                success = true;
+                onUpdate?.Invoke(amount);
+            }
+        }
+
+        public void Load(int amount)
+        {
+            this.amount = amount;
+            onUpdate?.Invoke(amount);
+        }
+
+        public void UpdateUI()
+        {
+            onUpdate?.Invoke(amount);
         }
     }
     
