@@ -10,6 +10,7 @@ using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.BrightnessState;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates;
 using _Project.Combat.HitObjects;
+using _Project.Inventories;
 using _Project.Maps.Climber;
 using _Project.Maps.Climber.Objects;
 using Cysharp.Threading.Tasks;
@@ -79,6 +80,8 @@ namespace _Project.Characters.IngameCharacters.Core
             LockParams = GetComponent<LockParams>();
 
             wallSoundSource = GetComponent<AudioSource>();
+
+            inventoryMaster = GetComponentInChildren<InventoryMaster>();
         }
 
         protected override void Start()
@@ -339,7 +342,7 @@ namespace _Project.Characters.IngameCharacters.Core
     {
         protected GUIStyle guiStyle = new GUIStyle();
         private float elapsedTime = 0f; // 경과 시간 누적
-        private int frameCount = 0; // 프레임 수 누적
+        private int frameCount = 0; // 프레임 수 누적 
         protected int FPS { get; set; }
 
         private void CalculateFPS()
@@ -362,5 +365,11 @@ namespace _Project.Characters.IngameCharacters.Core
                 frameCount = 0;
             }
         }
+    }
+
+    public partial class IngameCharacter : _Project.Characters._Core.Character
+    {
+        private InventoryMaster inventoryMaster;
+        public InventoryMaster InventoryMaster => inventoryMaster;
     }
 }

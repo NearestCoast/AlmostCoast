@@ -1,4 +1,6 @@
 using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
+using _Project.Inventories;
+using _Project.Inventories.Items;
 using _Project.Maps.Climber.Objects.Collectables;
 using UnityEngine;
 
@@ -6,9 +8,9 @@ namespace _Project.Maps.Climber.Objects
 {
     public class KeyDoor : LeverDoor
     {
-        [SerializeField] private Key.Type keyType;
+        [SerializeField] private KeyData.KeyType keyType;
 
-        public Key.Type KeyType
+        public KeyData.KeyType KeyType
         {
             get => keyType;
             set => keyType = value;
@@ -24,8 +26,7 @@ namespace _Project.Maps.Climber.Objects
 
         public override void Open()
         {
-            playerCharacter.TryUseKey(keyType, out var success);
-            if (!success) return;
+            playerCharacter.InventoryMaster.TryUse(new KeyData(IInventory.Type.Key, KeyType));
             base.Open();
         }
     }

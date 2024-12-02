@@ -1149,6 +1149,7 @@ GameObject:
   - component: {fileID: 6704677142090612312}
   - component: {fileID: 2616603983699052067}
   - component: {fileID: 8953505957132306285}
+  - component: {fileID: 503772485522366225}
   - component: {fileID: 3867191034218820114}
   - component: {fileID: 369170796785037436}
   - component: {fileID: 6213137668486297533}
@@ -1257,6 +1258,7 @@ MonoBehaviour:
   isInFightDistance: 8
   maxWaitingTime: 60
   lootObjPrefab: {fileID: 0}
+  id: 
 --- !u!114 &8953505957132306285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1272,6 +1274,18 @@ MonoBehaviour:
   isPlayer: 0
   maxHealth: 100
   currentHealth: 100
+--- !u!114 &503772485522366225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272130637984226032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d9bbe67c03248129d851d41a271f7f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3867191034218820114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3579,7 +3593,6 @@ MonoBehaviour:
   useInputMagnitude: 0
   maxLength: 2
   maxTime: 1.2
-  audioTick: 1
   references:
     version: 2
     RefIds:

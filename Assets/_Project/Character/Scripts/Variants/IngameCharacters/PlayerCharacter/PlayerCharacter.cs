@@ -7,6 +7,7 @@ using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.BrightnessState;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates;
+using _Project.Inventories;
 using _Project.Managers.Scripts._Core.SaveManager;
 using _Project.Maps.Climber;
 using _Project.Maps.Climber.Objects;
@@ -20,10 +21,11 @@ using UnityEngine.SceneManagement;
 
 namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 {
-    public class PlayerCharacter : IngameCharacter, ISavable
+    public partial class PlayerCharacter : IngameCharacter, ISavable
     {
-        [SerializeField, TitleGroup("CameraTarget")] private CameraTarget cameraTarget;
-        
+        [SerializeField, TitleGroup("CameraTarget")]
+        private CameraTarget cameraTarget;
+
         private int stateChangeFrameCount;
         private Vector3 PrevCamTargetMoveValue { get; set; }
         public bool IsStealthMove => MoveParams.IsStealthMove;
@@ -33,14 +35,14 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         {
             base.Awake();
             chargingUIs = GetComponentsInChildren<ChargingUI>(true);
-            
+
             cts = new CancellationTokenSource();
         }
 
         protected override void Start()
         {
             base.Start();
-            
+
             CurrentLevel?.StartLevel();
         }
 
@@ -55,7 +57,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     Debug.Log(velocity);
                 }
 #endif
-                
+
                 velocity += CurrentActionState.GetVelocity();
 #if UNITY_EDITOR
                 if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
@@ -70,7 +72,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     Debug.Log(velocity);
                 }
 #endif
-                
+
                 velocity += CurrentMovingPlatform ? CurrentMovingPlatform.Velocity : Vector3.zero;
 #if UNITY_EDITOR
                 if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
@@ -105,25 +107,30 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     if (chargingUI.gameObject.activeSelf) chargingUI.OnUpdate(transform.position);
                 }
             }
-            
+
             if (CurrentLevel)
             {
-            
+
                 switch (CurrentLevel.LevelType)
                 {
                     case Level.Type.Normal:
                     {
-                        commonStateConductor.TrySetBrightnessState(BrightnessStateContainer[BrightnessState.StateType.Normal]);
+                        commonStateConductor.TrySetBrightnessState(
+                            BrightnessStateContainer[BrightnessState.StateType.Normal]);
                         break;
                     }
                     case Level.Type.Dark:
                     {
-                        if (CurrentSpotLight) commonStateConductor.TrySetBrightnessState(BrightnessStateContainer[BrightnessState.StateType.Normal]);
-                        else commonStateConductor.TrySetBrightnessState(BrightnessStateContainer[BrightnessState.StateType.Dark]);
+                        if (CurrentSpotLight)
+                            commonStateConductor.TrySetBrightnessState(
+                                BrightnessStateContainer[BrightnessState.StateType.Normal]);
+                        else
+                            commonStateConductor.TrySetBrightnessState(
+                                BrightnessStateContainer[BrightnessState.StateType.Dark]);
                         break;
                     }
                 }
-                
+
                 foreach (var currentLevelMovingPlatform in CurrentLevel.MovingPlatforms)
                 {
                     currentLevelMovingPlatform.Move();
@@ -134,28 +141,30 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     rollingCube.Work(transform);
                 }
             }
-            
-            if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded && VerticalParams.IsEdgeOfPlatformFromTop)
+
+            if (MoveParams.IsClimbable && !MoveParams.IsClimbButtonPressed && !GroundParams.IsGrounded &&
+                VerticalParams.IsEdgeOfPlatformFromTop)
             {
                 if (movementStateContainer.ContainsKey(MovementState.StateType.Hang))
                 {
                     animationStateConductor.TrySetMovementState(movementStateContainer[MovementState.StateType.Hang]);
                 }
             }
-            
+
             base.Update();
-            
+
             CurrentLockState.UpdateLockOnMarker();
-            
+
             ReviseCameraTarget();
 
             if (CurrentBrightnessState is DarkState darkState && darkState.IsEliminationPhase)
             {
                 MoveToSavePoint();
             }
-            
-            
+
+
             return;
+
             void ReviseCameraTarget()
             {
                 if (CurrentLockState.Type == LockState.StateType.LockOn)
@@ -164,22 +173,24 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                     cameraTarget?.Move(camMoveValue);
                     return;
                 }
+
                 if (IsJustStateChanged)
                 {
                     // Debug.Log(CurrentActionState);
                     stateChangeFrameCount = 1;
                 }
-            
+
                 var currentMoveValue = CurrentMovementState.CameraTargetUpdate();
-            
+
                 if (0 < stateChangeFrameCount && stateChangeFrameCount < 3)
                 {
                     if (Mathf.Abs(PrevCamTargetMoveValue.magnitude - currentMoveValue.magnitude) > 0.2f)
                     {
-                        currentMoveValue = currentMoveValue.normalized * Mathf.Clamp(currentMoveValue.magnitude, 0, PrevCamTargetMoveValue.magnitude);
+                        currentMoveValue = currentMoveValue.normalized * Mathf.Clamp(currentMoveValue.magnitude, 0,
+                            PrevCamTargetMoveValue.magnitude);
                         // currentMoveValue = currentMoveValue.normalized * Mathf.Clamp(currentMoveValue.magnitude, 0, 0.2f);
                     }
-                
+
                     stateChangeFrameCount++;
                 }
                 else
@@ -188,14 +199,15 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 }
 
                 cameraTarget?.Move(currentMoveValue);
-            
+
                 PrevCamTargetMoveValue = currentMoveValue;
                 // if (IsJustStateChanged) Debug.Log(CurrentMovementState);
             }
         }
-        
+
         private CancellationTokenSource cts;
         private bool isApplicationQuitting = false;
+
         public override async void MoveToSavePoint()
         {
             var curtainUI = FindAnyObjectByType<CurtainUI>();
@@ -228,6 +240,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         }
 
         [SerializeField] private SavePoint initialSavePoint;
+
         public SavePoint InitialSavePoint
         {
             get => initialSavePoint;
@@ -237,7 +250,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         protected override void SetDying()
         {
             base.SetDying();
-            
+
             var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
             saveLoadManager.SaveGame();
         }
@@ -245,74 +258,22 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         public override void Die()
         {
             base.Die();
-            
+
             WaitAndRespawn().Forget();
-            
+
             return;
+
             async UniTaskVoid WaitAndRespawn()
             {
                 var curtainUI = FindAnyObjectByType<CurtainUI>();
                 await curtainUI.FadeOut(cts.Token);
-                
+
                 var currentSceneName = SceneManager.GetActiveScene().name;
                 await SceneManager.LoadSceneAsync(currentSceneName);
-                
+
             }
         }
-        
-        
 
-        [SerializeField] private int silverKeyAmount;
-        [SerializeField] private int goldKeyAmount;
-
-        public int SilverKeyAmount => silverKeyAmount;
-        public int GoldKeyAmount => goldKeyAmount;
-
-        public void AddKey(Key.Type keyType)
-        {
-            switch (keyType)
-            {
-                case Key.Type.Silver:
-                {
-                    silverKeyAmount += 1;
-                    break;
-                }
-                case Key.Type.Gold:
-                {
-                    goldKeyAmount += 1;
-                    break;
-                }
-            }
-            
-        }
-
-        public void TryUseKey(Key.Type keyType, out bool success)
-        {
-            success = false;
-            switch (keyType)
-            {
-                case Key.Type.Silver:
-                {
-                    if (silverKeyAmount > 0)
-                    {
-                        success = true;
-                        silverKeyAmount -= 1;
-                    }
-                    
-                    break;
-                }
-                case Key.Type.Gold:
-                {
-                    if (goldKeyAmount > 0)
-                    {
-                        success = true;
-                        goldKeyAmount -= 1;
-                    }
-                    break;
-                }
-            }
-        }
-        
         private void OnApplicationQuit()
         {
             isApplicationQuitting = true;
@@ -333,7 +294,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             var i = 0;
             guiStyle.fontSize = (int)(Screen.height * 0.02f);
             guiStyle.normal.textColor = Color.gray;
-            
+
             DrawLabel("");
             DrawLabel("");
             DrawLabel("");
@@ -348,8 +309,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
             // DrawLabel("MoveParams.JumpCount : " + MoveParams.JumpCount);
             DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
-            DrawLabel("SilverKeyAmount : " + SilverKeyAmount);
-            DrawLabel("GoldKeyAmount : " + GoldKeyAmount);
+            // DrawLabel("SilverKeyAmount : " + SilverKeyAmount);
+            // DrawLabel("GoldKeyAmount : " + GoldKeyAmount);
             // DrawLabel("MoveParams.ClimbJumpCount : " + MoveParams.ClimbJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
             DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
@@ -388,22 +349,26 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("MoveParams.IsWallJumpable : " + MoveParams.IsWallJumpable);
             // DrawLabel("MoveParams.Acceleration : " + MoveParams.Acceleration);
             // DrawLabel("");
-            
-        
+
+
             void DrawLabel(string msg)
             {
                 GUI.Label(new Rect(0, i++ * 20, 500, guiStyle.fontSize * 1.1f), msg, guiStyle);
             }
         }
+    }
 
+    public partial class PlayerCharacter : IngameCharacter, ISavable
+    {
         public bool EnrollToSaveManager => true;
+
         public bool Save(string saveFileName)
         {
             var position = IsDying ? Vector3.zero : transform.position;
             ISavable.EasySave("PlayerPosition", position, saveFileName);
             ISavable.EasySave("SavePoint", SavePoint, saveFileName);
             if (CurrentLevel) ISavable.EasySave("CurrentLevel ID", CurrentLevel.ID, saveFileName);
-            
+
             return true;
         }
 
@@ -412,13 +377,13 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             gameObject.SetActive(false);
             transform.position = ISavable.EasyLoad<Vector3>("PlayerPosition", saveFileName);
             SavePoint = ISavable.EasyLoad<SavePoint>("SavePoint", saveFileName);
-            
+
             var levelID = ISavable.EasyLoad<string>("CurrentLevel ID", saveFileName);
             var levels = FindObjectsByType<Level>(FindObjectsSortMode.None);
-            CurrentLevel = levels.ToList().Find(x => x.ID == levelID); 
-            
+            CurrentLevel = levels.ToList().Find(x => x.ID == levelID);
+
             gameObject.SetActive(true);
-            
+
             return true;
         }
 

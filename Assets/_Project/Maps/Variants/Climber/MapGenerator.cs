@@ -7,6 +7,7 @@ using _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.ActionStates.MeleeAttacks;
+using _Project.Inventories.Items;
 using _Project.Maps.Climber.Objects;
 using _Project.Maps.Climber.Objects.Collectables;
 using _Project.Maps.Climber.Objects.Variants;
@@ -40,8 +41,8 @@ namespace _Project.Maps.Climber
         [SerializeField, TitleGroup("Prefabs")] private SlideJumpUp slideJumpUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private MovingPlatform movingPlatformPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SpotLight spotLightPrefab;
-        [SerializeField, TitleGroup("Prefabs")] private Key silverKeyPrefab;
-        [SerializeField, TitleGroup("Prefabs")] private Key goldKeyPrefab;
+        [FormerlySerializedAs("silverKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable silverKeyCollectablePrefab;
+        [FormerlySerializedAs("goldKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable goldKeyCollectablePrefab;
 
         [SerializeField] private NavMeshSurface navMeshSurface; 
 
@@ -59,8 +60,8 @@ namespace _Project.Maps.Climber
             // movingPlatformInstance = GameObject.Find("MovingPlatformInstance").GetComponent<MovingPlatform>();
             movingPlatformPrefab ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
             spotLightPrefab ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
-            silverKeyPrefab ??= Extensions.FindInactiveObjectByName("SilverKey").GetComponent<Key>();
-            goldKeyPrefab ??= Extensions.FindInactiveObjectByName("GoldKey").GetComponent<Key>();
+            silverKeyCollectablePrefab ??= Extensions.FindInactiveObjectByName("SilverKey").GetComponent<KeyCollectable>();
+            goldKeyCollectablePrefab ??= Extensions.FindInactiveObjectByName("GoldKey").GetComponent<KeyCollectable>();
             
             navMeshSurface ??= Extensions.FindInactiveObjectByName("NavMesh Surface").GetComponent<NavMeshSurface>();
         }
@@ -500,11 +501,11 @@ namespace _Project.Maps.Climber
                             var keyType = split2[4];
                             if (keyType.Contains("SilverKey"))
                             {
-                                keyDoor.KeyType = Key.Type.Silver;
+                                keyDoor.KeyType = KeyData.KeyType.Silver;
                             }
                             else if (keyType.Contains("SilverKey"))
                             {
-                                keyDoor.KeyType = Key.Type.Gold;
+                                keyDoor.KeyType = KeyData.KeyType.Gold;
                             }
                             
                             leverDoorDict.Add(id, keyDoor);
@@ -922,11 +923,11 @@ namespace _Project.Maps.Climber
                             
                         if (lootObjName.Contains("SilverKey"))
                         {
-                            enemy.LootObj = silverKeyPrefab.gameObject;
+                            enemy.LootObj = silverKeyCollectablePrefab.gameObject;
                         }
                         else if (lootObjName.Contains("GoldKey"))
                         {
-                            enemy.LootObj = goldKeyPrefab.gameObject;
+                            enemy.LootObj = goldKeyCollectablePrefab.gameObject;
                         }
                     }
                 }
