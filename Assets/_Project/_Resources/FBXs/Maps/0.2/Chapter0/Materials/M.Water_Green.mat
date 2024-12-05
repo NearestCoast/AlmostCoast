@@ -89,7 +89,7 @@ Material:
     - _CameraDistanceFadeFar: 10
     - _ColorMode: 0
     - _CrestSharpness: 0.348
-    - _CrestSize: 0.113
+    - _CrestSize: 0.165
     - _Cull: 2
     - _Cutoff: 0.5
     - _Depth: 100
@@ -147,8 +147,8 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0, g: 1, b: 0.7287984, a: 1}
-    - _ColorDeep: {r: 0.3600108, g: 0.6981132, b: 0.31283376, a: 1}
-    - _ColorShallow: {r: 0.53521985, g: 1, b: 0.28773582, a: 0.8156863}
+    - _ColorDeep: {r: 0.39271176, g: 1, b: 0.3066038, a: 1}
+    - _ColorShallow: {r: 0.503318, g: 0.9433962, b: 0.27144888, a: 0.8156863}
     - _CrestColor: {r: 0.8728487, g: 1, b: 0.33490565, a: 0.53333336}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 0.12482198, g: 0.5188679, b: 0.31296068, a: 0.21176471}

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 770acbaed70db4ad696458511aa3f084, type: 3}
-  m_Name: FlatKitFog
+  m_Name: ProjectFlatKitFog
   m_EditorClassIdentifier: 
-  m_Active: 0
-  settings: {fileID: 11400000, guid: a7c91003576e047c19362bcda8364170, type: 2}
+  m_Active: 1
+  settings: {fileID: 11400000, guid: 862834054df134a2484e0e9e721d0260, type: 2}
 --- !u!114 &-6759592604168192598
 MonoBehaviour:
   m_ObjectHideFlags: 0
