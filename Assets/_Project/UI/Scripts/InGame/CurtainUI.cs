@@ -9,9 +9,9 @@ namespace _Project.UI.InGame
     public class CurtainUI : MonoBehaviour
     {
         private CanvasGroup fadeCanvasGroup;
-        [SerializeField] private float fadeOutDuration = 1.0f; // 페이드 아웃 시간
-        [SerializeField] private float fadeInDuration = 3f;    // 페이드 인 시간
-        [SerializeField] private float waitFadeIn = 2f;        // 대기 시간
+        [SerializeField] private float fadeOutDuration = 0.3f; // 페이드 아웃 시간
+        [SerializeField] private float fadeInDuration = 1;    // 페이드 인 시간
+        [SerializeField] private float waitFadeIn = 1f;        // 대기 시간
 
         private CancellationTokenSource cts;
         private bool isApplicationQuitting = false;

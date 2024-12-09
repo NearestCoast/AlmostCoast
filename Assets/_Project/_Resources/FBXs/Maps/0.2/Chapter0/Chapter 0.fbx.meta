@@ -38,7 +38,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.Wall
-    second: {fileID: 2100000, guid: 6eaa94660316643c3b2f7d9885548116, type: 2}
+    second: {fileID: 2100000, guid: d9d45a0a52ca64948b998861d14c09db, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

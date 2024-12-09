@@ -985,6 +985,10 @@ namespace _Project.Maps.Climber
                         {
                             enemy.LootObj = goldKeyCollectablePrefab.gameObject;
                         }
+                        else if (lootObjName.Contains("SB"))
+                        {
+                            enemy.LootObj = strawberryPrefab.gameObject;
+                        }
                     }
                 }
                 

@@ -49,15 +49,17 @@ namespace _Project.Maps.Climber.Objects.Collectables
             FindAnyObjectByType<AudioManager>().Play();
             DeactivateAfterDelay().Forget();
         }
+
+        protected virtual float StopTime => 0.5f;
         
         protected async UniTaskVoid DeactivateAfterDelay()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), ignoreTimeScale: true);
+            await UniTask.Delay(TimeSpan.FromSeconds(StopTime), ignoreTimeScale: true);
             
             var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
             saveLoadManager.SaveGame();
             
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), ignoreTimeScale: true);
+            await UniTask.Delay(TimeSpan.FromSeconds(StopTime), ignoreTimeScale: true);
             
             Time.timeScale = 1;
             gameObject.SetActive(false);

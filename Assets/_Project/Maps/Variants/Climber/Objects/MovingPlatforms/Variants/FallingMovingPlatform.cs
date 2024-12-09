@@ -28,6 +28,7 @@ namespace _Project.Maps.Climber.Objects
             if (IsWorked)
             {
                 transform.position = Position;
+                StartPosition = Position;
                 enabled = false;
             }
         }
@@ -41,7 +42,7 @@ namespace _Project.Maps.Climber.Objects
             {
                 IsWorked = true;
                 Position = transform.position;
-                
+                StartPosition = Position;
                 var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
                 saveLoadManager.SaveGame();
                 
