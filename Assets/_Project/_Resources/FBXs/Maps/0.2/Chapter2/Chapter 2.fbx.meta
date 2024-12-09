@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 38e31cf7c59ab46fa8b1e401a12e9da0
+guid: 75d159ce6c2cf45c4a16b07417f7b9af
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -8,27 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.Hazard
-    second: {fileID: 2100000, guid: 420397f1fb80642dd88f33838db4d50b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M.PlaneDark
-    second: {fileID: 2100000, guid: 895ba7ae53cef4b7cb4c3f28d99adaed, type: 2}
+    second: {fileID: 2100000, guid: 09a71a4e94a89461ab136941d78b6b59, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.PlaneLight
-    second: {fileID: 2100000, guid: bf46bd77128fd48f9931f1a2c9f25e3c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M.Wall
-    second: {fileID: 2100000, guid: 6eaa94660316643c3b2f7d9885548116, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M.Wall2
-    second: {fileID: 2100000, guid: d9d45a0a52ca64948b998861d14c09db, type: 2}
+    second: {fileID: 2100000, guid: fce4696209d614ba0b384151c5aefbe3, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -55,7 +40,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1

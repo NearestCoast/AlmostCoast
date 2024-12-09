@@ -9,7 +9,6 @@ namespace _Project.Maps.Climber.Objects.Collectables
 {
     public class Ability : Collectable
     {
-
         [SerializeField] private List<AnimationState> targetStates;
 
         public List<AnimationState> TargetStates

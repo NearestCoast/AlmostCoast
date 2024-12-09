@@ -36,6 +36,7 @@ namespace _Project.Maps.Climber
         [SerializeField] private Transform enemiesContainer;
 
         [SerializeField, TitleGroup("Prefabs")] private Transform objectPrefabContainer;
+        [SerializeField, TitleGroup("Prefabs")] private Strawberry strawberryPrefab;
         [SerializeField, TitleGroup("Prefabs")] private Ability abilityInstance;
         [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SlideJumpUp slideJumpUpPrefab;
@@ -54,6 +55,7 @@ namespace _Project.Maps.Climber
             if (!enemiesContainer) enemiesContainer = Extensions.FindInactiveObjectByName("EnemySpotsContainer").transform;
             if (!objectPrefabContainer) objectPrefabContainer = Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
             
+            strawberryPrefab ??= Extensions.FindInactiveObjectByName("Strawberry").GetComponent<Strawberry>();
             abilityInstance ??= Extensions.FindInactiveObjectByName("AbilityInstance").GetComponent<Ability>();
             wallJumpCountUpPrefab ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
             slideJumpUpPrefab ??= Extensions.FindInactiveObjectByName("SlideJumpUp").GetComponent<SlideJumpUp>();
@@ -734,6 +736,13 @@ namespace _Project.Maps.Climber
                     {
                         child.GetComponent<MeshRenderer>().enabled = false;
                         var collectable = Instantiate(slideJumpUpPrefab, child.transform);
+                        collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
+                        collectable.gameObject.SetActive(true);
+                    }
+                    else if (split[1].Contains("Strawberry"))
+                    {
+                        child.GetComponent<MeshRenderer>().enabled = false;
+                        var collectable = Instantiate(strawberryPrefab, child.transform);
                         collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
                         collectable.gameObject.SetActive(true);
                     }
