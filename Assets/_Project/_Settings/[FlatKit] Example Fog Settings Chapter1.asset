@@ -134,13 +134,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DistanceFogIntensity: 0.743
-    - _DistanceHeightBlend: 0.5
-    - _Far: 72.6
-    - _HeightFogIntensity: 0.769
-    - _HighWorldY: 51.9
-    - _LowWorldY: 8.8
-    - _Near: 25.72
+    - _DistanceFogIntensity: 1
+    - _DistanceHeightBlend: 0.539
+    - _Far: 600
+    - _HeightFogIntensity: 0.71
+    - _HighWorldY: 88.1
+    - _LowWorldY: 16.2
+    - _Near: 0
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
