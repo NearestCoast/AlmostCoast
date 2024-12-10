@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.Hazard
-    second: {fileID: 2100000, guid: 09a71a4e94a89461ab136941d78b6b59, type: 2}
+    second: {fileID: 2100000, guid: f25e442c6c25d49259c4294a5a09e6e0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: M.PlaneLight
-    second: {fileID: 2100000, guid: fce4696209d614ba0b384151c5aefbe3, type: 2}
+    second: {fileID: 2100000, guid: 5c75a88802a014f92a947af5a3a93af2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

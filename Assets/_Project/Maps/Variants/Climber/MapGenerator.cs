@@ -279,7 +279,7 @@ namespace _Project.Maps.Climber
                 {
                     var uvScaler = level.gameObject.AddComponent<UVScaler>();
                     // uvScaler.ScaleUVsToTexelDensity(textureScale);
-                    uvScaler.ScaleUVsToTexelDensity(Random.Range(2f, 3f));
+                    uvScaler.ScaleUVsToTexelDensity(Random.Range(2, 6));
                 }
             }
 
