@@ -32,7 +32,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 41441
+    atime1: 30262
     atime2: 65535
     atime3: 0
     atime4: 0
@@ -43,9 +43,9 @@ MonoBehaviour:
     m_ColorSpace: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  near: 25.9
-  far: 70.4
-  distanceFogIntensity: 0.704
+  near: 25.72
+  far: 72.6
+  distanceFogIntensity: 0.743
   useHeight: 1
   heightGradient:
     serializedVersion: 2
@@ -66,7 +66,7 @@ MonoBehaviour:
     ctime6: 0
     ctime7: 0
     atime0: 0
-    atime1: 22937
+    atime1: 25250
     atime2: 65535
     atime3: 0
     atime4: 0
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   low: 8.8
   high: 51.9
-  heightFogIntensity: 0.578
+  heightFogIntensity: 0.769
   cameraRelativePosition: 1
   distanceHeightBlend: 0.5
   renderEvent: 550
@@ -134,13 +134,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DistanceFogIntensity: 0.704
+    - _DistanceFogIntensity: 0.743
     - _DistanceHeightBlend: 0.5
-    - _Far: 70.4
-    - _HeightFogIntensity: 0.578
+    - _Far: 72.6
+    - _HeightFogIntensity: 0.769
     - _HighWorldY: 51.9
     - _LowWorldY: 8.8
-    - _Near: 25.9
+    - _Near: 25.72
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

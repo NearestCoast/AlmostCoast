@@ -38,7 +38,7 @@ namespace _Project.Managers.Scripts._Core.SaveManager
     [DefaultExecutionOrder(-10)]
     public class SaveLoadManager : MonoBehaviour
     {
-        [ShowInInspector] private static string SaveFileName => SaveFileData.SelectedSaveFileName;
+        [ShowInInspector] public static string SaveFileName => SaveFileData.SelectedSaveFileName;
         [ShowInInspector] private List<ISavable> savableObjects;
 
         private void Awake()

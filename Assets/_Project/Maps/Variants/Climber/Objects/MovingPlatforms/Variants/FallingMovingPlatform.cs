@@ -43,8 +43,8 @@ namespace _Project.Maps.Climber.Objects
                 IsWorked = true;
                 Position = transform.position;
                 StartPosition = Position;
-                var saveLoadManager = FindAnyObjectByType<SaveLoadManager>();
-                saveLoadManager.SaveGame();
+                
+                // Save(SaveFileData.SelectedSaveFileName);
                 
                 enabled = false;
             }
