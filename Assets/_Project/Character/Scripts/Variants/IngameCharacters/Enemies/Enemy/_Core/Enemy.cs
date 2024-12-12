@@ -113,7 +113,7 @@ namespace _Project.Character.IngameCharacters.Enemies
         public override void Die()
         {
             base.Die();
-
+            
             WaitAndRespawn().Forget();
 
             return;
@@ -123,6 +123,7 @@ namespace _Project.Character.IngameCharacters.Enemies
                 if (!hasLootDropped && lootObjPrefab)
                 {
                     var lootObj = Instantiate(lootObjPrefab, StartPosition, quaternion.identity);
+                    Debug.Log(lootObj);
                     lootObj.SetActive(true);
                     hasLootDropped = true;
                 }

@@ -15,6 +15,7 @@ using _Project.Utils;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using Unity.AI.Navigation;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
@@ -37,7 +38,7 @@ namespace _Project.Maps.Climber
 
         [SerializeField, TitleGroup("Prefabs")] private Transform objectPrefabContainer;
         [SerializeField, TitleGroup("Prefabs")] private Strawberry strawberryPrefab;
-        [SerializeField, TitleGroup("Prefabs")] private Ability abilityInstance;
+        [FormerlySerializedAs("abilityInstance")] [SerializeField, TitleGroup("Prefabs")] private Ability abilityPrefab;
         [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SlideJumpUp slideJumpUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private MovingPlatform movingPlatformPrefab;
@@ -45,27 +46,47 @@ namespace _Project.Maps.Climber
         [FormerlySerializedAs("silverKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable silverKeyCollectablePrefab;
         [FormerlySerializedAs("goldKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable goldKeyCollectablePrefab;
 
-        [SerializeField] private NavMeshSurface navMeshSurface; 
+        [SerializeField] private NavMeshSurface navMeshSurface;
 
         private void OnValidate()
-        {
+        { 
             if (Application.isPlaying) return;   
-            
+
             if (!mapInstanceContainer) mapInstanceContainer = Extensions.FindInactiveObjectByName("MapInstances").transform;
             if (!enemiesContainer) enemiesContainer = Extensions.FindInactiveObjectByName("EnemySpotsContainer").transform;
             if (!objectPrefabContainer) objectPrefabContainer = Extensions.FindInactiveObjectByName("ObjectPrefabs").transform;
-            
-            strawberryPrefab ??= Extensions.FindInactiveObjectByName("Strawberry").GetComponent<Strawberry>();
-            abilityInstance ??= Extensions.FindInactiveObjectByName("AbilityInstance").GetComponent<Ability>();
-            wallJumpCountUpPrefab ??= Extensions.FindInactiveObjectByName("WallJumpCountUp").GetComponent<WallJumpCountUp>();
-            slideJumpUpPrefab ??= Extensions.FindInactiveObjectByName("SlideJumpUp").GetComponent<SlideJumpUp>();
-            // movingPlatformInstance = GameObject.Find("MovingPlatformInstance").GetComponent<MovingPlatform>();
-            movingPlatformPrefab ??= Extensions.FindInactiveObjectByName("MovingPlatformInstance").GetComponent<AccMovingPlatform>();
-            spotLightPrefab ??= Extensions.FindInactiveObjectByName("SpotLightInstance").GetComponent<SpotLight>();
-            silverKeyCollectablePrefab ??= Extensions.FindInactiveObjectByName("SilverKey").GetComponent<KeyCollectable>();
-            goldKeyCollectablePrefab ??= Extensions.FindInactiveObjectByName("GoldKey").GetComponent<KeyCollectable>();
-            
+
+            AssignPrefab(ref strawberryPrefab, "Strawberry");
+            AssignPrefab(ref abilityPrefab, "AbilityInstance");
+            AssignPrefab(ref wallJumpCountUpPrefab, "WallJumpCountUp");
+            AssignPrefab(ref slideJumpUpPrefab, "SlideJumpUp");
+            AssignPrefab(ref movingPlatformPrefab, "MovingPlatformInstance");
+            AssignPrefab(ref spotLightPrefab, "SpotLightInstance");
+            AssignPrefab(ref silverKeyCollectablePrefab, "SilverKey");
+            AssignPrefab(ref goldKeyCollectablePrefab, "GoldKey");
+
             navMeshSurface ??= Extensions.FindInactiveObjectByName("NavMesh Surface").GetComponent<NavMeshSurface>();
+        }
+
+        private void AssignPrefab<T>(ref T prefabField, string objectName) where T : Component
+        {
+            if (prefabField != null) return;
+
+            var instance = Extensions.FindInactiveObjectByName(objectName);
+            if (instance == null)
+            {
+                Debug.LogWarning($"Object '{objectName}' not found in the scene.");
+                return;
+            }
+
+            var prefab = PrefabUtility.GetCorrespondingObjectFromSource(instance);
+            if (prefab == null)
+            {
+                Debug.LogWarning($"Prefab source for '{objectName}' not found.");
+                return;
+            }
+
+            prefabField = prefab.GetComponent<T>();
         }
 
         [Button]
@@ -751,7 +772,7 @@ namespace _Project.Maps.Climber
                         child.GetComponent<MeshRenderer>().enabled = false;
                         var abilityName = split[1].Split(".")[1];
                         var playerCharacter = FindAnyObjectByType<PlayerCharacter>();
-                        var collectable = Instantiate(abilityInstance, child.transform);
+                        var collectable = Instantiate(abilityPrefab, child.transform);
                         collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
                         collectable.gameObject.SetActive(true);
                         
