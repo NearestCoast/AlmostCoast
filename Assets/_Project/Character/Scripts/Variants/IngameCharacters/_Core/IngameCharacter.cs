@@ -226,12 +226,11 @@ namespace _Project.Characters.IngameCharacters.Core
             animationStateConductor.ForceSetMovementState(movementStateContainer[MovementState.StateType.Idle]);
         }
 
-        private bool IsMovingToSavePoint { get; set; }
+        public bool IsMovingToSavePoint { get; private set; }
 
         public virtual void MoveToSavePoint()
         {
             IsMovingToSavePoint = true; // 시작 시 true로 설정
-            ResetIsMovingToSavePointAfterDelay(); // 1000ms = 1초 뒤에 false로 설정
 
             transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
             ForceSetIdle();
@@ -254,17 +253,17 @@ namespace _Project.Characters.IngameCharacters.Core
             
             ResetModelTransform();
 
-            async void ResetIsMovingToSavePointAfterDelay()
-            {
-                await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-                IsMovingToSavePoint = false; // 1초 후 false로 변경
-            }
-
             void ResetModelTransform()
             {
                 var modelT = animationStateConductor.Animancer.transform;
                 modelT.localPosition = Vector3.zero;
             }
+        }
+
+        protected async void ResetIsMovingToSavePointAfterDelay(float time = 0.1f)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(time));
+            IsMovingToSavePoint = false; // 1초 후 false로 변경
         }
 
         public HittingInfo HittingInfo { get; private set; }

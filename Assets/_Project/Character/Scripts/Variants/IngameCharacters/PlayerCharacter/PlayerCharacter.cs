@@ -208,12 +208,14 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         private CancellationTokenSource cts;
         private bool isApplicationQuitting = false;
 
+        [SerializeField] private AudioSource hazardSound;
         public override async void MoveToSavePoint()
         {
             var curtainUI = FindAnyObjectByType<CurtainUI>();
 
             try
             {
+                hazardSound.Play();
                 // FadeOut 호출 시 CancellationToken 전달
                 await curtainUI.FadeOut(cts.Token);
 
@@ -230,6 +232,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
                 commonStateConductor.TrySetLockState(LockStateContainer[LockState.StateType.LockOff]);
                 cameraTarget?.ResetRotationAsync(SavePoint.transform.forward);
 
+                ResetIsMovingToSavePointAfterDelay(1f);
+                
                 // FadeIn 호출 시 CancellationToken 전달
                 await curtainUI.FadeIn(cts.Token);
             }
@@ -319,20 +323,20 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
             // DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
             // DrawLabel("MoveParams.JumpCount : " + MoveParams.JumpCount);
-            DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
+            // DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);
             // DrawLabel("SilverKeyAmount : " + SilverKeyAmount);
             // DrawLabel("GoldKeyAmount : " + GoldKeyAmount);
             // DrawLabel("MoveParams.ClimbJumpCount : " + MoveParams.ClimbJumpCount);
             // DrawLabel("VerticalParams.IsEdgeOfPlatform : " + VerticalParams.IsEdgeOfPlatform);
-            DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
+            // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
             // DrawLabel("GroundParams.IsGroundedOnCharacter : " + GroundParams.IsGroundedOnCharacter);
             // DrawLabel("MoveParams.HasMovingPlatform : " + MoveParams.HasMovingPlatform);
             // DrawLabel("CurrentLevel : " + CurrentLevel);
             // DrawLabel("CurrentMovingPlatform : " + CurrentMovingPlatform);
             // DrawLabel("CurrentRollingCube : " + CurrentRollingCube);
             // DrawLabel("characterController.isGrounded : " + characterController.isGrounded);
-            // DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
-            // DrawLabel("GroundParams.PrevIsGrounded : " + GroundParams.PrevIsGrounded);
+            DrawLabel("GroundParams.IsGrounded : " + GroundParams.IsGrounded);
+            DrawLabel("GroundParams.PrevIsGrounded : " + GroundParams.PrevIsGrounded);
             // DrawLabel("GroundParams.GroundNormal : " + GroundParams.GroundNormal);
             // DrawLabel("GroundParams.GroundPoint : " + GroundParams.GroundPoint);
             // DrawLabel("GroundParams.SlopeAngleDeg : " + GroundParams.SlopeAngleDeg);
@@ -348,8 +352,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel("VerticalParams.IsLeftSightOpened : " + VerticalParams.IsLeftSightOpened);
             // DrawLabel("VerticalParams.IsLeftLedgeMovable : " + VerticalParams.IsLeftLedgeMovable);
             // DrawLabel("");
-            DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
-            DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
+            // DrawLabel("MoveParams.Gravity : " + MoveParams.Gravity.magnitude);
+            // DrawLabel("MoveParams.GravityTime : " + MoveParams.GravityTime);
             // DrawLabel("MoveParams.IsClimbing : " + MoveParams.IsClimbing);
             // DrawLabel("MoveParams.IsClimbable : " + MoveParams.IsClimbable);
             // DrawLabel("MoveParams.ClimbStamina : " + MoveParams.ClimbStaminaTime);

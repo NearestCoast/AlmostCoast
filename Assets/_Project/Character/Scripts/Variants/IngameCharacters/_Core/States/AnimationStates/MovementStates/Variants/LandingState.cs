@@ -1,6 +1,7 @@
 using _Project.Utils;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Characters.IngameCharacters.Core.MovementStates
 {
@@ -31,15 +32,14 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         private MovementState prevState { get; set; }
 
-        public override void PlayAnimation()
-        {
-            
-        }
+        [SerializeField] private UnityEvent onEnter;
+        [SerializeField] private UnityEvent onEnd;
 
         public override void OnEnterState()
         {
             base.OnEnterState();
-
+            onEnter?.Invoke();
+            
             prevState = PrevState;
             MoveParams.ResetClimbStamina();
             MoveParams.EndClimbing();
@@ -60,6 +60,11 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
         protected override Vector3 GetVelocity()
         {
+            if (IsLandingEnded)
+            {
+                if (!masterCharacter.IsMovingToSavePoint) onEnd?.Invoke();
+            }
+            
             if (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth > 0)
             {
                 MoveParams.Gravity = Vector3.down * (transform.position.y - GroundParams.GroundPoint.y - characterControllerEnveloper.SkinWidth);

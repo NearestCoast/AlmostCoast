@@ -71,12 +71,13 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
         protected override void OnEnable()
         {
             StateTime = 0f;
-            PlayAnimation();
         }
 
         public override void OnEnterState()
         {
             base.OnEnterState();
+            
+            PlayAnimation();
             
             InitialPosition = transform.position;
         }
