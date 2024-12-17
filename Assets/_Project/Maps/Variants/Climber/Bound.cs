@@ -30,6 +30,7 @@ namespace _Project.Maps.Climber
                 var enemy = other.gameObject.GetComponent<Enemy>();
                 if (level.Enemies.Contains(enemy)) return;
                 enemy.CurrentLevel = level;
+                enemy.Level = Level;
                 level.Enemies.Add(enemy);
             }
 

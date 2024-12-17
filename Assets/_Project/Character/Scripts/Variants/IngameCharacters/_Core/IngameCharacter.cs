@@ -139,7 +139,10 @@ namespace _Project.Characters.IngameCharacters.Core
                 Debug.Log("CurrentActionState : " + CurrentActionState);
             }
 
-            if (!IsDying) transform.rotation = CurrentMovementState.Rotation;
+            if (!IsDying && !IsDead)
+            {
+                transform.rotation = CurrentMovementState.Rotation;
+            }
 
             if (MoveParams.IsJustLedgeMoveEnded) MoveParams.ResetIsJustLedgeMoveEnded();
 

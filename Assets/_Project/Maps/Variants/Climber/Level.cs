@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Character.IngameCharacters.Enemies;
 using _Project.Maps.Climber.Objects;
+using _Project.Maps.Climber.Objects.Collectables;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -87,6 +88,37 @@ namespace _Project.Maps.Climber
             foreach (var rollingCube in rollingCubes)
             {
                 rollingCube.ResetCube();
+            }
+        }
+
+        private int aliveMonsterCount;
+        [SerializeField] private List<GameObject> rewardPrefabs = new List<GameObject>();
+        [SerializeField] private List<Vector3> rewardObjectPositions = new List<Vector3>();
+        public List<GameObject> RewardPrefabs => rewardPrefabs;
+        public List<Vector3> RewardObjectPositions => rewardObjectPositions;
+        
+        public void UpdateAliveMonsterCount()
+        {
+            Debug.Log("UpdateAliveMonsterCount");
+            aliveMonsterCount = 0;
+            foreach (var enemy in Enemies)
+            {
+                if (!enemy.IsDead) aliveMonsterCount++;
+            }
+
+            Debug.Log(aliveMonsterCount);
+            if (aliveMonsterCount == 0)
+            {
+                Debug.Log("Instantiate");
+                for (var i = 0; i < rewardPrefabs.Count; i++)
+                {
+                    var rewardPrefab = rewardPrefabs[i];
+                    var position = rewardObjectPositions[i];
+                    var collectable = Instantiate(rewardPrefab, transform).GetComponent<Collectable>();
+                    collectable.transform.position = position;
+                    collectable.ID = $"Collectable_{id}_Reward_{i}";
+                    collectable.gameObject.SetActive(true);
+                }
             }
         }
     }

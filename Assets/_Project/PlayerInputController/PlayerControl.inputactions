@@ -99,7 +99,16 @@
                     "name": "Escape",
                     "type": "Button",
                     "id": "60e4da8c-c11d-4c21-866d-079eafb11f7d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Tab",
+                    "type": "Button",
+                    "id": "0a4aa1d4-f9a6-4fc5-8d2c-c6fa7d745ebf",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Press(behavior=1)",
                     "initialStateCheck": false
@@ -336,11 +345,33 @@
                 {
                     "name": "",
                     "id": "73622194-2a07-4525-b62f-d19a352cfd6f",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f400fb77-6a94-47b3-8f11-fd4d5d2714b1",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9d48657-b7b1-412a-90bc-9175464d1166",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tab",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

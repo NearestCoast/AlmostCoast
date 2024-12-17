@@ -17,7 +17,7 @@ namespace _Project.Characters._Core
         protected Statistics Stat { get; private set; }
         
         public bool IsDying { get; protected set; }
-        public bool IsDead { get; protected set; }
+        public bool IsDead { get; private set; }
         
         protected virtual void Awake()
         {

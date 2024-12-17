@@ -395,6 +395,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
 
 
             Vector3 verticalVelocity;
+            if (StateTime > MaxHeightTime) IsLeapEnd = true;
             if (!IsLeapEnd)
             {
                 var rayHead = new Ray(transform.position + Vector3.up * characterControllerEnveloper.Height / 2, Vector3.up);

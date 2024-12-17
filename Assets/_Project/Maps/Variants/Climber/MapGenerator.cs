@@ -755,10 +755,21 @@ namespace _Project.Maps.Climber
                     }
                     else if (split[1].Contains("SlideJumpUp"))
                     {
+                        var levelReward = split[1].Split(".")[1];
+                        
                         child.GetComponent<MeshRenderer>().enabled = false;
-                        var collectable = Instantiate(slideJumpUpPrefab, child.transform);
-                        collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
-                        collectable.gameObject.SetActive(true);
+
+                        if (levelReward.Contains("LevelReward"))
+                        {
+                            level.RewardPrefabs.Add(slideJumpUpPrefab.gameObject);
+                            level.RewardObjectPositions.Add(child.transform.position);
+                        }
+                        else
+                        {
+                            var collectable = Instantiate(slideJumpUpPrefab, child.transform);
+                            collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
+                            collectable.gameObject.SetActive(true);
+                        }
                     }
                     else if (split[1].Contains("Strawberry"))
                     {
@@ -1009,6 +1020,14 @@ namespace _Project.Maps.Climber
                         else if (lootObjName.Contains("SB"))
                         {
                             enemy.LootObj = strawberryPrefab.gameObject;
+                        }
+                        else if (lootObjName.Contains("SJumpUp"))
+                        {
+                            enemy.LootObj = slideJumpUpPrefab.gameObject;
+                            // child.GetComponent<MeshRenderer>().enabled = false;
+                            // var collectable = Instantiate(slideJumpUpPrefab, child.transform);
+                            // collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
+                            // collectable.gameObject.SetActive(true);
                         }
                     }
                 }

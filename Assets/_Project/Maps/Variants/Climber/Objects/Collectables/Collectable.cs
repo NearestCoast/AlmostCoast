@@ -4,6 +4,7 @@ using _Project.Managers.Scripts._Core.AudioManager;
 using _Project.Managers.Scripts._Core.SaveManager;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Maps.Climber.Objects.Collectables
 {
@@ -16,6 +17,13 @@ namespace _Project.Maps.Climber.Objects.Collectables
             get => id;
             set => id = value;
         }
+
+        [SerializeField] private bool isNotRevealed = false;
+        public bool IsNotRevealed
+        {
+            get => isNotRevealed;
+            set => isNotRevealed = value;
+        }
         
         private bool isWorked;
         
@@ -27,6 +35,8 @@ namespace _Project.Maps.Climber.Objects.Collectables
 
         private void OnEnable()
         {
+            // Debug.Log(name + " " + isNotRevealed);
+            gameObject.SetActive(!isNotRevealed);
             if (isWorked) gameObject.SetActive(false);
         }
 
@@ -52,7 +62,7 @@ namespace _Project.Maps.Climber.Objects.Collectables
 
         protected virtual float StopTime => 0.5f;
         
-        protected async UniTaskVoid DeactivateAfterDelay()
+        protected virtual async UniTaskVoid DeactivateAfterDelay()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(StopTime), ignoreTimeScale: true);
             
@@ -65,13 +75,14 @@ namespace _Project.Maps.Climber.Objects.Collectables
             gameObject.SetActive(false);
         }
         
-        [SerializeField] private AudioSource audioSource;
+        [SerializeField] protected AudioSource audioSource;
 
         public AudioSource AudioSource
         {
             get => audioSource;
             set => audioSource = value;
         }
+        
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -83,14 +94,22 @@ namespace _Project.Maps.Climber.Objects.Collectables
         
         public bool Save(string saveFileName)
         {
-            if (ID != "") ISavable.EasySave($"{ID} isWorked", isWorked, saveFileName);
+            if (ID != "")
+            {
+                ISavable.EasySave($"{ID} isWorked", isWorked, saveFileName);
+                ISavable.EasySave($"{ID} isRevealed", isNotRevealed, saveFileName);
+            }
             
             return true;
         }
 
         public bool Load(string saveFileName)
         {
-            if (ID != "") isWorked = ISavable.EasyLoad<bool>($"{ID} isWorked", saveFileName);
+            if (ID != "")
+            {
+                isWorked = ISavable.EasyLoad<bool>($"{ID} isWorked", saveFileName);
+                isNotRevealed = ISavable.EasyLoad<bool>($"{ID} isRevealed", saveFileName);
+            }
             return true;
         }
     }

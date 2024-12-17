@@ -2,6 +2,7 @@ using System;
 using _Project.Characters.IngameCharacters.Core;
 using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Managers.Scripts._Core.SaveManager;
+using _Project.Maps.Climber;
 using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -13,6 +14,15 @@ using UnityEngine.Serialization;
 
 namespace _Project.Character.IngameCharacters.Enemies
 {
+    public partial class Enemy : IngameCharacter, ISavable
+    {
+        public Level Level { get; set; }
+
+        private void ReportMonsterDead()
+        {
+            Level.UpdateAliveMonsterCount();
+        }
+    }
     public partial class Enemy : IngameCharacter, ISavable
     {
         // [SerializeField] private string specificID;
@@ -130,6 +140,8 @@ namespace _Project.Character.IngameCharacters.Enemies
 
                 await UniTask.Delay(TimeSpan.FromSeconds(4));
                 enabled = false;
+            
+                ReportMonsterDead();
             }
         }
 
