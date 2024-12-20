@@ -18,11 +18,13 @@ namespace _Project.Maps.Climber.Objects
                 connectedUnlockableT = value.Transform;
             }
         }
-
+        
         public void TakeDamage(HittingInfo hittingInfo, int damage, SideEffect sideEffect = SideEffect.None)
         {
             connectedUnlockable = connectedUnlockableT.GetComponent<ILeverUnlockable>();
             connectedUnlockable.Open();
+            
+            transform.rotation = Quaternion.Euler(new Vector3(0, 180f, 0));
         }
     }
 }

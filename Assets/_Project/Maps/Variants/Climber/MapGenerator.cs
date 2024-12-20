@@ -38,13 +38,15 @@ namespace _Project.Maps.Climber
 
         [SerializeField, TitleGroup("Prefabs")] private Transform objectPrefabContainer;
         [SerializeField, TitleGroup("Prefabs")] private Strawberry strawberryPrefab;
-        [FormerlySerializedAs("abilityInstance")] [SerializeField, TitleGroup("Prefabs")] private Ability abilityPrefab;
+        [SerializeField, TitleGroup("Prefabs")] private Ability abilityPrefab;
         [SerializeField, TitleGroup("Prefabs")] private WallJumpCountUp wallJumpCountUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SlideJumpUp slideJumpUpPrefab;
         [SerializeField, TitleGroup("Prefabs")] private MovingPlatform movingPlatformPrefab;
         [SerializeField, TitleGroup("Prefabs")] private SpotLight spotLightPrefab;
-        [FormerlySerializedAs("silverKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable silverKeyCollectablePrefab;
-        [FormerlySerializedAs("goldKeyPrefab")] [SerializeField, TitleGroup("Prefabs")] private KeyCollectable goldKeyCollectablePrefab;
+        [SerializeField, TitleGroup("Prefabs")] private PortalPiece portalPiecePrefab;
+        [SerializeField, TitleGroup("Prefabs")] private KeyCollectable silverKeyCollectablePrefab;
+        [SerializeField, TitleGroup("Prefabs")] private KeyCollectable goldKeyCollectablePrefab;
+        [SerializeField, TitleGroup("Prefabs")] private GameObject leverModelPrefab;
 
         [SerializeField] private NavMeshSurface navMeshSurface;
 
@@ -64,6 +66,7 @@ namespace _Project.Maps.Climber
             AssignPrefab(ref spotLightPrefab, "SpotLightInstance");
             AssignPrefab(ref silverKeyCollectablePrefab, "SilverKey");
             AssignPrefab(ref goldKeyCollectablePrefab, "GoldKey");
+            AssignPrefab(ref portalPiecePrefab, "PortalPiece");
 
             navMeshSurface ??= Extensions.FindInactiveObjectByName("NavMesh Surface").GetComponent<NavMeshSurface>();
         }
@@ -530,6 +533,11 @@ namespace _Project.Maps.Climber
                         // lever.ID = id;
                         child.AddComponent<BoxCollider>();
                         leverDict.Add(id, lever);
+                        
+                        var leverModel = Instantiate(leverModelPrefab, child.transform);
+                        leverModel.transform.position = child.transform.position;
+                        var meshRenderer = child.GetComponent<MeshRenderer>();
+                        meshRenderer.enabled = false;
                     }
                     else if (split[1].Contains("Portal"))
                     {
@@ -1024,6 +1032,14 @@ namespace _Project.Maps.Climber
                         else if (lootObjName.Contains("SJumpUp"))
                         {
                             enemy.LootObj = slideJumpUpPrefab.gameObject;
+                            // child.GetComponent<MeshRenderer>().enabled = false;
+                            // var collectable = Instantiate(slideJumpUpPrefab, child.transform);
+                            // collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
+                            // collectable.gameObject.SetActive(true);
+                        }
+                        else if (lootObjName.Contains("PortPiece"))
+                        {
+                            enemy.LootObj = portalPiecePrefab.gameObject;
                             // child.GetComponent<MeshRenderer>().enabled = false;
                             // var collectable = Instantiate(slideJumpUpPrefab, child.transform);
                             // collectable.ID = $"Collectable_{level.ID}{collectableCount++}";
