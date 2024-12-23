@@ -1,13 +1,6 @@
-using System;
 using _Project._Core;
-using _Project.Characters._Core.Input;
 using _Project.Combat.HitObjects;
-using _Project.UI.InGame;
-using Sirenix.OdinInspector;
 using UnityEngine;
-
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace _Project.Characters._Core
 {

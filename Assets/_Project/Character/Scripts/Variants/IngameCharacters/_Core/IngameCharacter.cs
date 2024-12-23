@@ -1,7 +1,5 @@
 using System;
 using _Project._Core;
-using _Project.Cameras;
-using _Project.Character.IngameCharacters.Enemies;
 using _Project.Characters._Core.States.AnimationStates;
 using _Project.Characters._Core.States.CommonStates;
 using _Project.Characters._Core.EnvironmentCheckers;
