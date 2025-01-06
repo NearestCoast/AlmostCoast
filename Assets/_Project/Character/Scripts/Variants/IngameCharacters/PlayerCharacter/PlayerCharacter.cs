@@ -3,18 +3,14 @@ using System.Linq;
 using System.Threading;
 using _Project.Cameras;
 using _Project.Characters.IngameCharacters.Core;
-using _Project.Characters.IngameCharacters.Core.ActionStates;
 using _Project.Characters.IngameCharacters.Core.MovementStates;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.BrightnessState;
 using _Project.Characters.IngameCharacters.Core.States.CommonStates.LockOnStates;
-using _Project.Inventories;
 using _Project.Managers.Scripts._Core.SaveManager;
 using _Project.Maps.Climber;
 using _Project.Maps.Climber.Objects;
-using _Project.Maps.Climber.Objects.Collectables;
 using _Project.UI.InGame;
 using Cysharp.Threading.Tasks;
-using Renge.PPB;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,7 +38,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
         protected override void Start()
         {
             base.Start();
-
+ 
             CurrentLevel?.StartLevel();
         }
 
