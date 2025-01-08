@@ -1,0 +1,19 @@
+{
+    "noiseType": "Cellular",
+    "fractalType": "None",
+    "fractalOctaves": 3,
+    "fractalLacunarity": 2.0,
+    "fractalGain": 0.5,
+    "cellularDistanceFunc": "Euclidean",
+    "cellularReturnType": "Distance",
+    "cellularJitter": 0.699999988079071,
+    "cellularGradient": 0.5400000214576721,
+    "useDomainWarp": false,
+    "domainWarpStrength": 12.699999809265137,
+    "textureWidth": 256,
+    "textureHeight": 256,
+    "scale": 10.0,
+    "offsetX": 0.0,
+    "offsetY": 0.0,
+    "seed": 1352
+}

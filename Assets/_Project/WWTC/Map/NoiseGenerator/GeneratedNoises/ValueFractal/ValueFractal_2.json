@@ -1,0 +1,18 @@
+{
+    "noiseType": "ValueFractal",
+    "fractalType": "FBM",
+    "fractalOctaves": 3,
+    "fractalLacunarity": 2.0,
+    "fractalGain": 0.5,
+    "cellularDistanceFunc": "None",
+    "cellularReturnType": "None",
+    "cellularJitter": 0.0,
+    "useDomainWarp": false,
+    "domainWarpStrength": 10.0,
+    "textureWidth": 256,
+    "textureHeight": 256,
+    "scale": 50.0,
+    "offsetX": 0.0,
+    "offsetY": 0.0,
+    "seed": 1337
+}

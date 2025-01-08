@@ -1,0 +1,19 @@
+{
+    "noiseType": "Perlin",
+    "fractalType": "None",
+    "fractalOctaves": 3,
+    "fractalLacunarity": 2.0,
+    "fractalGain": 0.5,
+    "cellularDistanceFunc": "None",
+    "cellularReturnType": "None",
+    "cellularJitter": 0.0,
+    "cellularGradient": 1.0,
+    "useDomainWarp": false,
+    "domainWarpStrength": 12.699999809265137,
+    "textureWidth": 256,
+    "textureHeight": 256,
+    "scale": 14.600000381469727,
+    "offsetX": 0.0,
+    "offsetY": 0.0,
+    "seed": 1337
+}
