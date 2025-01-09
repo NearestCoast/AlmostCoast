@@ -2,12 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using Sirenix.OdinInspector;
 
-//
-// MeshTerrainGenerator
-//   - (정규 격자 + ZigZag) -> SlopeSubdivider(EdgeDict+인접Subdiv + (옵션)랜덤오프셋) -> FlatShading
-//   - 최종 Mesh를 GameObject로 생성
-//
-
 public class MeshTerrainGenerator : MonoBehaviour
 {
     [Title("Heightmap (in Assets)")]
@@ -31,15 +25,15 @@ public class MeshTerrainGenerator : MonoBehaviour
     [ShowIf("useZigzag")] public float zigzagAmplitude = 1f;
     [ShowIf("useZigzag")] public float zigzagFrequency = 0.3f;
     [ShowIf("useZigzag")] public float zigzagRandomness = 0.5f;
-    [ShowIf("useZigzag")] public int  zigzagRandomSeed = 0;
+    [ShowIf("useZigzag")] public int zigzagRandomSeed = 0;
 
     [Title("Slope Subdivision")]
     public bool useSlopeSubdiv = false;
-    [ShowIf("useSlopeSubdiv")] public int   slopeSubdivIteration = 2;
-    [ShowIf("useSlopeSubdiv")] public float slopeAreaThreshold   = 10f;
+    [ShowIf("useSlopeSubdiv")] public int slopeSubdivIteration = 2;
+    [ShowIf("useSlopeSubdiv")] public float slopeAreaThreshold = 10f;
 
     // -------------------------
-    // [추가] subdiv 시 면을 깨트리는 랜덤 오프셋
+    // subdiv 시 면을 깨트리는 랜덤 오프셋
     // -------------------------
     [ShowIf("useSlopeSubdiv"), LabelText("Use Random Offset")]
     public bool useRandomOffset = false;
@@ -88,34 +82,33 @@ public class MeshTerrainGenerator : MonoBehaviour
             ZigZagModifier.ApplyZigZag(
                 baseMesh,
                 resolutionX, resolutionZ,
-                zigzagAmplitude, 
-                zigzagFrequency, 
-                zigzagRandomness, 
+                zigzagAmplitude,
+                zigzagFrequency,
+                zigzagRandomness,
                 zigzagRandomSeed
             );
         }
 
-        // 3) SlopeSubdivider(EdgeDict+인접)
+        // 3) SlopeSubdivider
         Mesh subdivMesh = baseMesh;
         if (useSlopeSubdiv)
         {
-            // --- 새 기능: randomAmplitude, randomSeed 적용 ---
-            // (SlopeSubdivider.PerformSubdivByArea 오버로드를 사용/수정했다고 가정)
-            // randomAmplitude= 0 이면 기존과 동일(오프셋x)
+            // randomAmplitude, randomSeed 적용
             float actualAmplitude = useRandomOffset ? randomAmplitude : 0f;
-            int   actualSeed      = useRandomOffset ? randomSeed : 0;
+            int actualSeed = useRandomOffset ? randomSeed : 0;
 
+            // PerformSubdivByArea
             subdivMesh = SlopeSubdivider.PerformSubdivByArea(
                 baseMesh,
                 slopeSubdivIteration,
                 slopeAreaThreshold,
-                (u,v) => heightSampler.SampleHeightUV(u,v), // 0..1
+                (u, v) => heightSampler.SampleHeightUV(u, v),
                 actualAmplitude,
                 actualSeed
             );
         }
 
-        // 4) FlatShading
+        // 4) FlatShading (옵션)
         Mesh finalMesh = subdivMesh;
         if (useFlatShading)
         {
@@ -132,7 +125,7 @@ public class MeshTerrainGenerator : MonoBehaviour
         mf.sharedMesh = finalMesh;
 
         var mr = terrainObject.AddComponent<MeshRenderer>();
-        mr.sharedMaterial = terrainMaterial 
+        mr.sharedMaterial = terrainMaterial
             ? terrainMaterial
             : new Material(Shader.Find("Standard"));
 
@@ -151,38 +144,38 @@ public class MeshTerrainGenerator : MonoBehaviour
     {
         int vCount = resolutionX * resolutionZ;
         Vector3[] verts = new Vector3[vCount];
-        Vector2[] uvs   = new Vector2[vCount];
-        int[] tris      = new int[(resolutionX -1)*(resolutionZ -1)*6];
+        Vector2[] uvs = new Vector2[vCount];
+        int[] tris = new int[(resolutionX - 1) * (resolutionZ - 1) * 6];
 
-        float stepX = 1f/(resolutionX -1);
-        float stepZ = 1f/(resolutionZ -1);
+        float stepX = 1f / (resolutionX - 1);
+        float stepZ = 1f / (resolutionZ - 1);
 
         // 정점
         for (int z = 0; z < resolutionZ; z++)
         {
             for (int x = 0; x < resolutionX; x++)
             {
-                int i = z*resolutionX + x;
+                int i = z * resolutionX + x;
                 float u = x * stepX; // 0..1
                 float v = z * stepZ; // 0..1
 
                 float wx = u * terrainSizeX;
                 float wz = v * terrainSizeZ;
-                float h  = sampler.SampleHeight(wx, wz);
+                float h = sampler.SampleHeight(wx, wz);
 
                 verts[i] = new Vector3(wx, h, wz);
-                uvs[i]   = new Vector2(u, v);
+                uvs[i] = new Vector2(u, v);
             }
         }
 
         // 삼각형
         int triIdx = 0;
-        for(int z=0; z<resolutionZ-1; z++)
+        for (int z = 0; z < resolutionZ - 1; z++)
         {
-            for(int x=0; x<resolutionX-1; x++)
+            for (int x = 0; x < resolutionX - 1; x++)
             {
-                int curr = z*resolutionX + x;
-                int next = (z+1)*resolutionX + x;
+                int curr = z * resolutionX + x;
+                int next = (z + 1) * resolutionX + x;
 
                 // 첫 삼각형
                 tris[triIdx++] = curr;
@@ -199,9 +192,9 @@ public class MeshTerrainGenerator : MonoBehaviour
         // Mesh
         Mesh mesh = new Mesh();
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        mesh.vertices    = verts;
-        mesh.uv          = uvs;
-        mesh.triangles   = tris;
+        mesh.vertices = verts;
+        mesh.uv = uvs;
+        mesh.triangles = tris;
 
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
