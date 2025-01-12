@@ -12,6 +12,8 @@ using UnityEditor;
 /// 
 /// * 부분 교차는 삼각형 중점(center)이 어느 Chunk인가로 분류(간단화).
 /// * 더 정교한 분할을 원하면 삼각형 단위 재클리핑 로직 구현 필요.
+/// 
+/// + Flat Shading( enableFlatShading ) 옵션 추가.
 /// </summary>
 public class ChunkMeshBuilder : MonoBehaviour
 {
@@ -30,6 +32,9 @@ public class ChunkMeshBuilder : MonoBehaviour
 
     [FoldoutGroup("Settings"), Tooltip("Chunk Mesh에 할당할 머티리얼 (옵션)")]
     public Material chunkMaterial;
+
+    [FoldoutGroup("Settings"), Tooltip("플랫 셰이딩(=로우폴리) 적용 여부")]
+    public bool enableFlatShading = false;
 
     // 내부 캐싱: 메쉬 데이터
     private List<Vector3> localVerts = new List<Vector3>();
@@ -148,16 +153,36 @@ public class ChunkMeshBuilder : MonoBehaviour
                     // 삼각형이 없음 => skip
                     continue;
                 }
-                // mesh
-                Mesh subMesh= BuildSubMesh(verts, subTris);
+
+                // mesh 생성 (Flat vs Smooth)
+                Mesh subMesh;
+                if (enableFlatShading)
+                {
+                    // flat shading
+                    subMesh= BuildSubMeshFlat(verts, subTris);
+                }
+                else
+                {
+                    // 기존 방식
+                    subMesh= BuildSubMesh(verts, subTris);
+                }
 
                 // GameObject
                 GameObject go= new GameObject($"Chunk_{cx}_{cz}");
                 go.transform.SetParent(container, false);
 
+                // layer= "Ground"
+                go.layer = LayerMask.NameToLayer("Ground");
+
+                // 컴포넌트
                 MeshFilter mf= go.AddComponent<MeshFilter>();
                 MeshRenderer mr= go.AddComponent<MeshRenderer>();
+                MeshCollider mc= go.AddComponent<MeshCollider>();
+
+                // mesh 할당
                 mf.sharedMesh= subMesh;
+                mc.sharedMesh= subMesh;
+                mc.convex= false; // 필요 시 설정
 
                 // 머티리얼 설정 (옵션)
                 if (chunkMaterial != null)
@@ -167,20 +192,15 @@ public class ChunkMeshBuilder : MonoBehaviour
             }
         }
 
-        Debug.Log("[ChunkMeshBuilder] Chunks 생성 완료");
+        Debug.Log($"[ChunkMeshBuilder] Chunks 생성 완료 (flatShading={enableFlatShading}).");
     }
 
     /// <summary>
-    /// 부분 삼각형 인덱스(subTris)를 모아, subMesh를 만든다.
-    /// vertices는 전체 공유
-    ///   1) subVerts / subIndices 로 변환 (빈도 낮은 경우) or
-    ///   2) 그냥 same vertex array (vertexCount== pathDataSO.CompositeMeshVerts.Count)
-    ///        => But subTris는 bounding. 
-    /// 여기서는 1)번 방식을 시연
+    /// 부분 삼각형 인덱스(subTris)를 모아, subMesh를 만든다 (기존 스무스 셰이딩 방식).
+    /// vertices는 전체 공유.
     /// </summary>
     private Mesh BuildSubMesh(List<Vector3> allVerts, List<int> subTris)
     {
-        // (A) subVerts, subIndex
         Dictionary<int,int> vertMap= new Dictionary<int,int>();
         List<Vector3> subVerts= new List<Vector3>();
         List<int>     newTris= new List<int>(subTris.Count);
@@ -197,13 +217,69 @@ public class ChunkMeshBuilder : MonoBehaviour
             newTris.Add(newIdx);
         }
 
-        // (B) Mesh 생성
         Mesh mesh= new Mesh();
-        mesh.indexFormat= UnityEngine.Rendering.IndexFormat.UInt32; // 큰 경우 대비
+        mesh.indexFormat= UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.SetVertices(subVerts);
         mesh.SetTriangles(newTris, 0);
 
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        return mesh;
+    }
+
+    /// <summary>
+    /// 부분 삼각형 인덱스(subTris)를 모아, subMesh를 만든다 (Flat Shading).
+    /// 각 삼각형마다 정점을 "복제"하여, 면 단위 노멀.
+    /// => Low-Poly 느낌 구현.
+    /// </summary>
+    private Mesh BuildSubMeshFlat(List<Vector3> allVerts, List<int> subTris)
+    {
+        // 예: subTris = [ i0,i1,i2, i3,i4,i5, ... ]
+        // 삼각형 하나마다 정점 3개씩 독립 생성 => total newTris.length/3 * 3 정점
+        List<Vector3> subVerts = new List<Vector3>(subTris.Count);
+        List<Vector3> subNormals = new List<Vector3>(subTris.Count);
+        List<int>     newTris = new List<int>(subTris.Count);
+
+        for (int i=0; i< subTris.Count; i+=3)
+        {
+            int i0= subTris[i];
+            int i1= subTris[i+1];
+            int i2= subTris[i+2];
+
+            Vector3 v0= allVerts[i0];
+            Vector3 v1= allVerts[i1];
+            Vector3 v2= allVerts[i2];
+
+            // face normal
+            Vector3 faceNormal= Vector3.Cross((v1-v0), (v2-v0)).normalized;
+
+            // 이 삼각형을 위해 독립된 정점 3개 추가
+            int baseIdx= subVerts.Count;
+
+            subVerts.Add(v0);
+            subVerts.Add(v1);
+            subVerts.Add(v2);
+
+            // 노멀 동일
+            subNormals.Add(faceNormal);
+            subNormals.Add(faceNormal);
+            subNormals.Add(faceNormal);
+
+            // 삼각형 인덱스
+            newTris.Add(baseIdx);
+            newTris.Add(baseIdx+1);
+            newTris.Add(baseIdx+2);
+        }
+
+        Mesh mesh= new Mesh();
+        mesh.indexFormat= UnityEngine.Rendering.IndexFormat.UInt32;
+
+        mesh.SetVertices(subVerts);
+        mesh.SetNormals(subNormals);
+        mesh.SetTriangles(newTris, 0);
+
+        // flat shading => 이미 노멀을 직접 설정. RecalculateNormals 생략 or 필요시 Bounds만
         mesh.RecalculateBounds();
 
         return mesh;
