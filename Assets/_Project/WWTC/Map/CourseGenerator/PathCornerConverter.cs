@@ -91,8 +91,10 @@ public class PathCornerConverter : MonoBehaviour
     /// <summary>
     /// 항상 Gizmo로 ConvertedPathNodes를 표시
     /// </summary>
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         if (pathDataSO == null) 
             return;
 

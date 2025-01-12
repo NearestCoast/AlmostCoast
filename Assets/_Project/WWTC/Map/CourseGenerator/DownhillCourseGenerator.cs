@@ -204,8 +204,10 @@ public class DownhillCourseGenerator : MonoBehaviour
     }
 
     // OnDrawGizmos: Downhill 코스 시각화
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         // Downhill 코스 시각화 (Vector3 리스트 기준)
         List<Vector3> drawList;
         if (saveDownhillToSO && pathDataSO != null && pathDataSO.DownhillPoints != null)

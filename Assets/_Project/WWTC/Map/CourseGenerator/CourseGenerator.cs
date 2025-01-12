@@ -213,8 +213,10 @@ public class CourseGenerator : MonoBehaviour
     // --------------------------------------------------------
     // 기즈모
     // --------------------------------------------------------
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         if (pathDataSO==null) return;
         var cv= pathDataSO.CourseVertices;
         var ct= pathDataSO.CourseTris;

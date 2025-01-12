@@ -95,8 +95,10 @@ public class CatmullRomCurveConverter : MonoBehaviour
         return h1*p1 + h2*m1 + h3*p2 + h4*m2;
     }
 
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         if (pathDataSO == null) return;
 
         List<Vector3> curvePoints = pathDataSO.CurvePoints;

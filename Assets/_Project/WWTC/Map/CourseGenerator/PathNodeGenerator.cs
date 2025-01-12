@@ -122,8 +122,10 @@ public class PathNodeGenerator : MonoBehaviour
     // =========================================================================
     // OnDrawGizmos : pathNodes 시각화
     // =========================================================================
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         // (1) 시작/종단점
         startPoint = To3D(0, 0);
         endPoint   = FindClosestZNode(targetZ);
