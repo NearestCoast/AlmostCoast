@@ -65,8 +65,10 @@ public class RectCalculator : MonoBehaviour
         Debug.Log($"[RectCalculator] computedRect= {computedRect}");
     }
 
+    [SerializeField] private bool showGizmo;
     private void OnDrawGizmos()
     {
+        if (!showGizmo) return;
         if (computedRect.width <= 0 || computedRect.height <= 0) return;
 
         Vector3 c1 = new Vector3(computedRect.xMin, 0, computedRect.yMin);
