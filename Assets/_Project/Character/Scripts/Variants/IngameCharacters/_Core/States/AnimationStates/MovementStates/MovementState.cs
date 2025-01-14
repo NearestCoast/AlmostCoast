@@ -19,6 +19,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
             None = 0,
             Idle,
             Move,
+            SlopeMove,
             WanderingMove,
             CautiousMove,
             Landing,

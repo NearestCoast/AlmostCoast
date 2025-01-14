@@ -27,3 +27,22 @@ public class GridNode
     public Vector3 position;
     public bool isCourseArea;
 }
+
+[System.Serializable]
+public class QuadtreeTriangle
+{
+    public Vector2 a, b, c; // 2D 좌표 (x,z)
+    // 바운딩박스(AABB)
+    public float xMin, xMax, yMin, yMax;
+
+    public QuadtreeTriangle(Vector2 A, Vector2 B, Vector2 C)
+    {
+        a=A; b=B; c=C;
+        xMin= Mathf.Min(A.x, B.x, C.x);
+        xMax= Mathf.Max(A.x, B.x, C.x);
+        yMin= Mathf.Min(A.y, B.y, C.y);
+        yMax= Mathf.Max(A.y, B.y, C.y);
+    }
+
+    // 추가로 "Point-In-Triangle" / "Point-To-Segment" 로직을 넣어도 됨.
+}

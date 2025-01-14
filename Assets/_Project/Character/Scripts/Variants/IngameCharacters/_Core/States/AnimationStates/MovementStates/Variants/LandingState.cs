@@ -18,6 +18,7 @@ namespace _Project.Characters.IngameCharacters.Core.MovementStates
                 {
                     StateType.Idle => IsLandingEnded,
                     StateType.Move => IsLandingEnded,
+                    StateType.SlopeMove => IsLandingEnded,
                     StateType.CautiousMove => IsLandingEnded,
                     StateType.WanderingMove => IsLandingEnded,
                     

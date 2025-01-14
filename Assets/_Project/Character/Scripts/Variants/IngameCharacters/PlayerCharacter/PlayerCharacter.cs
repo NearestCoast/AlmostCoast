@@ -291,7 +291,7 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
 
         private void OnGUI()
         {
-            return;
+            // return;
             var i = 0;
             guiStyle.fontSize = (int)(Screen.height * 0.02f);
             guiStyle.normal.textColor = Color.gray;
@@ -317,7 +317,8 @@ namespace _Project.Character.Scripts.Variants.IngameCharacters.PlayerCharacter
             // DrawLabel(CurrentSpotLight?.ToString());
             // DrawLabel(CurrentBrightnessState.Type + " " + (int)CurrentBrightnessState.StateTime);
             // DrawLabel(CurrentLockState.Type + " " + (int)CurrentLockState.StateTime);
-            // DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
+            DrawLabel(CurrentMovementState.Type + ", " + (int)CurrentMovementState.StateTime);
+            DrawLabel("GroundParams.SlopeAngleDeg :" + GroundParams.SlopeAngleDeg);
             // DrawLabel("MoveParams.MaxWallJumpCount : " + MoveParams.MaxWallJumpCount);
             // DrawLabel("MoveParams.JumpCount : " + MoveParams.JumpCount);
             // DrawLabel("MoveParams.WallJumpCount : " + MoveParams.WallJumpCount + "/" + MoveParams.MaxWallJumpCount);

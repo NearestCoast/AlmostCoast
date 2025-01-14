@@ -306,4 +306,17 @@ public class PathDataSO : ScriptableObject
         hatchGridNodes.Clear();
         hatchGridNodes.AddRange(newNodes);
     }
+    
+    [SerializeField] private List<Vector2> compositeMeshUV= new List<Vector2>();
+    public List<Vector2> CompositeMeshUV => compositeMeshUV;
+
+    public void ClearCompositeMeshUV()
+    {
+        compositeMeshUV.Clear();
+    }
+    public void SetCompositeMeshUV(List<Vector2> newUV)
+    {
+        compositeMeshUV.Clear();
+        compositeMeshUV.AddRange(newUV);
+    }
 }
