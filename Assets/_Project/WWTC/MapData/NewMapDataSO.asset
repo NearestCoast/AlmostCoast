@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c940f2efc8d407092f0e248644f7cc0, type: 3}
   m_Name: NewMapDataSO
   m_EditorClassIdentifier: 
+  boundaryData:
+    offset: {x: 0, y: 0, z: -10}
+    centerX: 0
+    centerZ: 140
+    width: 20
+    length: 300
