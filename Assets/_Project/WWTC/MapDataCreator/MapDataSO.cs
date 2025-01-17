@@ -6,11 +6,10 @@ public class MapDataSO : ScriptableObject
 {
     public BoundaryData boundaryData;
 
-    // 기존
     public List<CellPolygon> cellPolygons = new List<CellPolygon>();
 
-    // 새로 추가: Voronoi 결과를 저장할 리스트
-    public List<CellPolygon> shrunkPolygons = new List<CellPolygon>();
+    // 평행이동한 선분들을 저장할 리스트
+    public List<OffsetLineGroup> offsetLineGroups = new List<OffsetLineGroup>();
 }
 
 [System.Serializable]
@@ -26,9 +25,27 @@ public struct BoundaryData
 [System.Serializable]
 public class CellPolygon
 {
-    public float cellKey; 
+    public float cellKey;
     public List<Vector2> points;
     public Vector2 center;
-    
     public float area;
+}
+
+[System.Serializable]
+public struct LineSegment2D
+{
+    public Vector2 start;
+    public Vector2 end;
+
+    // 새로 추가된 필드: 각 끝점이 닫혀 있는지 여부
+    public bool startClosed;
+    public bool endClosed;
+}
+
+[System.Serializable]
+public class OffsetLineGroup
+{
+    public float cellKey;
+    public Vector2 center;
+    public List<LineSegment2D> lines;
 }

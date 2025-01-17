@@ -3,174 +3,120 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// Convex 폴리곤이라는 전제 하에,
-/// 1) 면적이 일정 threshold 이상인 폴리곤만 Inward Offset(단순 정점 이동)
-/// 2) 그리고 최종적으로 Convex Hull을 적용해 교차/뒤집힘을 제거
-/// 3) 결과를 MapDataSO.shrunkPolygons에 저장
+/// MapDataSO.cellPolygons를 대상으로,
+/// (면적 >= minAreaThreshold 인 것만) Convex 폴리곤을 'offset'만큼 평행이동한 선분들을 생성.
+/// 해당 선분들을 MapDataSO.offsetLineGroups에 저장.
+/// OffsetLineGroup에는 cellPolygon의 무게중심(center)도 함께 저장.
+/// 
+/// LineSegment2D에 startClosed, endClosed 필드를 추가했으나,
+/// 현재 예시에서는 기본값 false로만 설정.
+/// 필요하다면, 이후 다른 로직(닫힘 여부 판단 등)에서 true로 세팅 가능.
 /// </summary>
 public class TestShrinker : MapDataSystem
 {
-    [Title("Shrink Settings")]
-    [SerializeField] private float shrinkOffset = 1f;
+    [Title("Offset Settings")]
+    [SerializeField] private float offset = 1f;
 
-    [Title("Shrink Settings")]
-    [SerializeField] private float minAreaThreshold = 1f; // 이 값 미만인 폴리곤은 제외
+    [Title("Polygon Filter")]
+    [SerializeField, Min(0f)]
+    private float minAreaThreshold = 1f;
 
-    // Gizmo (부모 클래스 MapDataSystem에 protected bool drawGizmo 존재 가정)
     [FoldoutGroup("Gizmo Settings")]
-    [SerializeField] private Color shrinkEdgeColor = Color.magenta;
-    [FoldoutGroup("Gizmo Settings")]
-    [SerializeField] private Color shrinkCenterColor = Color.cyan;
-    [FoldoutGroup("Gizmo Settings")]
-    [SerializeField] private float shrinkGizmoSphereSize = 0.2f;
+    [SerializeField] private Color lineColor = Color.magenta;
 
     public override void Generate()
     {
         if (!IsReady) return;
 
-        var mapData = mapDataCreator.CurrentMapData;
-        if (mapData == null)
+        var so = mapDataCreator.CurrentMapData;
+        if (so == null)
         {
             Debug.LogWarning("[TestShrinker] No MapDataSO assigned.");
             return;
         }
 
-        // 결과 보관 리스트 초기화
-        mapData.shrunkPolygons.Clear();
+        // 결과 리스트 초기화
+        so.offsetLineGroups.Clear();
 
-        int polygonCount = 0;
-        foreach (var cell in mapData.cellPolygons)
+        int totalGroups = 0;
+        int totalLines = 0;
+
+        // cellPolygons 순회
+        foreach (var poly in so.cellPolygons)
         {
-            var original = cell.points;
-            if (original.Count < 3) 
+            // 면적 필터
+            if (poly.area < minAreaThreshold) 
                 continue;
 
-            // 먼저 폴리곤 면적 계산
-            float area = Mathf.Abs(SignedArea(original));
-            if (area < minAreaThreshold)
-            {
-                // 면적이 너무 작은 폴리곤은 스킵
+            var pts = poly.points;
+            if (pts == null || pts.Count < 3)
                 continue;
-            }
 
-            // 1) 단순 Inward Offset
-            List<Vector2> offsetPoly = InwardOffsetWithoutTrim(original, shrinkOffset);
-            if (offsetPoly.Count < 3) continue;
+            // 폴리곤이 CW인지 CCW인지 판단
+            bool isCW = IsClockwise(pts);
 
-            // 2) Convex Hull로 “교차된 선분” 정리
-            List<Vector2> finalPoly = BuildConvexHull(offsetPoly);
-            if (finalPoly.Count < 3) continue;
-
-            // 3) 중심점 계산
-            Vector2 center = Vector2.zero;
-            foreach (var p in finalPoly) center += p;
-            center /= finalPoly.Count;
-
-            // 4) 결과 저장
-            CellPolygon newCell = new CellPolygon
+            // 새로운 그룹 생성
+            OffsetLineGroup group = new OffsetLineGroup
             {
-                cellKey = cell.cellKey, 
-                points  = finalPoly,
-                center  = center
+                cellKey = poly.cellKey,
+                center  = poly.center,            // 무게중심 같이 저장
+                lines   = new List<LineSegment2D>()
             };
-            mapData.shrunkPolygons.Add(newCell);
 
-            polygonCount++;
-        }
-
-        Debug.Log($"[TestShrinker] {polygonCount} polygons offset by {shrinkOffset}, hull-applied; minArea={minAreaThreshold}");
-    }
-
-    /// <summary>
-    /// Convex 폴리곤에서 각 정점을 '인접 두 에지'의 Inward 방향으로 offset.
-    /// 별도 교차/Trim 로직 없이 정점만 이동하므로, offset이 클 때는 교차 가능성 있음.
-    /// </summary>
-    private List<Vector2> InwardOffsetWithoutTrim(List<Vector2> polygon, float offset)
-    {
-        bool isCW = IsClockwise(polygon);
-        var newPoly = new List<Vector2>(polygon.Count);
-        int n = polygon.Count;
-
-        for (int i = 0; i < n; i++)
-        {
-            Vector2 curr = polygon[i];
-            Vector2 prev = polygon[(i + n - 1) % n];
-            Vector2 next = polygon[(i + 1) % n];
-
-            Vector2 edgeA = (curr - prev).normalized;
-            Vector2 edgeB = (next - curr).normalized;
-
-            // Inward Normal: CW->오른쪽, CCW->왼쪽
-            Vector2 normalA = isCW 
-                ? new Vector2(edgeA.y, -edgeA.x) 
-                : new Vector2(-edgeA.y, edgeA.x);
-            Vector2 normalB = isCW
-                ? new Vector2(edgeB.y, -edgeB.x)
-                : new Vector2(-edgeB.y, edgeB.x);
-
-            // 두 노멀 평균
-            Vector2 inwardDir = (normalA + normalB).normalized;
-            Vector2 newPos = curr + inwardDir * offset;
-            newPoly.Add(newPos);
-        }
-
-        return newPoly;
-    }
-
-    /// <summary>
-    /// Convex Hull (Monotone chain) 
-    /// 교차/뒤집힘을 어느정도 제거하기 위해 최종적으로 적용.
-    /// </summary>
-    private List<Vector2> BuildConvexHull(List<Vector2> pts)
-    {
-        if (pts.Count < 3) return new List<Vector2>(pts);
-
-        // X좌표, Y좌표 순으로 정렬
-        pts.Sort((p1, p2) =>
-        {
-            if (Mathf.Approximately(p1.x, p2.x))
-                return p1.y.CompareTo(p2.y);
-            return p1.x.CompareTo(p2.x);
-        });
-
-        var hull = new List<Vector2>();
-
-        // lower hull
-        for (int i = 0; i < pts.Count; i++)
-        {
-            while (hull.Count >= 2 && Cross(hull[hull.Count - 2], hull[hull.Count - 1], pts[i]) <= 0)
+            // 모든 에지 평행이동
+            int n = pts.Count;
+            for (int i = 0; i < n; i++)
             {
-                hull.RemoveAt(hull.Count - 1);
+                Vector2 p1 = pts[i];
+                Vector2 p2 = pts[(i + 1) % n];
+
+                Vector2 edge = p2 - p1;
+                float length = edge.magnitude;
+                if (length < 1e-9f)
+                    continue;
+
+                edge /= length;
+
+                // inward normal
+                Vector2 normal = isCW 
+                    ? new Vector2(edge.y, -edge.x)
+                    : new Vector2(-edge.y, edge.x);
+
+                Vector2 shift = normal * offset;
+
+                Vector2 p1Shifted = p1 + shift;
+                Vector2 p2Shifted = p2 + shift;
+
+                // LineSegment2D
+                LineSegment2D seg = new LineSegment2D
+                {
+                    start = p1Shifted,
+                    end   = p2Shifted,
+
+                    // 새로 추가된 필드들 (기본값 false)
+                    startClosed = false,
+                    endClosed   = false
+                };
+
+                group.lines.Add(seg);
             }
-            hull.Add(pts[i]);
-        }
-        // upper hull
-        for (int i = pts.Count - 2, l = hull.Count + 1; i >= 0; i--)
-        {
-            while (hull.Count >= l && Cross(hull[hull.Count - 2], hull[hull.Count - 1], pts[i]) <= 0)
+
+            if (group.lines.Count > 0)
             {
-                hull.RemoveAt(hull.Count - 1);
+                so.offsetLineGroups.Add(group);
+                totalGroups++;
+                totalLines += group.lines.Count;
             }
-            hull.Add(pts[i]);
         }
-        hull.RemoveAt(hull.Count - 1);
-        return hull;
+
+        Debug.Log($"[TestShrinker] Created {totalGroups} groups, total {totalLines} lines, offset={offset}, minArea={minAreaThreshold}");
     }
 
     /// <summary>
-    /// Cross(a,b,c): (b - a) x (c - a)
-    /// 값 > 0 => a->b->c가 CCW, 값 < 0 => CW
-    /// </summary>
-    private float Cross(Vector2 a, Vector2 b, Vector2 c)
-    {
-        return (b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x);
-    }
-
-    /// <summary>
-    /// 폴리곤의 싸인(area) 계산
+    /// Shoelace formula로 폴리곤이 CW인지 CCW인지 판별
     /// area < 0 => CW, area > 0 => CCW
     /// </summary>
-    private float SignedArea(List<Vector2> poly)
+    private bool IsClockwise(List<Vector2> poly)
     {
         float area = 0f;
         for (int i = 0; i < poly.Count; i++)
@@ -179,42 +125,32 @@ public class TestShrinker : MapDataSystem
             var c2 = poly[(i + 1) % poly.Count];
             area += (c1.x * c2.y - c2.x * c1.y);
         }
-        return 0.5f * area;
-    }
-
-    private bool IsClockwise(List<Vector2> poly)
-    {
-        return (SignedArea(poly) < 0f);
+        return (area < 0f);
     }
 
     private void OnDrawGizmos()
     {
-        if (!drawGizmo) return; 
+        if (!drawGizmo) return;
         if (mapDataCreator == null) return;
 
         var so = mapDataCreator.CurrentMapData;
-        if (so == null || so.shrunkPolygons == null) return;
+        if (so == null || so.offsetLineGroups == null) return;
 
-        // shrunkPolygons 시각화
-        Gizmos.color = shrinkEdgeColor;
-        foreach (var poly in so.shrunkPolygons)
+        Gizmos.color = lineColor;
+
+        // 저장된 line segments 시각화
+        foreach (var group in so.offsetLineGroups)
         {
-            var pts = poly.points;
-            for (int i = 0; i < pts.Count; i++)
+            foreach (var seg in group.lines)
             {
-                Vector2 p1 = pts[i];
-                Vector2 p2 = pts[(i+1) % pts.Count];
-                Gizmos.DrawLine(new Vector3(p1.x, 0f, p1.y),
-                                new Vector3(p2.x, 0f, p2.y));
+                Vector3 a = new Vector3(seg.start.x, 0f, seg.start.y);
+                Vector3 b = new Vector3(seg.end.x,   0f, seg.end.y);
+                Gizmos.DrawLine(a, b);
             }
-        }
 
-        // center 표시
-        Gizmos.color = shrinkCenterColor;
-        foreach (var poly in so.shrunkPolygons)
-        {
-            Vector2 c = poly.center;
-            Gizmos.DrawSphere(new Vector3(c.x, 0f, c.y), shrinkGizmoSphereSize);
+            // center 표시 
+            Vector3 centerPos = new Vector3(group.center.x, 0f, group.center.y);
+            Gizmos.DrawSphere(centerPos, 0.1f); 
         }
     }
 }
