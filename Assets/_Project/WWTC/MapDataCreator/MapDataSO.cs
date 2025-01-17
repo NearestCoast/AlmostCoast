@@ -49,3 +49,17 @@ public class OffsetLineGroup
     public Vector2 center;
     public List<LineSegment2D> lines;
 }
+
+
+
+// 교차점 구조체
+public struct IntersectionData
+{
+    public float t;
+    public Vector2 point;
+}
+public struct IntersectionOnLine
+{
+    public float t;
+    public Vector2 point;
+}

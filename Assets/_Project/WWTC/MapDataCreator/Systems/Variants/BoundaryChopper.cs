@@ -2,6 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
+/// <summary>
+/// 맵 경계를 정의한 뒤, FastNoise 를 사용해
+/// 노이즈 값별로 좌표를 분류(Dictionary<int, List<Vector2>>) -> 
+/// 각 그룹에 대해 Convex Hull -> cellPolygons 생성.
+/// 
+/// 주파수(frequency) 를 높였을 때, 기존 key quantization( val*10000 ) 로 인한
+/// "서로 다른 값인데도 동일 key로 묶이는" 문제를 완화하기 위해,
+/// *10000 → *40000 (예시) 로 조정.
+/// (실제로는 상황에 따라 배율을 더 늘리거나, 더 줄이는 실험이 필요)
+/// </summary>
 public class BoundaryChopper : MapDataSystem
 {
     [Title("Noise Settings")]
@@ -27,9 +37,10 @@ public class BoundaryChopper : MapDataSystem
         mapData = mapDataCreator.CurrentMapData;
         if (mapData == null) return;
 
-        // 생성 전에 기존 리스트 초기화
+        // (1) 기존 cellPolygons 초기화
         mapData.cellPolygons.Clear();
 
+        // (2) fastNoise 설정
         fastNoise = new FastNoise(seed);
         fastNoise.SetFrequency(frequency);
         fastNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
@@ -41,10 +52,10 @@ public class BoundaryChopper : MapDataSystem
         float minZ = bd.centerZ - bd.length * 0.5f;
         float maxZ = bd.centerZ + bd.length * 0.5f;
 
-        // width/length 비(Aspect Ratio)
+        // 폭/길이 비 → aspect
         float aspect = bd.width / bd.length;
 
-        // 노이즈 값별로 좌표를 모으는 Dictionary
+        // (3) 노이즈 값별 (키=정수화 노이즈) -> 좌표 목록
         Dictionary<int, List<Vector2>> cellDict = new Dictionary<int, List<Vector2>>();
 
         for (int i = 0; i < gridResolution; i++)
@@ -54,66 +65,68 @@ public class BoundaryChopper : MapDataSystem
             {
                 float z = Mathf.Lerp(minZ, maxZ, j / (float)(gridResolution - 1));
 
-                // 노이즈 스케일링
-                float scaledX = (x - minX) / (maxX - minX); // 0~1 구간
-                float scaledZ = (z - minZ) / (maxZ - minZ); // 0~1 구간
-                scaledX *= aspect; // 길이 쪽(1.0)에 맞춰 폭 쪽만 보정
+                // 스케일링
+                float scaledX = (x - minX) / (maxX - minX);
+                float scaledZ = (z - minZ) / (maxZ - minZ);
+                scaledX *= aspect;
 
+                // FastNoise
                 float val = fastNoise.GetNoise(scaledX, scaledZ);
 
-                // 키로 쓸 정수화된 노이즈값
-                int key = Mathf.RoundToInt(val * 10000f);
+                // ===============================
+                // ★ 변경 부분: *10000f → *40000f
+                // ===============================
+                int key = Mathf.RoundToInt(val * 10000000f);
 
                 if (!cellDict.ContainsKey(key))
                     cellDict[key] = new List<Vector2>();
+
                 cellDict[key].Add(new Vector2(x, z));
             }
         }
 
-        // cellDict를 순회하며 Convex Hull을 생성 -> cellPolygons
+        // (4) cellDict에 대해 Convex Hull -> cellPolygons 생성
         foreach (var kv in cellDict)
         {
             var pts = kv.Value;
-            if (pts.Count < 3) 
-                continue;
+            if (pts.Count < 3) continue;
 
+            // Convex Hull
             List<Vector2> hull = BuildConvexHull(pts);
-            if (hull.Count < 3) 
-                continue;
+            if (hull.Count < 3) continue;
 
-            // 중심
+            // 중심(center)
             Vector2 center = Vector2.zero;
             foreach (var p in hull) 
                 center += p;
             center /= hull.Count;
 
-            // 면적(Shoelace 공식) 계산
+            // Shoelace로 면적 계산
             float area = ComputePolygonArea(hull);
 
-            // cellPolygon 생성
+            // CellPolygon 생성
             var cellPolygon = new CellPolygon
             {
                 cellKey = kv.Key,
-                points = hull,
-                center = center,
-                area = area // 면적 저장
+                points  = hull,
+                center  = center,
+                area    = area
             };
-
             mapData.cellPolygons.Add(cellPolygon);
         }
 
-        Debug.Log($"[BoundaryChopper] {mapData.cellPolygons.Count}개의 셀 생성 완료 (Aspect={aspect:F3})");
+        Debug.Log($"[BoundaryChopper] {mapData.cellPolygons.Count}개의 셀 생성 완료 (Aspect={aspect:F3}, freq={frequency:F3})");
     }
 
     /// <summary>
-    /// 주어진 점들에 대한 Convex Hull (Graham Scan/Monotone chain)
+    /// Convex Hull (Monotone chain)
     /// </summary>
     private List<Vector2> BuildConvexHull(List<Vector2> pts)
     {
         if (pts.Count < 3) 
             return new List<Vector2>(pts);
 
-        // 좌하단 기준 정렬
+        // 1) 정렬 (x 먼저, y 다음)
         pts.Sort((p1, p2) =>
         {
             if (Mathf.Approximately(p1.x, p2.x))
@@ -123,31 +136,34 @@ public class BoundaryChopper : MapDataSystem
 
         List<Vector2> hull = new List<Vector2>();
 
-        // lower hull
+        // 2) lower hull
         for (int i = 0; i < pts.Count; i++)
         {
             while (hull.Count >= 2 && Cross(hull[hull.Count - 2], hull[hull.Count - 1], pts[i]) <= 0)
                 hull.RemoveAt(hull.Count - 1);
             hull.Add(pts[i]);
         }
-        // upper hull
+
+        // 3) upper hull
         for (int i = pts.Count - 2, l = hull.Count + 1; i >= 0; i--)
         {
             while (hull.Count >= l && Cross(hull[hull.Count - 2], hull[hull.Count - 1], pts[i]) <= 0)
                 hull.RemoveAt(hull.Count - 1);
             hull.Add(pts[i]);
         }
+
         hull.RemoveAt(hull.Count - 1);
         return hull;
     }
 
     private float Cross(Vector2 a, Vector2 b, Vector2 c)
     {
+        // 2D cross: (b-a) x (c-a)
         return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
     }
 
     /// <summary>
-    /// Shoelace formula 로 2D 폴리곤 면적(절댓값 취하지 않은 signed area)
+    /// Shoelace formula로 다각형 면적 (signed area)
     /// </summary>
     private float ComputePolygonArea(List<Vector2> poly)
     {
@@ -159,17 +175,17 @@ public class BoundaryChopper : MapDataSystem
             area += (c1.x * c2.y - c2.x * c1.y);
         }
         return 0.5f * area; 
-        // 실제 면적(abs) 필요하면 Mathf.Abs(0.5f*area) 사용
     }
 
     private void OnDrawGizmos()
     {
-        if (!drawGizmo) return; // 부모 클래스 MapDataSystem에 protected bool drawGizmo 있다고 가정
+        if (!drawGizmo) return;
         if (mapDataCreator == null) return;
+
         var so = mapDataCreator.CurrentMapData;
         if (so == null || so.cellPolygons == null) return;
 
-        // cellPolygons 그리기
+        // 폴리곤 테두리
         Gizmos.color = cellEdgeColor;
         foreach (var cell in so.cellPolygons)
         {
@@ -182,16 +198,12 @@ public class BoundaryChopper : MapDataSystem
             }
         }
 
+        // 폴리곤 중심
         Gizmos.color = cellCenterColor;
         foreach (var cell in so.cellPolygons)
         {
-            // 중심
             Vector2 c = cell.center;
             Gizmos.DrawSphere(new Vector3(c.x, 0f, c.y), gizmoSphereSize);
-
-            // (선택) 면적정보를 SceneView에 텍스트로 표시하고 싶다면
-            // SceneGUI 또는 Handles.Label 등을 써야 하므로, OnDrawGizmos에서는 직접 문자는 못그립니다.
-            // Debug.DrawLine 등으로 그리거나, Handles API를 사용해야 합니다.
         }
     }
 }

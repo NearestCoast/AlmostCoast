@@ -35,6 +35,10 @@ public class ClosedSegmentPruner : MapDataSystem
     [FoldoutGroup("Prune Settings")]
     [SerializeField]
     private float epsilon = 1e-5f;
+    
+    [FoldoutGroup("Prune Settings")]
+    [SerializeField]
+    private int maxRemovalIteration = 5; // 최대 반복 횟수
 
     // -----------------------------
     // 1) 열림/닫힘 판별 버튼
@@ -161,6 +165,45 @@ public class ClosedSegmentPruner : MapDataSystem
 
         Debug.Log($"[RemoveOpenedSegments] Finished after {iteration} iteration(s) (max={maxIterations}).");
     }
+    
+    [Button("RemoveSegmentsByCenterMidCheck")]
+    private void RemoveSegmentsByCenterMidCheck()
+    {
+        var so = mapDataCreator?.CurrentMapData;
+        if (so == null)
+        {
+            Debug.LogWarning("[RemoveSegmentsByCenterMidCheck] MapDataSO is null.");
+            return;
+        }
+        if (so.offsetLineGroups == null || so.offsetLineGroups.Count == 0)
+        {
+            Debug.Log("[RemoveSegmentsByCenterMidCheck] No offsetLineGroups found.");
+            return;
+        }
+
+        // 여러 번 반복하여 선분 제거
+        for (int iteration = 0; iteration < maxRemovalIteration; iteration++)
+        {
+            bool removedAnyThisPass = false;
+
+            // 각 offsetLineGroup에 대해 검사
+            foreach (var group in so.offsetLineGroups)
+            {
+                if (group.lines == null || group.lines.Count < 2) 
+                    continue;
+
+                bool removed = CheckAndRemoveSegmentsByMidCenter(group, epsilon);
+                if (removed) 
+                    removedAnyThisPass = true;
+            }
+
+            // 한 번도 제거가 일어나지 않았다면 종료
+            if (!removedAnyThisPass)
+                break;
+        }
+
+        Debug.Log("[RemoveSegmentsByCenterMidCheck] Completed new feature (center-mid checking).");
+    }
 
     // -----------------------------
     // Generate() = (1)CheckOpenClose + (2)RemoveOpenedSegments
@@ -176,6 +219,8 @@ public class ClosedSegmentPruner : MapDataSystem
 
             // 2) 열려있는 선분 제거
             RemoveOpenedSegments();
+
+            RemoveSegmentsByCenterMidCheck();
         }
     }
 
@@ -272,5 +317,89 @@ public class ClosedSegmentPruner : MapDataSystem
         }
 
         return changed;
+    }
+    
+    private bool CheckAndRemoveSegmentsByMidCenter(OffsetLineGroup group, float eps)
+    {
+        if (group.lines == null || group.lines.Count < 1)
+            return false;
+
+        var oldLines = group.lines;
+        var newLines = new List<LineSegment2D>();
+        bool anyRemoved = false;
+
+        foreach (var segA in oldLines)
+        {
+            Vector2 midA = 0.5f * (segA.start + segA.end);
+            Vector2 cPos = group.center;
+            // center ~ 중점을 이은 임시 선분
+            var testLine = new LineSegment2D
+            {
+                start = cPos,
+                end   = midA
+            };
+
+            bool intersected = false;
+            // 자기 자신 제외
+            foreach (var segB in oldLines)
+            {
+                // 같은 참조(동일 선분)인지 확인할 방법이 없으므로, 
+                // 실제 좌표값이 같은지 비교하거나 별도 아이디가 있어야 하지만,
+                // 여기서는 "동일 개체"가 아닌 "동일 index"로 구분했다고 가정.
+                // => 편의상 "본인" 제외가 필요하다면, oldLines.IndexOf(segA)...등 추가 작업 필요
+
+                if (segB.Equals(segA)) 
+                    continue;
+
+                if (TryGetIntersection(testLine, segB, eps, out var _, out var _))
+                {
+                    intersected = true;
+                    break;
+                }
+            }
+
+            if (intersected)
+            {
+                // 교차 시 제거
+                anyRemoved = true;
+            }
+            else
+            {
+                newLines.Add(segA);
+            }
+        }
+
+        group.lines = newLines;
+        return anyRemoved;
+    }
+    
+    private bool TryGetIntersection(LineSegment2D segA, LineSegment2D segB, float eps,
+        out IntersectionData interA, out IntersectionData interB)
+    {
+        interA = default;
+        interB = default;
+
+        var A = segA.start;
+        var B = segA.end;
+        var C = segB.start;
+        var D = segB.end;
+
+        Vector2 AB = B - A;
+        Vector2 CD = D - C;
+        float denom = AB.x * CD.y - AB.y * CD.x;
+        if (Mathf.Abs(denom) < eps)
+            return false; // 평행
+
+        Vector2 AC = C - A;
+        float tA = (AC.x * CD.y - AC.y * CD.x) / denom;
+        float tB = (AC.x * AB.y - AC.y * AB.x) / denom;
+
+        if (tA < -eps || tA > 1f + eps) return false;
+        if (tB < -eps || tB > 1f + eps) return false;
+
+        Vector2 ip = A + AB * tA;
+        interA.t = tA; interA.point = ip;
+        interB.t = tB; interB.point = ip;
+        return true;
     }
 }

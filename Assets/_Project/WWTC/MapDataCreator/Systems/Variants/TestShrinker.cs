@@ -4,13 +4,17 @@ using UnityEngine;
 
 /// <summary>
 /// MapDataSO.cellPolygons를 대상으로,
-/// (면적 >= minAreaThreshold 인 것만) Convex 폴리곤을 'offset'만큼 평행이동한 선분들을 생성.
-/// 해당 선분들을 MapDataSO.offsetLineGroups에 저장.
+/// (면적 >= minAreaThreshold 인 것만) Convex 폴리곤을 'offset'만큼 안쪽으로 평행이동(Inward)한 뒤,
+/// 그 결과로 생성된 (Shift + 양쪽 확장) 선분들을 MapDataSO.offsetLineGroups에 저장.
 /// OffsetLineGroup에는 cellPolygon의 무게중심(center)도 함께 저장.
+///
+/// LineSegment2D에 startClosed, endClosed 필드는 있지만, 여기서는 기본값(false)로만 사용.
+/// (닫힘 판단 등은 다른 로직에서 별도로 설정 가능)
 /// 
-/// LineSegment2D에 startClosed, endClosed 필드를 추가했으나,
-/// 현재 예시에서는 기본값 false로만 설정.
-/// 필요하다면, 이후 다른 로직(닫힘 여부 판단 등)에서 true로 세팅 가능.
+/// 변경 요점: 
+///   1) 기존과 동일하게 노멀 방향으로 offset만큼 '이동'
+///   2) 그 후, 선분 양끝을 선분 진행 방향으로 offset만큼 추가 연장
+///      => "양쪽으로 offset만큼 선분 길이를 늘린다."
 /// </summary>
 public class TestShrinker : MapDataSystem
 {
@@ -52,18 +56,17 @@ public class TestShrinker : MapDataSystem
             if (pts == null || pts.Count < 3)
                 continue;
 
-            // 폴리곤이 CW인지 CCW인지 판단
+            // CW(CCW) 판별
             bool isCW = IsClockwise(pts);
 
             // 새로운 그룹 생성
             OffsetLineGroup group = new OffsetLineGroup
             {
                 cellKey = poly.cellKey,
-                center  = poly.center,            // 무게중심 같이 저장
+                center  = poly.center,            
                 lines   = new List<LineSegment2D>()
             };
 
-            // 모든 에지 평행이동
             int n = pts.Count;
             for (int i = 0; i < n; i++)
             {
@@ -75,25 +78,29 @@ public class TestShrinker : MapDataSystem
                 if (length < 1e-9f)
                     continue;
 
-                edge /= length;
+                edge /= length;  // 에지 방향 단위벡터
 
-                // inward normal
+                // 1) 노멀 방향 오프셋
                 Vector2 normal = isCW 
                     ? new Vector2(edge.y, -edge.x)
                     : new Vector2(-edge.y, edge.x);
 
                 Vector2 shift = normal * offset;
 
+                // 평행 이동된 점
                 Vector2 p1Shifted = p1 + shift;
                 Vector2 p2Shifted = p2 + shift;
 
-                // LineSegment2D
+                // 2) 선분 진행 방향으로 (edge 방향) 양 끝을 offset만큼 추가 연장
+                //    p1Shifted - (edge*offset), p2Shifted + (edge*offset) 
+                p1Shifted -= edge * offset;  // 뒤쪽으로 offset만큼
+                p2Shifted += edge * offset;  // 앞쪽으로 offset만큼
+
+                // 새 선분 생성
                 LineSegment2D seg = new LineSegment2D
                 {
                     start = p1Shifted,
                     end   = p2Shifted,
-
-                    // 새로 추가된 필드들 (기본값 false)
                     startClosed = false,
                     endClosed   = false
                 };

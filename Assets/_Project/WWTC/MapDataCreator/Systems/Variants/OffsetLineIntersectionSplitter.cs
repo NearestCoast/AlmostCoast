@@ -321,18 +321,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         return true;
     }
 
-    // 교차점 구조체
-    private struct IntersectionData
-    {
-        public float t;
-        public Vector2 point;
-    }
-    private struct IntersectionOnLine
-    {
-        public float t;
-        public Vector2 point;
-    }
-
     //--------------------------------------------------------------------------
     // 기즈모: 선분별 색상 순환
     //--------------------------------------------------------------------------
