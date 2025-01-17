@@ -22,6 +22,7 @@ public class Boundary : MapDataSystem
 
     private void OnDrawGizmos()
     {
+        if (!drawGizmo) return;
         if (!IsReady) return;
         var data = mapDataCreator.CurrentMapData.boundaryData;
         Gizmos.color = gizmoColor;

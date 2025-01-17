@@ -31,7 +31,11 @@ public class MapDataSystem : MonoBehaviour
     }
 
     [Button("Generate")]
+    [GUIColor(0, 1, 0)] // 초록색
     public virtual void Generate()
     {
     }
+
+    [FoldoutGroup("Gizmo Settings")]
+    [SerializeField] protected bool drawGizmo;
 }
