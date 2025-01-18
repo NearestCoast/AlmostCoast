@@ -9,13 +9,14 @@ using Sirenix.OdinInspector;
 /// 
 /// 주파수(frequency) 를 높였을 때, 기존 key quantization( val*10000 ) 로 인한
 /// "서로 다른 값인데도 동일 key로 묶이는" 문제를 완화하기 위해,
-/// *10000 → *40000 (예시) 로 조정.
-/// (실제로는 상황에 따라 배율을 더 늘리거나, 더 줄이는 실험이 필요)
+/// 예: *10000 -> *40000 또는 *10000000 등으로 조정 가능
+///
+/// 이제 seed는 MapDataSO.noiseSeed를 사용.
 /// </summary>
 public class BoundaryChopper : MapDataSystem
 {
     [Title("Noise Settings")]
-    [SerializeField] private int seed = 1337;
+    // [SerializeField] private int seed = 1337;  // ← 제거
     [SerializeField] private float frequency = 0.01f;
 
     [Title("Cell Settings")]
@@ -41,7 +42,9 @@ public class BoundaryChopper : MapDataSystem
         mapData.cellPolygons.Clear();
 
         // (2) fastNoise 설정
-        fastNoise = new FastNoise(seed);
+        // seed를 직접 SerializeField로 받지 않고,
+        // mapData.noiseSeed 를 사용
+        fastNoise = new FastNoise(mapData.noiseSeed);
         fastNoise.SetFrequency(frequency);
         fastNoise.SetNoiseType(FastNoise.NoiseType.Cellular);
         fastNoise.SetCellularReturnType(FastNoise.CellularReturnType.CellValue);
@@ -73,9 +76,8 @@ public class BoundaryChopper : MapDataSystem
                 // FastNoise
                 float val = fastNoise.GetNoise(scaledX, scaledZ);
 
-                // ===============================
-                // ★ 변경 부분: *10000f → *40000f
-                // ===============================
+                // 예시) 기존보다 배율 높이기
+                // 기존 *10000 → *40000 or *10000000 등
                 int key = Mathf.RoundToInt(val * 10000000f);
 
                 if (!cellDict.ContainsKey(key))
@@ -115,7 +117,7 @@ public class BoundaryChopper : MapDataSystem
             mapData.cellPolygons.Add(cellPolygon);
         }
 
-        Debug.Log($"[BoundaryChopper] {mapData.cellPolygons.Count}개의 셀 생성 완료 (Aspect={aspect:F3}, freq={frequency:F3})");
+        Debug.Log($"[BoundaryChopper] {mapData.cellPolygons.Count}개의 셀 생성 완료 (Aspect={aspect:F3}, freq={frequency:F3}, seed={mapData.noiseSeed})");
     }
 
     /// <summary>

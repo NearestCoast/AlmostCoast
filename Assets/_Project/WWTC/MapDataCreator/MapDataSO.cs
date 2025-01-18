@@ -6,11 +6,14 @@ public class MapDataSO : ScriptableObject
 {
     public BoundaryData boundaryData;
 
-    public List<CellPolygon> cellPolygons = new List<CellPolygon>();
+    // 새로 추가
+    // boundaryChopper가 사용할 seed
+    public int noiseSeed = 1337;
 
-    // 평행이동한 선분들을 저장할 리스트
+    public List<CellPolygon> cellPolygons = new List<CellPolygon>();
     public List<OffsetLineGroup> offsetLineGroups = new List<OffsetLineGroup>();
 }
+
 
 [System.Serializable]
 public struct BoundaryData
