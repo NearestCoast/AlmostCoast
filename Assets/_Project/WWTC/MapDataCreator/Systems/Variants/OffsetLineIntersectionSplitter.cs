@@ -2,24 +2,15 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-/// <summary>
-/// MapDataSystem을 상속.
-/// - 새 기능: 각 그룹의 center ~ 선분(a)의 중점을 연결하는 선분이 다른 선분과 교차하면 선분(a)를 제거
-/// - 기존 기능: 선분 쌍 교차점을 찾아 분할
-/// - Generate()는 위 순서대로 두 기능을 연달아 호출
-/// </summary>
 public class OffsetLineIntersectionSplitter : MapDataSystem
 {
     [FoldoutGroup("Intersection Split Settings")]
-    [SerializeField] private int maxIterations = 10;      // 교차 분할 반복 제한
-
+    [SerializeField] private int maxIterations = 10;
     [FoldoutGroup("Intersection Split Settings")]
-    [SerializeField] private float epsilon = 1e-4f;       // 교차 판단 오차
-
+    [SerializeField] private float epsilon = 1e-4f;
     [FoldoutGroup("Intersection Split Settings")]
-    [SerializeField] private int maxRemovalIteration = 5; // "중점-센터" 교차 검사 후 제거 반복 제한
+    [SerializeField] private int maxRemovalIteration = 5;
 
-    // 원하는 색상 팔레트를 지정
     private static readonly Color[] colorPalette = new Color[]
     {
         Color.red,
@@ -28,12 +19,9 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         Color.cyan,
         Color.magenta,
         Color.yellow,
-        new Color(1f, 0.5f, 0f) // 오렌지
+        new Color(1f, 0.5f, 0f)
     };
 
-    //--------------------------------------------------------------------------
-    // (1) 새 기능만 실행하는 버튼
-    //--------------------------------------------------------------------------
     [Button("RemoveSegmentsByCenterMidCheck")]
     private void RemoveSegmentsByCenterMidCheck()
     {
@@ -49,12 +37,10 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
             return;
         }
 
-        // 여러 번 반복하여 선분 제거
         for (int iteration = 0; iteration < maxRemovalIteration; iteration++)
         {
             bool removedAnyThisPass = false;
 
-            // 각 offsetLineGroup에 대해 검사
             foreach (var group in so.offsetLineGroups)
             {
                 if (group.lines == null || group.lines.Count < 2) 
@@ -65,7 +51,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
                     removedAnyThisPass = true;
             }
 
-            // 한 번도 제거가 일어나지 않았다면 종료
             if (!removedAnyThisPass)
                 break;
         }
@@ -73,9 +58,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         Debug.Log("[RemoveSegmentsByCenterMidCheck] Completed new feature (center-mid checking).");
     }
 
-    //--------------------------------------------------------------------------
-    // (2) 기존 기능만 실행하는 버튼
-    //--------------------------------------------------------------------------
     [Button("Split Intersections Only")]
     private void PerformSplitIntersectionsOnly()
     {
@@ -111,27 +93,13 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         Debug.Log($"[PerformSplitIntersectionsOnly] Done. Groups processed={groupProcessed}");
     }
 
-    //--------------------------------------------------------------------------
-    // Generate() => (1)새 기능 → (2)기존 기능
-    //--------------------------------------------------------------------------
     public override void Generate()
     {
         if (!IsReady) return;
-
-        // 1) 중점-센터 교차 검사 후 제거
         RemoveSegmentsByCenterMidCheck();
-
-        // 2) 선분 교차점 분할
         PerformSplitIntersectionsOnly();
     }
 
-    //--------------------------------------------------------------------------
-    // (A) 새 기능: 중점-센터 교차 검사 후 제거
-    //--------------------------------------------------------------------------
-    /// <summary>
-    /// 그룹의 center ~ (각 선분의 중점) 을 잇는 선분이
-    /// 기존 다른 선분들과 교차하면 해당 선분(자기 자신)을 제거.
-    /// </summary>
     private bool CheckAndRemoveSegmentsByMidCenter(OffsetLineGroup group, float eps)
     {
         if (group.lines == null || group.lines.Count < 1)
@@ -145,7 +113,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         {
             Vector2 midA = 0.5f * (segA.start + segA.end);
             Vector2 cPos = group.center;
-            // center ~ 중점을 이은 임시 선분
             var testLine = new LineSegment2D
             {
                 start = cPos,
@@ -153,14 +120,8 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
             };
 
             bool intersected = false;
-            // 자기 자신 제외
             foreach (var segB in oldLines)
             {
-                // 같은 참조(동일 선분)인지 확인할 방법이 없으므로, 
-                // 실제 좌표값이 같은지 비교하거나 별도 아이디가 있어야 하지만,
-                // 여기서는 "동일 개체"가 아닌 "동일 index"로 구분했다고 가정.
-                // => 편의상 "본인" 제외가 필요하다면, oldLines.IndexOf(segA)...등 추가 작업 필요
-
                 if (segB.Equals(segA)) 
                     continue;
 
@@ -173,7 +134,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
 
             if (intersected)
             {
-                // 교차 시 제거
                 anyRemoved = true;
             }
             else
@@ -186,21 +146,16 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         return anyRemoved;
     }
 
-    //--------------------------------------------------------------------------
-    // (B) 기존 기능: 선분 쌍 교차점 분할
-    //--------------------------------------------------------------------------
     private bool SplitAllIntersectionsInGroup(OffsetLineGroup group, float eps)
     {
         var oldLines = group.lines;
         int n = oldLines.Count;
         if (n < 2) return false;
 
-        // (1) 각 선분별 교차점 수집
         var intersectionMap = new Dictionary<int, List<IntersectionOnLine>>();
         for (int i = 0; i < n; i++)
             intersectionMap[i] = new List<IntersectionOnLine>();
 
-        // (2) 모든 쌍(i<j)에 대해 교차 검사
         for (int i = 0; i < n; i++)
         {
             for (int j = i + 1; j < n; j++)
@@ -223,7 +178,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
             }
         }
 
-        // 교차점이 하나도 없다면 false
         bool foundAny = false;
         foreach (var kv in intersectionMap)
         {
@@ -235,7 +189,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         }
         if (!foundAny) return false;
 
-        // (3) 교차점 있는 선분 분할
         var newLines = new List<LineSegment2D>();
         for (int i = 0; i < n; i++)
         {
@@ -247,7 +200,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
                 continue;
             }
 
-            // t값 정렬
             list.Sort((a, b) => a.t.CompareTo(b.t));
 
             Vector2 currStart = seg.start;
@@ -273,7 +225,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
                 }
             }
 
-            // 마지막 조각
             var lastPart = new LineSegment2D
             {
                 start       = currStart,
@@ -288,9 +239,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         return true;
     }
 
-    //--------------------------------------------------------------------------
-    // 공용 교차 검사
-    //--------------------------------------------------------------------------
     private bool TryGetIntersection(LineSegment2D segA, LineSegment2D segB, float eps,
                                     out IntersectionData interA, out IntersectionData interB)
     {
@@ -306,7 +254,7 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         Vector2 CD = D - C;
         float denom = AB.x * CD.y - AB.y * CD.x;
         if (Mathf.Abs(denom) < eps)
-            return false; // 평행
+            return false;
 
         Vector2 AC = C - A;
         float tA = (AC.x * CD.y - AC.y * CD.x) / denom;
@@ -321,9 +269,6 @@ public class OffsetLineIntersectionSplitter : MapDataSystem
         return true;
     }
 
-    //--------------------------------------------------------------------------
-    // 기즈모: 선분별 색상 순환
-    //--------------------------------------------------------------------------
     private void OnDrawGizmos()
     {
         if (!drawGizmo) return;
