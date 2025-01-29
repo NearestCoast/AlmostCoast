@@ -11,7 +11,6 @@ public class TestMeshDataGenerator : MapDataSystem
 {
     [FoldoutGroup("Triangle Settings")] [SerializeField]
     private float triangleSide = 1f;
-
     [SerializeField] private float cornerMultiplier = 0.9f;
     [SerializeField] private float subdivMultiplier = 0.75f;
 
@@ -19,7 +18,6 @@ public class TestMeshDataGenerator : MapDataSystem
 
     [FoldoutGroup("Gizmo Settings")] [SerializeField]
     private bool drawGizmoMesh = true;
-
     [FoldoutGroup("Gizmo Settings")] [SerializeField]
     private bool drawLabel = true;
 
@@ -117,110 +115,108 @@ public class TestMeshDataGenerator : MapDataSystem
             if (biggestPoly.points == null || biggestPoly.points.Count < 3)
                 continue;
 
-
+            
             // 반복적으로 작업 수행
             ProcessPolygonRecursively(biggestPoly, so, gIndex);
         }
     }
 
     private void ProcessPolygonRecursively(CellPolygon initialPoly, MapDataSO so, int groupIndex)
+{
+    CellPolygon currentPoly = initialPoly;
+    int iteration = 0;
+
+    while (currentPoly != null && iteration < maxIteration)
     {
-        CellPolygon currentPoly = initialPoly;
-        int iteration = 0;
+        // (1) ring + subdiv
+        List<Vector2> ring = BuildOrderedRing(currentPoly);
 
-        while (currentPoly != null && iteration < maxIteration)
+        List<Vector2> ringSubdiv = (iteration == 0)
+            ? SubdivideEdgesByTriangleSide(ring, triangleSide)
+            : SubdivideEdgesByCurrentPoly(currentPoly);
+
+        if (ringSubdiv.Count < 3)
+            break;
+
+        // (2) Corner 준비, segment 매핑 (기존 로직)
+        cornerSet = new HashSet<Vector2>(currentPoly.points);
+        cornerNeighbors = new Dictionary<Vector2, (Vector2, Vector2)>();
+        PrepareCornerNeighbors(ringSubdiv, currentPoly);
+
+        cornerIndices.Clear();
+        for (int i = 0; i < ringSubdiv.Count; i++)
         {
-            // (1) ring + subdiv
-            List<Vector2> ring = BuildOrderedRing(currentPoly);
-
-            List<Vector2> ringSubdiv = (iteration == 0)
-                ? SubdivideEdgesByTriangleSide(ring, triangleSide)
-                : SubdivideEdgesByCurrentPoly(currentPoly);
-
-            if (ringSubdiv.Count < 3)
-                break;
-
-            // (2) Corner 준비, segment 매핑 (기존 로직)
-            cornerSet = new HashSet<Vector2>(currentPoly.points);
-            cornerNeighbors = new Dictionary<Vector2, (Vector2, Vector2)>();
-            PrepareCornerNeighbors(ringSubdiv, currentPoly);
-
-            cornerIndices.Clear();
-            for (int i = 0; i < ringSubdiv.Count; i++)
-            {
-                if (cornerSet.Contains(ringSubdiv[i]))
-                    cornerIndices.Add(i);
-            }
-
-            cornerIndices.Sort();
-            segmentCount = cornerIndices.Count;
-            if (segmentCount < 2) break;
-
-            segmentOfRingIndex = new int[ringSubdiv.Count];
-            subdivCountPerSegment = new int[segmentCount];
-            subdivApexCountPerSegment = new int[segmentCount];
-            BuildSegmentMap(ringSubdiv.Count);
-
-            LabelRingDebugPoints(ringSubdiv);
-
-            // (3) 메시 생성
-            Mesh mesh = GenerateMixedTriangles_OnePass(
-                ringSubdiv,
-                currentPoly,
-                out List<ApexRecord> apexRecords,
-                out int[] apexPerRingVertex,
-                out Dictionary<Vector2, int> ringDict
-            );
-
-            if (mesh == null || mesh.vertexCount == 0)
-                break;
-
-            // (4) Apex 보정, 메시 보강
-            AdjustSubdivApexPositions(apexRecords, apexPerRingVertex, ringSubdiv);
-            UpdateMeshVertices(mesh, apexRecords);
-            AddAdditionalTriangles(mesh, ringSubdiv, apexPerRingVertex, ringDict);
-            AddCornerLeftSubdivTriangle(mesh, ringSubdiv, apexPerRingVertex, ringDict);
-
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-
-            // (5) iteration 결과 저장
-            var gmd = new GeneratedMeshData
-            {
-                cellKey = currentPoly.cellKey,
-                vertices = mesh.vertices,
-                triangles = mesh.triangles,
-                uv = mesh.uv
-            };
-            so.generatedMeshDataList.Add(gmd);
-
-            var apexDataGroup = new ApexDataGroup
-            {
-                groupName = $"Group #{groupIndex}_Iter{iteration}",
-                groupKey = currentPoly.cellKey,
-                apexPositions = apexRecords.Select(ar => ar.position).ToList()
-            };
-            apexDataGroups.Add(apexDataGroup);
-
-            // ───────────────────────────────────────────────────────────────────
-            // (6) Corner Apex & Subdiv Apex 거리 체크. 하나라도 임계값 이하이면 중단
-            // ───────────────────────────────────────────────────────────────────
-
-            bool cornerTooClose = CheckCornerApexDistanceBelowThreshold(apexRecords, triangleSide, cornerMultiplier);
-            bool subdivTooClose = CheckSubdivApexDistanceBelowThreshold(apexRecords, triangleSide, subdivMultiplier);
-
-            if (cornerTooClose || subdivTooClose)
-            {
-                Debug.Log(
-                    $"[TestMeshDataGenerator] CornerTooClose={cornerTooClose}, SubdivTooClose={subdivTooClose}. Stop iteration here.");
-                break;
-            }
-
-            // (7) 다음 폴리곤으로
-            currentPoly = DefineNextPolygon(apexRecords);
-            iteration++;
+            if (cornerSet.Contains(ringSubdiv[i]))
+                cornerIndices.Add(i);
         }
+        cornerIndices.Sort();
+        segmentCount = cornerIndices.Count;
+        if (segmentCount < 2) break;
+
+        segmentOfRingIndex = new int[ringSubdiv.Count];
+        subdivCountPerSegment = new int[segmentCount];
+        subdivApexCountPerSegment = new int[segmentCount];
+        BuildSegmentMap(ringSubdiv.Count);
+
+        LabelRingDebugPoints(ringSubdiv);
+
+        // (3) 메시 생성
+        Mesh mesh = GenerateMixedTriangles_OnePass(
+            ringSubdiv,
+            currentPoly,
+            out List<ApexRecord> apexRecords,
+            out int[] apexPerRingVertex,
+            out Dictionary<Vector2, int> ringDict
+        );
+
+        if (mesh == null || mesh.vertexCount == 0)
+            break;
+
+        // (4) Apex 보정, 메시 보강
+        AdjustSubdivApexPositions(apexRecords, apexPerRingVertex, ringSubdiv);
+        UpdateMeshVertices(mesh, apexRecords);
+        AddAdditionalTriangles(mesh, ringSubdiv, apexPerRingVertex, ringDict);
+        AddCornerLeftSubdivTriangle(mesh, ringSubdiv, apexPerRingVertex, ringDict);
+
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        // (5) iteration 결과 저장
+        var gmd = new GeneratedMeshData
+        {
+            cellKey   = currentPoly.cellKey,
+            vertices  = mesh.vertices,
+            triangles = mesh.triangles,
+            uv        = mesh.uv
+        };
+        so.generatedMeshDataList.Add(gmd);
+
+        var apexDataGroup = new ApexDataGroup
+        {
+            groupName     = $"Group #{groupIndex}_Iter{iteration}",
+            groupKey      = currentPoly.cellKey,
+            apexPositions = apexRecords.Select(ar => ar.position).ToList()
+        };
+        apexDataGroups.Add(apexDataGroup);
+
+        // ───────────────────────────────────────────────────────────────────
+        // (6) Corner Apex & Subdiv Apex 거리 체크. 하나라도 임계값 이하이면 중단
+        // ───────────────────────────────────────────────────────────────────
+
+        bool cornerTooClose = CheckCornerApexDistanceBelowThreshold(apexRecords, triangleSide, cornerMultiplier);
+        bool subdivTooClose = CheckSubdivApexDistanceBelowThreshold(apexRecords, triangleSide, subdivMultiplier);
+
+        if (cornerTooClose || subdivTooClose)
+        {
+            Debug.Log($"[TestMeshDataGenerator] CornerTooClose={cornerTooClose}, SubdivTooClose={subdivTooClose}. Stop iteration here.");
+            break;  
+        }
+
+        // (7) 다음 폴리곤으로
+        currentPoly = DefineNextPolygon(apexRecords);
+        iteration++;
     }
+}
 
 
     /// <summary>
@@ -228,8 +224,8 @@ public class TestMeshDataGenerator : MapDataSystem
     /// 하나라도 (triangleSide * thresholdMultiplier) 이하이면 true
     /// </summary>
     private bool CheckCornerApexDistanceBelowThreshold(
-        List<ApexRecord> apexRecords,
-        float triangleSide,
+        List<ApexRecord> apexRecords, 
+        float triangleSide, 
         float thresholdMultiplier
     )
     {
@@ -254,42 +250,42 @@ public class TestMeshDataGenerator : MapDataSystem
     }
 
 
-    /// <summary>
-    /// Subdiv Apex들 끼리의 거리를 검사.
-    /// 하나라도 (triangleSide * thresholdMultiplier) 이하이면 true
-    /// </summary>
-    private bool CheckSubdivApexDistanceBelowThreshold(
-        List<ApexRecord> apexRecords,
-        float triangleSide,
-        float thresholdMultiplier
-    )
+/// <summary>
+/// Subdiv Apex들 끼리의 거리를 검사.
+/// 하나라도 (triangleSide * thresholdMultiplier) 이하이면 true
+/// </summary>
+private bool CheckSubdivApexDistanceBelowThreshold(
+    List<ApexRecord> apexRecords,
+    float triangleSide,
+    float thresholdMultiplier
+)
+{
+    var subdivApex = apexRecords
+        .Where(ar => ar.apexType == ApexType.Subdiv)
+        .ToList();
+
+    if (subdivApex.Count < 2) return false;
+
+    float threshold = triangleSide * thresholdMultiplier;
+    for (int i = 0; i < subdivApex.Count; i++)
     {
-        var subdivApex = apexRecords
-            .Where(ar => ar.apexType == ApexType.Subdiv)
-            .ToList();
-
-        if (subdivApex.Count < 2) return false;
-
-        float threshold = triangleSide * thresholdMultiplier;
-        for (int i = 0; i < subdivApex.Count; i++)
+        for (int j = i + 1; j < subdivApex.Count; j++)
         {
-            for (int j = i + 1; j < subdivApex.Count; j++)
-            {
-                float dist = Vector2.Distance(subdivApex[i].position, subdivApex[j].position);
-                if (dist < threshold)
-                    return true;
-            }
+            float dist = Vector2.Distance(subdivApex[i].position, subdivApex[j].position);
+            if (dist < threshold)
+                return true;
         }
-
-        return false;
     }
 
+    return false;
+}
 
 
-
-
-
-
+    
+    
+    
+    
+    
     /// <summary>
     /// 이미 subdiv된 currentPoly(코너 + subdivEdges)로부터 ringSubdiv를 구성하여 반환.
     /// iteration==0(첫 번째) 이후의 반복에서, 추가로 subdiv할 필요가 없을 때 사용.
@@ -323,95 +319,95 @@ public class TestMeshDataGenerator : MapDataSystem
     }
 
     private CellPolygon DefineNextPolygon(List<ApexRecord> apexRecords)
+{
+    if (apexRecords == null || apexRecords.Count < 3)
+        return null;
+
+    // 1) Corner / Subdiv 그룹으로 분리
+    var cornerRecords = apexRecords
+        .Where(ar => ar.apexType == ApexType.Corner)
+        .OrderBy(ar => ar.ringIndex)  // ringIndex 기준 정렬
+        .ToList();
+
+    var subdivRecords = apexRecords
+        .Where(ar => ar.apexType == ApexType.Subdiv)
+        .OrderBy(ar => ar.ringIndex)  // ringIndex 기준 정렬
+        .ToList();
+
+    // Corner가 3개 미만이면 폴리곤 불가
+    if (cornerRecords.Count < 3)
+        return null;
+
+    // 2) 코너들만으로 폴리곤의 points & cornerPoints 구성
+    var cornerPositions = cornerRecords.Select(cr => cr.position).ToList();
+
+    // 3) CellPolygon 생성
+    var nextPolygon = new CellPolygon
     {
-        if (apexRecords == null || apexRecords.Count < 3)
-            return null;
+        points = cornerPositions,       // 코너만
+        cornerPoints = cornerPositions, // cornerPoints도 동일
+        subdivEdges = new List<SubdivEdge>()
+    };
 
-        // 1) Corner / Subdiv 그룹으로 분리
-        var cornerRecords = apexRecords
-            .Where(ar => ar.apexType == ApexType.Corner)
-            .OrderBy(ar => ar.ringIndex) // ringIndex 기준 정렬
-            .ToList();
+    // 4) SubdivEdges 구성
+    //    Corner i 와 Corner (i+1) 사이에 속하는 Subdiv Apex를 찾아 SubdivEdge를 만든다.
+    int cornerCount = cornerRecords.Count;
+    for (int i = 0; i < cornerCount; i++)
+    {
+        // 현재 코너와 다음 코너
+        var cornerA = cornerRecords[i];
+        var cornerB = cornerRecords[(i + 1) % cornerCount]; // wrap-around
+        int ringA = cornerA.ringIndex;
+        int ringB = cornerB.ringIndex;
 
-        var subdivRecords = apexRecords
-            .Where(ar => ar.apexType == ApexType.Subdiv)
-            .OrderBy(ar => ar.ringIndex) // ringIndex 기준 정렬
-            .ToList();
+        // ringIndex가 A < B 인 경우: (A, A+1 ... B-1) 사이 subdiv
+        // ringIndex가 A > B 인 경우: (A, A+1 ... (마지막 Corner)) + (0 ... B-1)
+        // 다만, 실제로 ringIndex가 wrap될 수 있으므로, 
+        // 단순 비교가 어려울 때는 "폴리곤 한 바퀴"를 고려하는 로직을 짜야 함.
 
-        // Corner가 3개 미만이면 폴리곤 불가
-        if (cornerRecords.Count < 3)
-            return null;
+        // 여기서는 간단히 "ringIndex가 A와 B 사이"인 Subdiv만 골라서 SubdivEdge를 구성.
+        // (필요하다면 더 정교한 로직으로 바꿀 수 있음)
 
-        // 2) 코너들만으로 폴리곤의 points & cornerPoints 구성
-        var cornerPositions = cornerRecords.Select(cr => cr.position).ToList();
-
-        // 3) CellPolygon 생성
-        var nextPolygon = new CellPolygon
+        var edgeSubdiv = new List<Vector2>();
+        if (ringA < ringB)
         {
-            points = cornerPositions, // 코너만
-            cornerPoints = cornerPositions, // cornerPoints도 동일
-            subdivEdges = new List<SubdivEdge>()
+            // A+1 <= x < B
+            var between = subdivRecords
+                .Where(sr => sr.ringIndex > ringA && sr.ringIndex < ringB)
+                .Select(sr => sr.position);
+            edgeSubdiv.AddRange(between);
+        }
+        else if (ringA > ringB)
+        {
+            // (A+1 ... maxRing) + (0 ... B-1)
+            var between1 = subdivRecords
+                .Where(sr => sr.ringIndex > ringA)
+                .Select(sr => sr.position);
+            var between2 = subdivRecords
+                .Where(sr => sr.ringIndex < ringB)
+                .Select(sr => sr.position);
+            edgeSubdiv.AddRange(between1);
+            edgeSubdiv.AddRange(between2);
+        }
+        // ringA == ringB 인 경우는 특수 케이스 - 일반적으로 corner가 같을 수는 없으나, 
+        // 만약 ringIndex가 같다면 subdiv 없음.
+
+        // SubdivEdge에 저장
+        SubdivEdge newEdge = new SubdivEdge
+        {
+            // edgePoints: (CornerA ~ CornerB) 사이의 subdiv apex들
+            edgePoints = edgeSubdiv.ToList()
         };
 
-        // 4) SubdivEdges 구성
-        //    Corner i 와 Corner (i+1) 사이에 속하는 Subdiv Apex를 찾아 SubdivEdge를 만든다.
-        int cornerCount = cornerRecords.Count;
-        for (int i = 0; i < cornerCount; i++)
-        {
-            // 현재 코너와 다음 코너
-            var cornerA = cornerRecords[i];
-            var cornerB = cornerRecords[(i + 1) % cornerCount]; // wrap-around
-            int ringA = cornerA.ringIndex;
-            int ringB = cornerB.ringIndex;
-
-            // ringIndex가 A < B 인 경우: (A, A+1 ... B-1) 사이 subdiv
-            // ringIndex가 A > B 인 경우: (A, A+1 ... (마지막 Corner)) + (0 ... B-1)
-            // 다만, 실제로 ringIndex가 wrap될 수 있으므로, 
-            // 단순 비교가 어려울 때는 "폴리곤 한 바퀴"를 고려하는 로직을 짜야 함.
-
-            // 여기서는 간단히 "ringIndex가 A와 B 사이"인 Subdiv만 골라서 SubdivEdge를 구성.
-            // (필요하다면 더 정교한 로직으로 바꿀 수 있음)
-
-            var edgeSubdiv = new List<Vector2>();
-            if (ringA < ringB)
-            {
-                // A+1 <= x < B
-                var between = subdivRecords
-                    .Where(sr => sr.ringIndex > ringA && sr.ringIndex < ringB)
-                    .Select(sr => sr.position);
-                edgeSubdiv.AddRange(between);
-            }
-            else if (ringA > ringB)
-            {
-                // (A+1 ... maxRing) + (0 ... B-1)
-                var between1 = subdivRecords
-                    .Where(sr => sr.ringIndex > ringA)
-                    .Select(sr => sr.position);
-                var between2 = subdivRecords
-                    .Where(sr => sr.ringIndex < ringB)
-                    .Select(sr => sr.position);
-                edgeSubdiv.AddRange(between1);
-                edgeSubdiv.AddRange(between2);
-            }
-            // ringA == ringB 인 경우는 특수 케이스 - 일반적으로 corner가 같을 수는 없으나, 
-            // 만약 ringIndex가 같다면 subdiv 없음.
-
-            // SubdivEdge에 저장
-            SubdivEdge newEdge = new SubdivEdge
-            {
-                // edgePoints: (CornerA ~ CornerB) 사이의 subdiv apex들
-                edgePoints = edgeSubdiv.ToList()
-            };
-
-            nextPolygon.subdivEdges.Add(newEdge);
-        }
-
-        // 5) center & area 계산
-        nextPolygon.center = CalculateCentroid(nextPolygon.points);
-        nextPolygon.area = CalculatePolygonArea(nextPolygon.points);
-
-        return nextPolygon;
+        nextPolygon.subdivEdges.Add(newEdge);
     }
+
+    // 5) center & area 계산
+    nextPolygon.center = CalculateCentroid(nextPolygon.points);
+    nextPolygon.area   = CalculatePolygonArea(nextPolygon.points);
+
+    return nextPolygon;
+}
 
 
     private List<Vector2> CalculateConvexHull(List<Vector2> points)

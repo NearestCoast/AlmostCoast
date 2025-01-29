@@ -17,7 +17,6 @@ namespace _Project.Managers.Scripts._Core.SaveManager
             ES3.Save(key, item, saveFileName);
             Debug.Log($"{key} saved: {item}");
         }
-
         public static T EasyLoad<T>(string key, string saveFileName)
         {
             T item = default; // 기본값으로 초기화
